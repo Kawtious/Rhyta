@@ -1,4 +1,4 @@
-# RhytaDemo
+# RhytaServerJS
 
 [issues-shield]: https://img.shields.io/github/issues/Zeferito/RhytaDemo.svg?style=for-the-badge
 
