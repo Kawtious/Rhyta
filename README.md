@@ -40,7 +40,7 @@ To run this application locally, follow these steps:
 2. Change into the project directory:
 
     ```bash
-    cd RhytaDemo
+    cd RhytaServerJS
     ```
 
 3. Install the required dependencies:
@@ -120,9 +120,9 @@ contain environment variables that store the database connection information. He
 
 ## Contributing
 
-As this project serves as a demonstration for a school project, it is meant to showcase specific features and
-functionalities. Therefore, we have intentionally limited contributions to ensure the project remains aligned with its
-educational objectives.
+This project is meant to develop specific features and functionalities of another system using web frameworks
+specifically. Basically, this project is meant for educational purposes. Therefore, we have intentionally limited
+contributions to ensure the project remains aligned with its educational objectives.
 
 ## License
 
