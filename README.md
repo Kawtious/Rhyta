@@ -1,12 +1,12 @@
 # RhytaServerJS
 
-[issues-shield]: https://img.shields.io/github/issues/Zeferito/RhytaDemo.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/Kawtious/RhytaServerJS.svg?style=for-the-badge
 
-[issues-url]: https://github.com/Zeferito/RhytaDemo/issues
+[issues-url]: https://github.com/Kawtious/RhytaServerJS/issues
 
-[license-shield]: https://img.shields.io/github/license/Zeferito/RhytaDemo.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/Kawtious/RhytaServerJS.svg?style=for-the-badge
 
-[license-url]: https://github.com/Zeferito/RhytaDemo/blob/master/LICENSE
+[license-url]: https://github.com/Kawtious/RhytaServerJS/blob/master/LICENSE
 
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
@@ -34,7 +34,7 @@ To run this application locally, follow these steps:
 1. Clone the repository to your local machine:
 
     ```bash
-    git clone https://github.com/Zeferito/RhytaDemo.git
+    git clone https://github.com/Kawtious/RhytaServerJS.git
     ```
 
 2. Change into the project directory:
