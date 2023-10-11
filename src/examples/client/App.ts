@@ -32,7 +32,7 @@ const baseUrl: string = "http://" + process.env.SERVER_HOST + ":" + process.env.
 const careerEndpoint: string = 'careers';
 const courseEndpoint: string = 'courses';
 const professorEndpoint: string = 'professors';
-const professorEventEndpoint: string = 'events';
+const professorEventEndpoint: string = 'events/professors';
 const termEndpoint: string = 'terms';
 
 const careerView: CareerView = new CareerView(baseUrl, careerEndpoint);

@@ -24,10 +24,10 @@ import ProfessorEventController from "../controllers/ProfessorEventController";
 const router: Router = Router();
 const professorEventController: ProfessorEventController = new ProfessorEventController();
 
-router.get('/:professorId/', professorEventController.getAllByProfessorId);
-router.get('/:professorId/:eventId', professorEventController.getByProfessorId);
-router.post('/:professorId', professorEventController.insertByProfessorId);
-router.put('/:professorId/:eventId', professorEventController.updateByProfessorId);
-router.delete('/:professorId/:eventId', professorEventController.deleteByProfessorId);
+router.get('/professors/:professorId', professorEventController.getAllByProfessorId);
+router.get('/professors/:professorId/:eventId', professorEventController.getByProfessorId);
+router.post('/professors/:professorId', professorEventController.insertByProfessorId);
+router.put('/professors/:professorId/:eventId', professorEventController.updateByProfessorId);
+router.delete('/professors/:professorId/:eventId', professorEventController.deleteByProfessorId);
 
 export default router;
