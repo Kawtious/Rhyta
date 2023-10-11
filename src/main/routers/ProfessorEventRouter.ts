@@ -24,7 +24,7 @@ import ProfessorEventController from "../controllers/ProfessorEventController";
 const router: Router = Router();
 const professorEventController: ProfessorEventController = new ProfessorEventController();
 
-router.get('/:professorId/', professorEventController.getAllByProfessorId);
+router.get('/:professorId', professorEventController.getAllByProfessorId);
 router.get('/:professorId/:eventId', professorEventController.getByProfessorId);
 router.post('/:professorId', professorEventController.insertByProfessorId);
 router.put('/:professorId/:eventId', professorEventController.updateByProfessorId);
