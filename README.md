@@ -70,13 +70,13 @@ To run this application locally, follow these steps:
 6. Build the application:
 
     ```bash
-    npm build
+    npm run build
     ```
 
 7. Start the application:
 
     ```bash
-    npm start
+    npm run start
     ```
 
 8. (Optional) Start the example client application:
@@ -86,7 +86,7 @@ To run this application locally, follow these steps:
 
     ```bash
     # Assuming you're in the root directory of the project
-    ts-node src/examples/client/App.ts
+    npx ts-node src/examples/client/App.ts
     ```
 
 ## Configuring Database Connections
