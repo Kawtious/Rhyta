@@ -20,18 +20,21 @@
  */
 import express from 'express';
 import bodyParser from 'body-parser';
+import authRouter from "./routers/AuthRouter";
 import careerRouter from './routers/CareerRouter';
 import courseRouter from './routers/CourseRouter';
 import professorRouter from './routers/ProfessorRouter';
 import termRouter from './routers/TermRouter';
 import professorEventRouter from "./routers/ProfessorEventRouter";
 import {sequelizeConfig} from "./configuration/SequelizeConfig";
+import {connectMongo} from "./configuration/MongooseConfig";
 
 const app = express();
 const bodyParse = bodyParser.json();
 
 app.use(bodyParse);
 
+app.use('/auth', authRouter);
 app.use('/careers', careerRouter);
 app.use('/courses', courseRouter);
 app.use('/professors', professorRouter);
@@ -41,7 +44,10 @@ app.use('/terms', termRouter);
 const host: string = process.env.SERVER_HOST || 'localhost';
 const port: number = Number(process.env.SERVER_PORT as string) || 3000;
 sequelizeConfig.sync().then(() => {
-    app.listen(port, host, () => {
-        console.log(`Server is running on port ${port}`);
-    });
+    connectMongo().then(rr => {
+            app.listen(port, host, () => {
+                console.log(`Server is running on port ${port}`);
+            });
+        }
+    );
 });

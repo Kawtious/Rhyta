@@ -18,15 +18,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import axios from 'axios';
 import readlineSync from 'readline-sync';
+import {axiosInstance} from "../configuration/AxiosConfig";
 
 class TermView {
-    private readonly baseUrl: string;
     private readonly termEndpoint: string;
 
-    constructor(baseUrl: string, termEndpoint: string) {
-        this.baseUrl = baseUrl;
+    constructor(termEndpoint: string) {
         this.termEndpoint = termEndpoint;
     }
 
@@ -68,7 +66,7 @@ class TermView {
 
     private async getAllTerms() {
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.termEndpoint}`);
+            const response = await axiosInstance.get(`/${this.termEndpoint}`);
             console.log('\nAll Terms:');
             console.log(response.data);
         } catch (error: any) {
@@ -85,7 +83,7 @@ class TermView {
         const id = readlineSync.question('Enter Term ID: ');
 
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.termEndpoint}/${id}`);
+            const response = await axiosInstance.get(`/${this.termEndpoint}/${id}`);
             console.log('\nTerm by ID:');
             console.log(response.data);
         } catch (error: any) {
@@ -105,7 +103,7 @@ class TermView {
         const endDate = readlineSync.question('Enter End Date (YYYY-MM-DD): ');
 
         try {
-            const response = await axios.post(`${this.baseUrl}/${this.termEndpoint}`, {
+            const response = await axiosInstance.post(`/${this.termEndpoint}`, {
                 title,
                 description,
                 startDate,
@@ -131,7 +129,7 @@ class TermView {
         const endDate = readlineSync.question('Enter End Date (YYYY-MM-DD): ');
 
         try {
-            const response = await axios.put(`${this.baseUrl}/${this.termEndpoint}/${id}`, {
+            const response = await axiosInstance.put(`/${this.termEndpoint}/${id}`, {
                 title,
                 description,
                 startDate,
@@ -153,7 +151,7 @@ class TermView {
         const id = readlineSync.question('Enter Term ID: ');
 
         try {
-            await axios.delete(`${this.baseUrl}/${this.termEndpoint}/${id}`);
+            await axiosInstance.delete(`/${this.termEndpoint}/${id}`);
             console.log('\nDeleted Term with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting term:');

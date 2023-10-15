@@ -18,15 +18,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import axios from 'axios';
 import readlineSync from 'readline-sync';
+import {axiosInstance} from "../configuration/AxiosConfig";
 
 class CareerView {
-    private readonly baseUrl: string;
     private readonly careerEndpoint: string;
 
-    constructor(baseUrl: string, careerEndpoint: string) {
-        this.baseUrl = baseUrl;
+    constructor(careerEndpoint: string) {
         this.careerEndpoint = careerEndpoint;
     }
 
@@ -68,7 +66,7 @@ class CareerView {
 
     private async getAllCareers() {
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.careerEndpoint}`);
+            const response = await axiosInstance.get(`/${this.careerEndpoint}`);
             console.log('\nAll Careers:');
             console.log(response.data);
         } catch (error: any) {
@@ -85,7 +83,7 @@ class CareerView {
         const id = readlineSync.question('Enter Career ID: ');
 
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.careerEndpoint}/${id}`);
+            const response = await axiosInstance.get(`/${this.careerEndpoint}/${id}`);
             console.log('\nCareer by ID:');
             console.log(response.data);
         } catch (error: any) {
@@ -103,7 +101,7 @@ class CareerView {
         const description = readlineSync.question('Enter Career Description: ');
 
         try {
-            const response = await axios.post(`${this.baseUrl}/${this.careerEndpoint}`, {
+            const response = await axiosInstance.post(`/${this.careerEndpoint}`, {
                 name,
                 description,
             });
@@ -125,7 +123,7 @@ class CareerView {
         const description = readlineSync.question('Enter Career Description: ');
 
         try {
-            const response = await axios.put(`${this.baseUrl}/${this.careerEndpoint}/${id}`, {
+            const response = await axiosInstance.put(`/${this.careerEndpoint}/${id}`, {
                 name,
                 description,
             });
@@ -145,7 +143,7 @@ class CareerView {
         const id = readlineSync.question('Enter Career ID: ');
 
         try {
-            await axios.delete(`${this.baseUrl}/${this.careerEndpoint}/${id}`);
+            await axiosInstance.delete(`/${this.careerEndpoint}/${id}`);
             console.log('\nDeleted Career with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting career:');

@@ -18,18 +18,10 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Router} from 'express';
-import CourseController from '../controllers/CourseController';
-import authMiddleware from "../middlewares/AuthMiddleware";
-import {UserRoles} from "../models/User";
+import mongoose from 'mongoose';
 
-const router: Router = Router();
-const courseController: CourseController = new CourseController();
+const DB_URI = process.env.MONGODB_URI || "";
 
-router.get('/', authMiddleware([UserRoles.Admin]), courseController.getAll);
-router.get('/:id', authMiddleware([UserRoles.Admin]), courseController.getById);
-router.post('/', authMiddleware([UserRoles.Admin]), courseController.insert);
-router.put('/:id', authMiddleware([UserRoles.Admin]), courseController.update);
-router.delete('/:id', authMiddleware([UserRoles.Admin]), courseController.delete);
-
-export default router;
+export async function connectMongo() {
+    return mongoose.connect(DB_URI);
+}

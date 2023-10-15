@@ -19,17 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Router} from 'express';
-import CourseController from '../controllers/CourseController';
-import authMiddleware from "../middlewares/AuthMiddleware";
-import {UserRoles} from "../models/User";
+import AuthController from "../controllers/AuthController";
 
 const router: Router = Router();
-const courseController: CourseController = new CourseController();
+const authController: AuthController = new AuthController();
 
-router.get('/', authMiddleware([UserRoles.Admin]), courseController.getAll);
-router.get('/:id', authMiddleware([UserRoles.Admin]), courseController.getById);
-router.post('/', authMiddleware([UserRoles.Admin]), courseController.insert);
-router.put('/:id', authMiddleware([UserRoles.Admin]), courseController.update);
-router.delete('/:id', authMiddleware([UserRoles.Admin]), courseController.delete);
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 
 export default router;

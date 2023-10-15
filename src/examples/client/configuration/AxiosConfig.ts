@@ -18,18 +18,23 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Router} from 'express';
-import CourseController from '../controllers/CourseController';
-import authMiddleware from "../middlewares/AuthMiddleware";
-import {UserRoles} from "../models/User";
+require('dotenv').config();
 
-const router: Router = Router();
-const courseController: CourseController = new CourseController();
+import axios, {AxiosInstance} from 'axios';
 
-router.get('/', authMiddleware([UserRoles.Admin]), courseController.getAll);
-router.get('/:id', authMiddleware([UserRoles.Admin]), courseController.getById);
-router.post('/', authMiddleware([UserRoles.Admin]), courseController.insert);
-router.put('/:id', authMiddleware([UserRoles.Admin]), courseController.update);
-router.delete('/:id', authMiddleware([UserRoles.Admin]), courseController.delete);
+export const axiosInstance: AxiosInstance = axios.create({
+    baseURL: process.env.API_BASE_URL,
+    timeout: 5000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-export default router;
+let authToken: string | null = 'YOUR_INITIAL_BEARER_TOKEN';
+
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+
+export function updateAuthToken(newToken: string) {
+    authToken = newToken;
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+}

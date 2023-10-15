@@ -20,6 +20,7 @@
  */
 require('dotenv').config();
 
+import AuthView from "./views/AuthView";
 import readlineSync from 'readline-sync';
 import CareerView from './views/CareerView';
 import CourseView from './views/CourseView';
@@ -27,19 +28,19 @@ import ProfessorView from './views/ProfessorView';
 import ProfessorEventView from './views/ProfessorEventView';
 import TermView from './views/TermView';
 
-const baseUrl: string = "http://" + process.env.SERVER_HOST + ":" + process.env.SERVER_PORT;
-
+const authEndpoint: string = 'auth';
 const careerEndpoint: string = 'careers';
 const courseEndpoint: string = 'courses';
 const professorEndpoint: string = 'professors';
 const professorEventEndpoint: string = 'events';
 const termEndpoint: string = 'terms';
 
-const careerView: CareerView = new CareerView(baseUrl, careerEndpoint);
-const courseView: CourseView = new CourseView(baseUrl, courseEndpoint);
-const professorView: ProfessorView = new ProfessorView(baseUrl, professorEndpoint);
-const professorEventView: ProfessorEventView = new ProfessorEventView(baseUrl, professorEventEndpoint);
-const termView: TermView = new TermView(baseUrl, termEndpoint);
+const authView: AuthView = new AuthView(authEndpoint);
+const careerView: CareerView = new CareerView(careerEndpoint);
+const courseView: CourseView = new CourseView(courseEndpoint);
+const professorView: ProfessorView = new ProfessorView(professorEndpoint);
+const professorEventView: ProfessorEventView = new ProfessorEventView(professorEventEndpoint);
+const termView: TermView = new TermView(termEndpoint);
 
 (async () => {
     while (true) {
@@ -49,6 +50,7 @@ const termView: TermView = new TermView(baseUrl, termEndpoint);
         console.log('3. Professor');
         console.log('4. Professor Event');
         console.log('5. Term');
+        console.log('6. Auth');
         console.log('0. Exit');
 
         const choice = readlineSync.question('Enter your choice: ');
@@ -68,6 +70,9 @@ const termView: TermView = new TermView(baseUrl, termEndpoint);
                 break;
             case '5':
                 await termView.show();
+                break;
+            case '6':
+                await authView.show();
                 break;
             case '0':
                 return;

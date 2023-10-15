@@ -20,14 +20,16 @@
  */
 import {Router} from 'express';
 import CareerController from '../controllers/CareerController';
+import {UserRoles} from "../models/User";
+import authMiddleware from "../middlewares/AuthMiddleware";
 
 const router: Router = Router();
 const careerController: CareerController = new CareerController();
 
-router.get('/', careerController.getAll);
-router.get('/:id', careerController.getById);
-router.post('/', careerController.insert);
-router.put('/:id', careerController.update);
-router.delete('/:id', careerController.delete);
+router.get('/', authMiddleware([UserRoles.Admin]), careerController.getAll);
+router.get('/:id', authMiddleware([UserRoles.Admin]), careerController.getById);
+router.post('/', authMiddleware([UserRoles.Admin]), careerController.insert);
+router.put('/:id', authMiddleware([UserRoles.Admin]), careerController.update);
+router.delete('/:id', authMiddleware([UserRoles.Admin]), careerController.delete);
 
 export default router;

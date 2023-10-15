@@ -18,15 +18,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import axios from 'axios';
 import readlineSync from 'readline-sync';
+import {axiosInstance} from "../configuration/AxiosConfig";
 
 class ProfessorView {
-    private readonly baseUrl: string;
     private readonly professorEndpoint: string;
 
-    constructor(baseUrl: string, professorEndpoint: string) {
-        this.baseUrl = baseUrl;
+    constructor(professorEndpoint: string) {
         this.professorEndpoint = professorEndpoint;
     }
 
@@ -68,7 +66,7 @@ class ProfessorView {
 
     private async getAllProfessors() {
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.professorEndpoint}`);
+            const response = await axiosInstance.get(`/${this.professorEndpoint}`);
             console.log('\nAll Professors:');
             console.log(response.data);
         } catch (error: any) {
@@ -85,7 +83,7 @@ class ProfessorView {
         const id = readlineSync.question('Enter Professor ID: ');
 
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.professorEndpoint}/${id}`);
+            const response = await axiosInstance.get(`/${this.professorEndpoint}/${id}`);
             console.log('\nProfessor by ID:');
             console.log(response.data);
         } catch (error: any) {
@@ -103,7 +101,7 @@ class ProfessorView {
         const lastName = readlineSync.question('Enter Professor Last Name: ');
 
         try {
-            const response = await axios.post(`${this.baseUrl}/${this.professorEndpoint}`, {
+            const response = await axiosInstance.post(`/${this.professorEndpoint}`, {
                 firstName,
                 lastName,
             });
@@ -125,7 +123,7 @@ class ProfessorView {
         const lastName = readlineSync.question('Enter Professor Last Name: ');
 
         try {
-            const response = await axios.put(`${this.baseUrl}/${this.professorEndpoint}/${id}`, {
+            const response = await axiosInstance.put(`/${this.professorEndpoint}/${id}`, {
                 firstName,
                 lastName,
             });
@@ -145,7 +143,7 @@ class ProfessorView {
         const id = readlineSync.question('Enter Professor ID: ');
 
         try {
-            await axios.delete(`${this.baseUrl}/${this.professorEndpoint}/${id}`);
+            await axiosInstance.delete(`/${this.professorEndpoint}/${id}`);
             console.log('\nDeleted Professor with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting professor:');

@@ -18,15 +18,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import axios from 'axios';
 import readlineSync from 'readline-sync';
+import {axiosInstance} from "../configuration/AxiosConfig";
 
 class ProfessorEventView {
-    private readonly baseUrl: string;
     private readonly professorEventEndpoint: string;
 
-    constructor(baseUrl: string, professorEventEndpoint: string) {
-        this.baseUrl = baseUrl;
+    constructor(professorEventEndpoint: string) {
         this.professorEventEndpoint = professorEventEndpoint;
     }
 
@@ -70,8 +68,7 @@ class ProfessorEventView {
         const professorId = readlineSync.question('Enter Professor ID: ');
 
         try {
-            const response = await axios.get(
-                `${this.baseUrl}/${this.professorEventEndpoint}/${professorId}`
+            const response = await axiosInstance.get(`/${this.professorEventEndpoint}/${professorId}`
             );
             console.log('\nAll Professor Events:');
             console.log(response.data);
@@ -90,8 +87,7 @@ class ProfessorEventView {
         const eventId = readlineSync.question('Enter Professor Event ID: ');
 
         try {
-            const response = await axios.get(
-                `${this.baseUrl}/${this.professorEventEndpoint}/${professorId}/${eventId}`
+            const response = await axiosInstance.get(`/${this.professorEventEndpoint}/${professorId}/${eventId}`
             );
             console.log('\nProfessor Event by ID:');
             console.log(response.data);
@@ -113,8 +109,7 @@ class ProfessorEventView {
         const endDate = readlineSync.question('Enter Professor Event End Date (YYYY-MM-DD): ');
 
         try {
-            const response = await axios.post(
-                `${this.baseUrl}/${this.professorEventEndpoint}/${professorId}`,
+            const response = await axiosInstance.post(`/${this.professorEventEndpoint}/${professorId}`,
                 {
                     title,
                     description,
@@ -143,8 +138,7 @@ class ProfessorEventView {
         const endDate = readlineSync.question('Enter Professor Event End Date (YYYY-MM-DD): ');
 
         try {
-            const response = await axios.put(
-                `${this.baseUrl}/${this.professorEventEndpoint}/${professorId}/${eventId}`,
+            const response = await axiosInstance.put(`/${this.professorEventEndpoint}/${professorId}/${eventId}`,
                 {
                     title,
                     description,
@@ -169,8 +163,7 @@ class ProfessorEventView {
         const eventId = readlineSync.question('Enter Professor Event ID: ');
 
         try {
-            await axios.delete(
-                `${this.baseUrl}/${this.professorEventEndpoint}/${professorId}/${eventId}`
+            await axiosInstance.delete(`/${this.professorEventEndpoint}/${professorId}/${eventId}`
             );
             console.log('\nDeleted Professor Event with ID:', eventId);
         } catch (error: any) {

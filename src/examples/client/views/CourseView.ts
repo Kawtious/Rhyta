@@ -18,15 +18,13 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import axios from 'axios';
 import readlineSync from 'readline-sync';
+import {axiosInstance} from "../configuration/AxiosConfig";
 
 class CourseView {
-    private readonly baseUrl: string;
     private readonly courseEndpoint: string;
 
-    constructor(baseUrl: string, courseEndpoint: string) {
-        this.baseUrl = baseUrl;
+    constructor(courseEndpoint: string) {
         this.courseEndpoint = courseEndpoint;
     }
 
@@ -68,7 +66,7 @@ class CourseView {
 
     private async getAllCourses() {
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.courseEndpoint}`);
+            const response = await axiosInstance.get(`/${this.courseEndpoint}`);
             console.log('\nAll Courses:');
             console.log(response.data);
         } catch (error: any) {
@@ -85,7 +83,7 @@ class CourseView {
         const id = readlineSync.question('Enter Course ID: ');
 
         try {
-            const response = await axios.get(`${this.baseUrl}/${this.courseEndpoint}/${id}`);
+            const response = await axiosInstance.get(`/${this.courseEndpoint}/${id}`);
             console.log('\nCourse by ID:');
             console.log(response.data);
         } catch (error: any) {
@@ -104,7 +102,7 @@ class CourseView {
         const careerId = readlineSync.question('Enter Career ID: ');
 
         try {
-            const response = await axios.post(`${this.baseUrl}/${this.courseEndpoint}`, {
+            const response = await axiosInstance.post(`/${this.courseEndpoint}`, {
                 name,
                 description,
                 careerId
@@ -128,7 +126,7 @@ class CourseView {
         const careerId = readlineSync.question('Enter Career ID: ');
 
         try {
-            const response = await axios.put(`${this.baseUrl}/${this.courseEndpoint}/${id}`, {
+            const response = await axiosInstance.put(`/${this.courseEndpoint}/${id}`, {
                 name,
                 description,
                 careerId
@@ -149,7 +147,7 @@ class CourseView {
         const id = readlineSync.question('Enter Course ID: ');
 
         try {
-            await axios.delete(`${this.baseUrl}/${this.courseEndpoint}/${id}`);
+            await axiosInstance.delete(`/${this.courseEndpoint}/${id}`);
             console.log('\nDeleted Course with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting course:');

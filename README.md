@@ -22,10 +22,12 @@ project utilizes Node.js with Sequelize as the primary development stack and sup
     - [Node.js](https://nodejs.org/): A JavaScript runtime for server-side development.
     - [Express.js](https://expressjs.com/): A Node.js web application framework.
     - [Sequelize](https://sequelize.org/): An ORM (Object-Relational Mapping) for MySQL database.
+    - [Mongoose](https://mongoosejs.com/): A MongoDB object modeling tool.
     - [Jest](https://jestjs.io/): A JavaScript testing framework.
 
 - **Databases**:
     - [MySQL](https://www.mysql.com/): A widely used relational database management system.
+    - [MongoDB](https://www.mongodb.com/): An open source NoSQL database management program.
 
 ## Getting Started
 
@@ -50,9 +52,9 @@ To run this application locally, follow these steps:
     npm install
     ```
 
-4. Configure the Database:
+4. Configure the Databases:
 
-   Configure the database by following the instructions in
+   Configure the databases by following the instructions in
    the [Configuring Database Connections](#configuring-database-connections) section of this README.
 
 5. Configure the server:
@@ -67,19 +69,30 @@ To run this application locally, follow these steps:
 
    Replace `your_server_host`, and `your_server_port` with your preferred connection details.
 
-6. Build the application:
+6. Configure JWT:
+
+   In the `.env` file, add the following environment variables:
+
+    ```plaintext
+    JWT_SECRET="your_jwt_secret"                 # "AVeeeeeeeeeeeeeryLongSecret"
+    JWT_EXPIRATION="your_jwt_expiration_time"    # "1h"
+    ```
+
+   Replace `your_jwt_secret`, and `your_jwt_expiration_time` with your preferred JWT details.
+
+7. Build the application:
 
     ```bash
     npm run build
     ```
 
-7. Start the application:
+8. Start the application:
 
     ```bash
     npm run start
     ```
 
-8. (Optional) Start the example client application:
+9. (Optional) Start the example client application:
 
    A small example CLI client is included in this repository to test the server endpoints. In order to run the client,
    just run this command:
@@ -89,12 +102,18 @@ To run this application locally, follow these steps:
     npx ts-node src/examples/client/App.ts
     ```
 
+   Also make sure to configure the API base URL in your `.env` file:
+
+    ```plaintext
+    API_BASE_URL="your_api_base_url"      # "http://localhost:3000"
+    ```
+   
+   Replace `your_api_base_url` with your actual API base URL.
+
 ## Configuring Database Connections
 
 To configure the MySQL connection, you must create a `.env` file in the root directory of the project. This file will
 contain environment variables that store the database connection information. Here's how to set it up:
-
-### MySQL Configuration
 
 1. In the root directory of the project, create a `.env` file:
 
@@ -102,9 +121,11 @@ contain environment variables that store the database connection information. He
     touch .env
     ```
 
-2. Open the `.env` file using a text editor.
+### MySQL Configuration
 
-3. Add the following environment variables with your MySQL database information:
+1. Open the `.env` file using a text editor.
+
+2. Add the following environment variables with your MySQL database information:
 
     ```plaintext
     MYSQLDB_HOST="your_mysql_host"             # "localhost"
@@ -115,8 +136,19 @@ contain environment variables that store the database connection information. He
     ```
 
    Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
-   and `your_mysql_database_name` with your actual
-   MySQL database details.
+   and `your_mysql_database_name` with your actual MySQL database details.
+
+### MongoDB Configuration
+
+1. Open the `.env` file using a text editor.
+
+2. Add the following environment variables with your MongoDB database information:
+
+    ```plaintext
+    MONGODB_URI="your_mongodb_uri"             # "mongodb://localhost/your-database-name"
+    ```
+
+   Replace `your_mongodb_uri` with your actual MongoDB database details.
 
 ## Contributing
 
