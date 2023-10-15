@@ -18,90 +18,91 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import ProfessorService from '../services/ProfessorService';
 import HttpStatusCode from "../utils/HttpStatusCode";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 
 class ProfessorController {
-    async getAll(req: Request, res: Response) {
+    async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const professors = await ProfessorService.getAll();
 
             return res.json(professors);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professors: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async getById(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async getById(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const professor = await ProfessorService.getById(id);
 
             if (!professor) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
+                throw new EntityNotFoundError('Professor not found');
             }
 
             return res.json(professor);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professor by ID: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async insert(req: Request, res: Response) {
+    async insert(req: Request, res: Response, next: NextFunction) {
         try {
             const {firstName, lastName} = req.body;
             const newProfessor = await ProfessorService.insert(firstName, lastName);
 
             return res.status(HttpStatusCode.CREATED_201).json(newProfessor);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting professor: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async update(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const {firstName, lastName} = req.body;
             const [count, professors] = await ProfessorService.update(id, firstName, lastName);
 
             if (count === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
+                throw new EntityNotFoundError('Professor not found');
             }
 
             return res.json(professors[0]);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating professor: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async delete(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async delete(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const deletedCount = await ProfessorService.delete(id);
 
             if (deletedCount === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
+                throw new EntityNotFoundError('Professor not found');
             }
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting professor: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 }

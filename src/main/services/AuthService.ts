@@ -21,11 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-require('dotenv').config();
-
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 import User, {UserRoles} from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt, {Secret} from 'jsonwebtoken';
+import {PasswordMismatchError} from "../errors/PasswordMismatchError";
+import {JwtGenerationError} from "../errors/JwtGenerationError";
+
+require('dotenv').config();
 
 class AuthService {
     async register(username: string, email: string, password: string, roles: UserRoles[]) {
@@ -46,16 +49,22 @@ class AuthService {
         });
 
         if (!user) {
-            throw new Error('User not found');
+            throw new EntityNotFoundError('User not found');
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            throw new Error('Invalid password');
+            throw new PasswordMismatchError('Invalid password');
         }
 
-        return this.generateToken(user.username, user.roles);
+        const token = this.generateToken(user.username, user.roles);
+
+        if (!token) {
+            throw new JwtGenerationError('Failed to create token');
+        }
+
+        return token;
     }
 
     private generateToken(username: string, roles: UserRoles[]): string {

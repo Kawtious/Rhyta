@@ -18,90 +18,91 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import CourseService from '../services/CourseService';
 import HttpStatusCode from "../utils/HttpStatusCode";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 
 class CourseController {
-    async getAll(req: Request, res: Response) {
+    async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const courses = await CourseService.getAll();
 
             return res.json(courses);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching courses: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async getById(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async getById(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const course = await CourseService.getById(id);
 
             if (!course) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
+                throw new EntityNotFoundError('Course not found');
             }
 
             return res.json(course);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching course by ID: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async insert(req: Request, res: Response) {
+    async insert(req: Request, res: Response, next: NextFunction) {
         try {
             const {name, description, careerId} = req.body;
             const newCourse = await CourseService.insert(name, description, careerId);
 
             return res.status(HttpStatusCode.CREATED_201).json(newCourse);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting course: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async update(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const {name, description, careerId} = req.body;
             const [count, courses] = await CourseService.update(id, name, description, careerId);
 
             if (count === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
+                throw new EntityNotFoundError('Course not found');
             }
 
             return res.json(courses[0]);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating course: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async delete(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async delete(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const deletedCount = await CourseService.delete(id);
 
             if (deletedCount === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
+                throw new EntityNotFoundError('Course not found');
             }
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting course: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 }

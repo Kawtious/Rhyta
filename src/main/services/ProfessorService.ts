@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Professor} from '../models/Professor';
+import {DatabaseError} from "../errors/DatabaseError";
 
 class ProfessorService {
     async getAll(): Promise<Professor[]> {
         try {
             return await Professor.findAll();
         } catch (error: any) {
-            throw new Error('Error fetching professors: ' + error.message);
+            throw new DatabaseError('Error fetching professors: ' + error.message);
         }
     }
 
@@ -33,7 +34,7 @@ class ProfessorService {
         try {
             return await Professor.findByPk(id);
         } catch (error: any) {
-            throw new Error('Error fetching professor by ID: ' + error.message);
+            throw new DatabaseError('Error fetching professor by ID: ' + error.message);
         }
     }
 
@@ -41,7 +42,7 @@ class ProfessorService {
         try {
             return await Professor.create({firstName, lastName});
         } catch (error: any) {
-            throw new Error('Error inserting professor: ' + error.message);
+            throw new DatabaseError('Error inserting professor: ' + error.message);
         }
     }
 
@@ -53,7 +54,7 @@ class ProfessorService {
             });
             return [count, professors];
         } catch (error: any) {
-            throw new Error('Error updating professor: ' + error.message);
+            throw new DatabaseError('Error updating professor: ' + error.message);
         }
     }
 
@@ -63,7 +64,7 @@ class ProfessorService {
                 where: {id},
             });
         } catch (error: any) {
-            throw new Error('Error deleting professor: ' + error.message);
+            throw new DatabaseError('Error deleting professor: ' + error.message);
         }
     }
 }

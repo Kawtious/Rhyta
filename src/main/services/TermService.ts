@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Term} from '../models/Term';
+import {DatabaseError} from "../errors/DatabaseError";
 
 class TermService {
     async getAll(): Promise<Term[]> {
         try {
             return await Term.findAll();
         } catch (error: any) {
-            throw new Error('Error fetching terms: ' + error.message);
+            throw new DatabaseError('Error fetching terms: ' + error.message);
         }
     }
 
@@ -33,7 +34,7 @@ class TermService {
         try {
             return await Term.findByPk(id);
         } catch (error: any) {
-            throw new Error('Error fetching term by ID: ' + error.message);
+            throw new DatabaseError('Error fetching term by ID: ' + error.message);
         }
     }
 
@@ -46,7 +47,7 @@ class TermService {
                 endDate,
             });
         } catch (error: any) {
-            throw new Error('Error inserting term: ' + error.message);
+            throw new DatabaseError('Error inserting term: ' + error.message);
         }
     }
 
@@ -66,7 +67,7 @@ class TermService {
             );
             return [count, terms];
         } catch (error: any) {
-            throw new Error('Error updating term: ' + error.message);
+            throw new DatabaseError('Error updating term: ' + error.message);
         }
     }
 
@@ -76,7 +77,7 @@ class TermService {
                 where: {id},
             });
         } catch (error: any) {
-            throw new Error('Error deleting term: ' + error.message);
+            throw new DatabaseError('Error deleting term: ' + error.message);
         }
     }
 }

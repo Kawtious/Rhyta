@@ -18,34 +18,30 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import HttpStatusCode from "../utils/HttpStatusCode";
 import AuthService from "../services/AuthService";
 
 class AuthController {
-    async register(req: Request, res: Response) {
+    async register(req: Request, res: Response, next: NextFunction) {
         try {
             const {username, email, password, roles} = req.body;
             const user = await AuthService.register(username, email, password, roles);
 
             return res.status(HttpStatusCode.CREATED_201).json(user);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error registering user: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async login(req: Request, res: Response) {
+    async login(req: Request, res: Response, next: NextFunction) {
         try {
             const {identifier, password} = req.body;
             const token = await AuthService.login(identifier, password);
 
-            if (!token) {
-                return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Failed to create token'});
-            }
-
             return res.status(HttpStatusCode.OK_200).json({accessToken: token, tokenType: 'Bearer'});
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error logging user in: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 }

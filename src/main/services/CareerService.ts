@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Career} from '../models/Career';
+import {DatabaseError} from "../errors/DatabaseError";
 
 class CareerService {
     async getAll(): Promise<Career[]> {
         try {
             return await Career.findAll();
         } catch (error: any) {
-            throw new Error('Error fetching careers: ' + error.message);
+            throw new DatabaseError('Error fetching careers: ' + error.message);
         }
     }
 
@@ -33,7 +34,7 @@ class CareerService {
         try {
             return await Career.findByPk(id);
         } catch (error: any) {
-            throw new Error('Error fetching career by ID: ' + error.message);
+            throw new DatabaseError('Error fetching career by ID: ' + error.message);
         }
     }
 
@@ -44,7 +45,7 @@ class CareerService {
                 description,
             });
         } catch (error: any) {
-            throw new Error('Error inserting career: ' + error.message);
+            throw new DatabaseError('Error inserting career: ' + error.message);
         }
     }
 
@@ -62,7 +63,7 @@ class CareerService {
             );
             return [count, careers];
         } catch (error: any) {
-            throw new Error('Error updating career: ' + error.message);
+            throw new DatabaseError('Error updating career: ' + error.message);
         }
     }
 
@@ -72,7 +73,7 @@ class CareerService {
                 where: {id},
             });
         } catch (error: any) {
-            throw new Error('Error deleting career: ' + error.message);
+            throw new DatabaseError('Error deleting career: ' + error.message);
         }
     }
 }

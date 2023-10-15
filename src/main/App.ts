@@ -28,6 +28,7 @@ import termRouter from './routers/TermRouter';
 import professorEventRouter from "./routers/ProfessorEventRouter";
 import {sequelizeConfig} from "./configuration/SequelizeConfig";
 import {connectMongo} from "./configuration/MongooseConfig";
+import {errorHandler} from "./middlewares/ErrorHandlerMiddleware";
 
 const app = express();
 const bodyParse = bodyParser.json();
@@ -40,6 +41,8 @@ app.use('/courses', courseRouter);
 app.use('/professors', professorRouter);
 app.use('/events', professorEventRouter);
 app.use('/terms', termRouter);
+
+app.use(errorHandler);
 
 const host: string = process.env.SERVER_HOST || 'localhost';
 const port: number = Number(process.env.SERVER_PORT as string) || 3000;

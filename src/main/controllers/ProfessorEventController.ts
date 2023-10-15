@@ -18,108 +18,111 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import ProfessorEventService from '../services/ProfessorEventService';
 import HttpStatusCode from "../utils/HttpStatusCode";
+import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 
 class ProfessorEventController {
-    async getAllByProfessorId(req: Request, res: Response) {
-        const professorId = Number(req.params.professorId);
-
-        if (isNaN(professorId)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async getAllByProfessorId(req: Request, res: Response, next: NextFunction) {
         try {
+            const professorId = Number(req.params.professorId);
+
+            if (isNaN(professorId)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const professorEvents = await ProfessorEventService.getAllByProfessorId(professorId);
 
             return res.json(professorEvents);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professor events: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async getByProfessorId(req: Request, res: Response) {
-        const professorId = Number(req.params.professorId);
-        const eventId = Number(req.params.eventId);
-
-        if (isNaN(professorId) || isNaN(eventId)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async getByProfessorId(req: Request, res: Response, next: NextFunction) {
         try {
+            const professorId = Number(req.params.professorId);
+            const eventId = Number(req.params.eventId);
+
+            if (isNaN(professorId) || isNaN(eventId)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const event = await ProfessorEventService.getByProfessorId(professorId, eventId);
 
             if (!event) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor Event not found'});
+                throw new EntityNotFoundError('Professor event not found');
             }
 
             return res.json(event);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professor by ID: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async insertByProfessorId(req: Request, res: Response) {
-        const professorId = Number(req.params.professorId);
-
-        if (isNaN(professorId)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async insertByProfessorId(req: Request, res: Response, next: NextFunction) {
         try {
+            const professorId = Number(req.params.professorId);
+
+            if (isNaN(professorId)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const {title, description, startDate, endDate} = req.body;
             const newProfessorEvent = await ProfessorEventService.insertByProfessorId(
                 professorId, title, description, startDate, endDate
             );
 
             return res.status(HttpStatusCode.CREATED_201).json(newProfessorEvent);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting professor event: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async updateByProfessorId(req: Request, res: Response) {
-        const professorId = Number(req.params.professorId);
-        const eventId = Number(req.params.eventId);
-        if (isNaN(professorId) || isNaN(eventId)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async updateByProfessorId(req: Request, res: Response, next: NextFunction) {
         try {
+            const professorId = Number(req.params.professorId);
+            const eventId = Number(req.params.eventId);
+
+            if (isNaN(professorId) || isNaN(eventId)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const {title, description, startDate, endDate} = req.body;
             const [count, professorEvent] = await ProfessorEventService.updateByProfessorId(
                 professorId, eventId, title, description, startDate, endDate
             );
 
             if (count === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor event not found'});
+                throw new EntityNotFoundError('Professor event not found');
             }
 
             return res.json(professorEvent);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating professor event: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async deleteByProfessorId(req: Request, res: Response) {
-        const professorId = Number(req.params.professorId);
-        const eventId = Number(req.params.eventId);
-
-        if (isNaN(professorId) || isNaN(eventId)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async deleteByProfessorId(req: Request, res: Response, next: NextFunction) {
         try {
+            const professorId = Number(req.params.professorId);
+            const eventId = Number(req.params.eventId);
+
+            if (isNaN(professorId) || isNaN(eventId)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const deletedCount = await ProfessorEventService.deleteByProfessorId(professorId, eventId);
 
             if (deletedCount === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor event not found'});
+                throw new EntityNotFoundError('Professor event not found');
             }
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting professor event: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 }

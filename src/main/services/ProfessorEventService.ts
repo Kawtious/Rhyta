@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {ProfessorEvent} from '../models/ProfessorEvent';
+import {DatabaseError} from "../errors/DatabaseError";
 
 class ProfessorEventService {
     async getAllByProfessorId(professorId: number): Promise<ProfessorEvent[]> {
@@ -27,7 +28,7 @@ class ProfessorEventService {
                 where: {professorId},
             });
         } catch (error: any) {
-            throw new Error('Error fetching professor events: ' + error.message);
+            throw new DatabaseError('Error fetching professor events: ' + error.message);
         }
     }
 
@@ -38,7 +39,7 @@ class ProfessorEventService {
             });
             return professorEvent || null;
         } catch (error: any) {
-            throw new Error('Error fetching professor event: ' + error.message);
+            throw new DatabaseError('Error fetching professor event: ' + error.message);
         }
     }
 
@@ -58,7 +59,7 @@ class ProfessorEventService {
                 professorId
             });
         } catch (error: any) {
-            throw new Error('Error inserting professor event: ' + error.message);
+            throw new DatabaseError('Error inserting professor event: ' + error.message);
         }
     }
 
@@ -85,7 +86,7 @@ class ProfessorEventService {
             );
             return [count, updatedProfessorEvent];
         } catch (error: any) {
-            throw new Error('Error updating professor event: ' + error.message);
+            throw new DatabaseError('Error updating professor event: ' + error.message);
         }
     }
 
@@ -95,7 +96,7 @@ class ProfessorEventService {
                 where: {professorId, id: eventId},
             });
         } catch (error: any) {
-            throw new Error('Error deleting professor event: ' + error.message);
+            throw new DatabaseError('Error deleting professor event: ' + error.message);
         }
     }
 }

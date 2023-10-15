@@ -18,90 +18,92 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Request, Response} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import HttpStatusCode from "../utils/HttpStatusCode";
 import TermService from '../services/TermService';
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
 
 class TermController {
-    async getAll(req: Request, res: Response) {
+    async getAll(req: Request, res: Response, next: NextFunction) {
         try {
             const terms = await TermService.getAll();
 
             return res.json(terms);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching terms: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async getById(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async getById(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                throw new MethodArgumentNotValidError('Invalid ID');
+            }
+
             const term = await TermService.getById(id);
 
             if (!term) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
+                throw new EntityNotFoundError('Term not found');
             }
 
             return res.json(term);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching term by ID: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async insert(req: Request, res: Response) {
+    async insert(req: Request, res: Response, next: NextFunction) {
         try {
             const {title, description, startDate, endDate} = req.body;
             const newTerm = await TermService.insert(title, description, startDate, endDate);
 
             return res.status(HttpStatusCode.CREATED_201).json(newTerm);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting term: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async update(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const {title, description, startDate, endDate} = req.body;
             const [count, terms] = await TermService.update(id, title, description, startDate, endDate);
 
             if (count === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
+                throw new EntityNotFoundError('Term not found');
             }
 
             return res.json(terms[0]);
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating term: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 
-    async delete(req: Request, res: Response) {
-        const id = Number(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
-        }
-
+    async delete(req: Request, res: Response, next: NextFunction) {
         try {
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+            }
+
             const deletedCount = await TermService.delete(id);
 
             if (deletedCount === 0) {
-                return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
+                throw new EntityNotFoundError('Term not found');
             }
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
-        } catch (error: any) {
-            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting term: ' + error.message});
+        } catch (error) {
+            next(error);
         }
     }
 }

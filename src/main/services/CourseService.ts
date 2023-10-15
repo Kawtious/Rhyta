@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Course} from '../models/Course';
+import {DatabaseError} from "../errors/DatabaseError";
 
 class CourseService {
     async getAll(): Promise<Course[]> {
         try {
             return await Course.findAll();
         } catch (error: any) {
-            throw new Error('Error fetching courses: ' + error.message);
+            throw new DatabaseError('Error fetching courses: ' + error.message);
         }
     }
 
@@ -33,7 +34,7 @@ class CourseService {
         try {
             return await Course.findByPk(id);
         } catch (error: any) {
-            throw new Error('Error fetching course by ID: ' + error.message);
+            throw new DatabaseError('Error fetching course by ID: ' + error.message);
         }
     }
 
@@ -45,7 +46,7 @@ class CourseService {
                 careerId,
             });
         } catch (error: any) {
-            throw new Error('Error inserting course: ' + error.message);
+            throw new DatabaseError('Error inserting course: ' + error.message);
         }
     }
 
@@ -64,7 +65,7 @@ class CourseService {
             );
             return [count, courses];
         } catch (error: any) {
-            throw new Error('Error updating course: ' + error.message);
+            throw new DatabaseError('Error updating course: ' + error.message);
         }
     }
 
@@ -74,7 +75,7 @@ class CourseService {
                 where: {id},
             });
         } catch (error: any) {
-            throw new Error('Error deleting course: ' + error.message);
+            throw new DatabaseError('Error deleting course: ' + error.message);
         }
     }
 }

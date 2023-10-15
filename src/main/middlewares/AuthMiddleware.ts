@@ -24,37 +24,45 @@
 import {NextFunction, Request, Response} from 'express';
 import jwt, {Secret} from 'jsonwebtoken';
 import {UserRoles} from '../models/User';
-import HttpStatusCode from "../utils/HttpStatusCode";
+import {TokenVerificationError} from "../errors/TokenVerificationError";
+import {UnauthorizedResourceAccessError} from "../errors/UnauthorizedResourceAccessError";
 
 const authMiddleware = (allowedRoles: UserRoles[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const authHeader = req.header('Authorization');
-
-        if (!authHeader) {
-            return res.status(HttpStatusCode.UNAUTHORIZED_401).json({error: 'Access denied. No token provided.'});
-        }
-
-        const token = authHeader.split(' ')[1];
-
-        if (!token) {
-            return res.status(HttpStatusCode.UNAUTHORIZED_401).json({error: 'Access denied. No token provided.'});
-        }
-
-        const secret = process.env.JWT_SECRET as Secret;
-
         try {
-            const decodedToken = jwt.verify(token, secret) as { username: string; roles: UserRoles[] };
+            const authHeader = req.header('Authorization');
+
+            if (!authHeader) {
+                throw new TokenVerificationError('Access denied. No token provided.');
+            }
+
+            const token = authHeader.split(' ')[1];
+
+            if (!token) {
+                throw new TokenVerificationError('Access denied. No token provided.');
+            }
+
+            const secret = process.env.JWT_SECRET as Secret;
+
+            let decodedToken;
+
+            try {
+                decodedToken = jwt.verify(token, secret) as { username: string; roles: UserRoles[] };
+            } catch (error: any) {
+                throw new TokenVerificationError(error.message);
+            }
+
             const userRoles = decodedToken.roles;
             const hasAllowedRole = userRoles.some((role) => allowedRoles.includes(role));
 
             if (!hasAllowedRole) {
-                return res.status(HttpStatusCode.FORBIDDEN_403).json({error: 'Access denied. Insufficient permissions.'});
+                throw new UnauthorizedResourceAccessError('Access denied. Insufficient permissions.');
             }
 
             (<any>req).user = decodedToken;
             next();
-        } catch (error) {
-            return res.status(HttpStatusCode.UNAUTHORIZED_401).json({error: 'Invalid token.'});
+        } catch (error: any) {
+            next(error);
         }
     };
 };
