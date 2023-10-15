@@ -30,5 +30,5 @@ export function errorHandler(error: Error, req: Request, res: Response, next: Ne
         return res.status(error.statusCode).json({error: error.message});
     }
 
-    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Internal Server Error'});
+    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Internal Server Error: ' + error.message});
 }
