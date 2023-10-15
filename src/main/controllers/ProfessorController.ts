@@ -26,73 +26,82 @@ class ProfessorController {
     async getAll(req: Request, res: Response) {
         try {
             const professors = await ProfessorService.getAll();
-            res.json(professors);
+
+            return res.json(professors);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professors: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professors: ' + error.message});
         }
     }
 
     async getById(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const professor = await ProfessorService.getById(id);
+
             if (!professor) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
             }
-            res.json(professor);
+
+            return res.json(professor);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professor by ID: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching professor by ID: ' + error.message});
         }
     }
 
     async insert(req: Request, res: Response) {
-        const {firstName, lastName} = req.body;
-
         try {
+            const {firstName, lastName} = req.body;
             const newProfessor = await ProfessorService.insert(firstName, lastName);
-            res.status(HttpStatusCode.CREATED_201).json(newProfessor);
+
+            return res.status(HttpStatusCode.CREATED_201).json(newProfessor);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting professor: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting professor: ' + error.message});
         }
     }
 
     async update(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
-        const {firstName, lastName} = req.body;
-
         try {
+            const {firstName, lastName} = req.body;
             const [count, professors] = await ProfessorService.update(id, firstName, lastName);
+
             if (count === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
             }
-            res.json(professors[0]);
+
+            return res.json(professors[0]);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating professor: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating professor: ' + error.message});
         }
     }
 
     async delete(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const deletedCount = await ProfessorService.delete(id);
+
             if (deletedCount === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Professor not found'});
             }
-            res.status(HttpStatusCode.NO_CONTENT_204).send();
+
+            return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting professor: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting professor: ' + error.message});
         }
     }
 }

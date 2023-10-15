@@ -26,73 +26,82 @@ class CourseController {
     async getAll(req: Request, res: Response) {
         try {
             const courses = await CourseService.getAll();
-            res.json(courses);
+
+            return res.json(courses);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching courses: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching courses: ' + error.message});
         }
     }
 
     async getById(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const course = await CourseService.getById(id);
+
             if (!course) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
             }
-            res.json(course);
+
+            return res.json(course);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching course by ID: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching course by ID: ' + error.message});
         }
     }
 
     async insert(req: Request, res: Response) {
-        const {name, description, careerId} = req.body;
-
         try {
+            const {name, description, careerId} = req.body;
             const newCourse = await CourseService.insert(name, description, careerId);
-            res.status(HttpStatusCode.CREATED_201).json(newCourse);
+
+            return res.status(HttpStatusCode.CREATED_201).json(newCourse);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting course: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting course: ' + error.message});
         }
     }
 
     async update(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
-        const {name, description, careerId} = req.body;
-
         try {
+            const {name, description, careerId} = req.body;
             const [count, courses] = await CourseService.update(id, name, description, careerId);
+
             if (count === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
             }
-            res.json(courses[0]);
+
+            return res.json(courses[0]);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating course: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating course: ' + error.message});
         }
     }
 
     async delete(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const deletedCount = await CourseService.delete(id);
+
             if (deletedCount === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Course not found'});
             }
-            res.status(HttpStatusCode.NO_CONTENT_204).send();
+
+            return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting course: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting course: ' + error.message});
         }
     }
 }

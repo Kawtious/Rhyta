@@ -24,27 +24,28 @@ import AuthService from "../services/AuthService";
 
 class AuthController {
     async register(req: Request, res: Response) {
-        const {username, email, password, roles} = req.body;
-
         try {
+            const {username, email, password, roles} = req.body;
             const user = await AuthService.register(username, email, password, roles);
-            res.status(HttpStatusCode.CREATED_201).json(user);
+
+            return res.status(HttpStatusCode.CREATED_201).json(user);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error registering user: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error registering user: ' + error.message});
         }
     }
 
     async login(req: Request, res: Response) {
-        const {identifier, password} = req.body;
-
         try {
+            const {identifier, password} = req.body;
             const token = await AuthService.login(identifier, password);
+
             if (!token) {
                 return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Failed to create token'});
             }
-            res.status(HttpStatusCode.OK_200).json({accessToken: token, tokenType: 'Bearer'});
+
+            return res.status(HttpStatusCode.OK_200).json({accessToken: token, tokenType: 'Bearer'});
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error logging user in: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error logging user in: ' + error.message});
         }
     }
 }

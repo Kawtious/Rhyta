@@ -26,74 +26,82 @@ class TermController {
     async getAll(req: Request, res: Response) {
         try {
             const terms = await TermService.getAll();
-            res.json(terms);
+
+            return res.json(terms);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching terms: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching terms: ' + error.message});
         }
     }
 
     async getById(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const term = await TermService.getById(id);
+
             if (!term) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
             }
-            res.json(term);
+
+            return res.json(term);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching term by ID: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error fetching term by ID: ' + error.message});
         }
     }
 
     async insert(req: Request, res: Response) {
-        const {title, description, startDate, endDate} = req.body;
-
         try {
+            const {title, description, startDate, endDate} = req.body;
             const newTerm = await TermService.insert(title, description, startDate, endDate);
-            res.status(HttpStatusCode.CREATED_201).json(newTerm);
+
+            return res.status(HttpStatusCode.CREATED_201).json(newTerm);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500)
-                .json({error: 'Error inserting term: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error inserting term: ' + error.message});
         }
     }
 
     async update(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
-        const {title, description, startDate, endDate} = req.body;
-
         try {
+            const {title, description, startDate, endDate} = req.body;
             const [count, terms] = await TermService.update(id, title, description, startDate, endDate);
+
             if (count === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
             }
-            res.json(terms[0]);
+
+            return res.json(terms[0]);
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating term: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error updating term: ' + error.message});
         }
     }
 
     async delete(req: Request, res: Response) {
         const id = Number(req.params.id);
+
         if (isNaN(id)) {
             return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
         }
 
         try {
             const deletedCount = await TermService.delete(id);
+
             if (deletedCount === 0) {
                 return res.status(HttpStatusCode.NOT_FOUND_404).json({error: 'Term not found'});
             }
-            res.status(HttpStatusCode.NO_CONTENT_204).send();
+
+            return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error: any) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting term: ' + error.message});
+            return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR_500).json({error: 'Error deleting term: ' + error.message});
         }
     }
 }
