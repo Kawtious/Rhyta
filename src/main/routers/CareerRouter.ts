@@ -26,10 +26,12 @@ import authMiddleware from "../middlewares/AuthMiddleware";
 const router: Router = Router();
 const careerController: CareerController = new CareerController();
 
-router.get('/', authMiddleware([UserRoles.Admin]), careerController.getAll);
-router.get('/:id', authMiddleware([UserRoles.Admin]), careerController.getById);
-router.post('/', authMiddleware([UserRoles.Admin]), careerController.insert);
-router.put('/:id', authMiddleware([UserRoles.Admin]), careerController.update);
-router.delete('/:id', authMiddleware([UserRoles.Admin]), careerController.delete);
+const requireAdmin = authMiddleware([UserRoles.Admin]);
+
+router.get('/', requireAdmin, careerController.getAll);
+router.get('/:id', requireAdmin, careerController.getById);
+router.post('/', requireAdmin, careerController.insert);
+router.put('/:id', requireAdmin, careerController.update);
+router.delete('/:id', requireAdmin, careerController.delete);
 
 export default router;

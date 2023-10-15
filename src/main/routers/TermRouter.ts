@@ -26,10 +26,12 @@ import {UserRoles} from "../models/User";
 const router: Router = Router();
 const termController: TermController = new TermController();
 
-router.get('/', authMiddleware([UserRoles.Admin]), termController.getAll);
-router.get('/:id', authMiddleware([UserRoles.Admin]), termController.getById);
-router.post('/', authMiddleware([UserRoles.Admin]), termController.insert);
-router.put('/:id', authMiddleware([UserRoles.Admin]), termController.update);
-router.delete('/:id', authMiddleware([UserRoles.Admin]), termController.delete);
+const requireAdmin = authMiddleware([UserRoles.Admin]);
+
+router.get('/', requireAdmin, termController.getAll);
+router.get('/:id', requireAdmin, termController.getById);
+router.post('/', requireAdmin, termController.insert);
+router.put('/:id', requireAdmin, termController.update);
+router.delete('/:id', requireAdmin, termController.delete);
 
 export default router;
