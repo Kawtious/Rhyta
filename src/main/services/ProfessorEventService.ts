@@ -19,28 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {ProfessorEvent} from '../models/ProfessorEvent';
-import {DatabaseError} from "../errors/DatabaseError";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {professorEventRepository} from "../repositories/ProfessorEventRepository";
+import {DeleteResult} from "typeorm";
+import {professorRepository} from "../repositories/ProfessorRepository";
 
 class ProfessorEventService {
     async getAllByProfessorId(professorId: number): Promise<ProfessorEvent[]> {
-        try {
-            return await ProfessorEvent.findAll({
-                where: {professorId},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching professor events: ' + error.message);
-        }
+        return await professorEventRepository.findBy(
+            {professor: {id: professorId}}
+        );
     }
 
-    async getByProfessorId(professorId: number, eventId: number): Promise<ProfessorEvent | null> {
-        try {
-            const professorEvent = await ProfessorEvent.findOne({
-                where: {professorId, id: eventId},
-            });
-            return professorEvent || null;
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching professor event: ' + error.message);
+    async getByProfessorId(professorId: number, eventId: number): Promise<ProfessorEvent> {
+        const professorEvent = await professorEventRepository.findOneBy(
+            {id: eventId, professor: {id: professorId}}
+        );
+
+        if (!professorEvent) {
+            throw new EntityNotFoundError('Professor event not found');
         }
+
+        return professorEvent;
     }
 
     async insertByProfessorId(
@@ -50,17 +50,21 @@ class ProfessorEventService {
         startDate: Date,
         endDate: Date
     ): Promise<ProfessorEvent> {
-        try {
-            return await ProfessorEvent.create({
-                title,
-                description,
-                startDate,
-                endDate,
-                professorId
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error inserting professor event: ' + error.message);
+        const existingProfessor = await professorRepository.findOneBy({id: professorId});
+
+        if (!existingProfessor) {
+            throw new EntityNotFoundError('Professor not found');
         }
+
+        const professorEvent = new ProfessorEvent();
+
+        professorEvent.title = title;
+        professorEvent.description = description;
+        professorEvent.startDate = startDate;
+        professorEvent.endDate = endDate;
+        professorEvent.professor = existingProfessor;
+
+        return await professorEventRepository.save(professorEvent);
     }
 
     async updateByProfessorId(
@@ -70,34 +74,25 @@ class ProfessorEventService {
         description: string,
         startDate: Date,
         endDate: Date
-    ): Promise<[number, ProfessorEvent[]]> {
-        try {
-            const [count, updatedProfessorEvent] = await ProfessorEvent.update(
-                {
-                    title,
-                    description,
-                    startDate,
-                    endDate,
-                },
-                {
-                    where: {professorId, id: eventId},
-                    returning: true,
-                }
-            );
-            return [count, updatedProfessorEvent];
-        } catch (error: any) {
-            throw new DatabaseError('Error updating professor event: ' + error.message);
+    ): Promise<ProfessorEvent> {
+        const existingProfessorEvent = await professorEventRepository.findOneBy(
+            {id: eventId, professor: {id: professorId}}
+        );
+
+        if (!existingProfessorEvent) {
+            throw new EntityNotFoundError('Professor event not found');
         }
+
+        existingProfessorEvent.title = title;
+        existingProfessorEvent.description = description;
+        existingProfessorEvent.startDate = startDate;
+        existingProfessorEvent.endDate = endDate;
+
+        return await professorEventRepository.save(existingProfessorEvent);
     }
 
-    async deleteByProfessorId(professorId: number, eventId: number): Promise<number> {
-        try {
-            return await ProfessorEvent.destroy({
-                where: {professorId, id: eventId},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error deleting professor event: ' + error.message);
-        }
+    async deleteByProfessorId(professorId: number, eventId: number): Promise<DeleteResult> {
+        return await professorEventRepository.delete({id: eventId, professor: {id: professorId}});
     }
 }
 

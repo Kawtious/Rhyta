@@ -21,39 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {MySQLDataSource} from "../configuration/MySQLDataSource";
+import {ProfessorEvent} from "../models/ProfessorEvent";
 
-export enum UserRoles {
-    User = 'user',
-    Professor = 'professor',
-    Admin = 'admin',
-}
-
-@Entity()
-export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id!: string;
-
-    @Column({
-        nullable: false,
-        unique: true
-    })
-    username!: string;
-
-    @Column({
-        nullable: false,
-        unique: true
-    })
-    email!: string;
-
-    @Column({
-        nullable: false,
-    })
-    password!: string;
-
-    @Column({
-        type: "text",
-        array: true,
-    })
-    roles!: UserRoles[];
-}
+export const professorEventRepository = MySQLDataSource.getRepository(ProfessorEvent);

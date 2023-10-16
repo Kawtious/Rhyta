@@ -22,7 +22,6 @@ import {NextFunction, Request, Response} from 'express';
 import ProfessorEventService from '../services/ProfessorEventService';
 import HttpStatusCode from "../utils/HttpStatusCode";
 import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
-import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 
 class ProfessorEventController {
     async getAllByProfessorId(req: Request, res: Response, next: NextFunction) {
@@ -51,10 +50,6 @@ class ProfessorEventController {
             }
 
             const event = await ProfessorEventService.getByProfessorId(professorId, eventId);
-
-            if (!event) {
-                throw new EntityNotFoundError('Professor event not found');
-            }
 
             return res.json(event);
         } catch (error) {
@@ -91,15 +86,11 @@ class ProfessorEventController {
             }
 
             const {title, description, startDate, endDate} = req.body;
-            const [count, professorEvent] = await ProfessorEventService.updateByProfessorId(
+            const updatedProfessorEvent = await ProfessorEventService.updateByProfessorId(
                 professorId, eventId, title, description, startDate, endDate
             );
 
-            if (count === 0) {
-                throw new EntityNotFoundError('Professor event not found');
-            }
-
-            return res.json(professorEvent);
+            return res.json(updatedProfessorEvent);
         } catch (error) {
             next(error);
         }
@@ -114,11 +105,7 @@ class ProfessorEventController {
                 throw new MethodArgumentNotValidError('Invalid ID');
             }
 
-            const deletedCount = await ProfessorEventService.deleteByProfessorId(professorId, eventId);
-
-            if (deletedCount === 0) {
-                throw new EntityNotFoundError('Professor event not found');
-            }
+            await ProfessorEventService.deleteByProfessorId(professorId, eventId);
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error) {

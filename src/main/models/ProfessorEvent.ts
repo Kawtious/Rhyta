@@ -18,76 +18,35 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sequelizeConfig} from '../configuration/SequelizeConfig';
-
-import {
-    CreationOptional,
-    DataTypes,
-    ForeignKey,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute
-} from "sequelize";
 import {Professor} from "./Professor";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation} from "typeorm";
 
-export class ProfessorEvent extends Model<InferAttributes<ProfessorEvent>, InferCreationAttributes<ProfessorEvent>> {
-    declare id: CreationOptional<number>;
+@Entity()
+export class ProfessorEvent {
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-    declare title: string;
-    declare description: string | null;
-    declare startDate: Date;
-    declare endDate: Date;
+    @Column({
+        nullable: false,
+    })
+    title!: string;
 
-    declare professorId: ForeignKey<Professor['id']>;
-    declare professor?: NonAttribute<Professor>;
+    @Column()
+    description!: string;
+
+    @Column({
+        nullable: false,
+    })
+    startDate!: Date;
+
+    @Column({
+        nullable: false,
+    })
+    endDate!: Date;
+
+    @ManyToOne(() => Professor, (professor) => professor.events, {
+        nullable: false
+    })
+    @JoinColumn()
+    professor!: Relation<Professor>;
 }
-
-ProfessorEvent.init({
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true,
-            autoIncrement: true,
-            unique: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Title must not be null',
-                },
-                notEmpty: {
-                    msg: 'Title must not be empty',
-                },
-            },
-        },
-        description: {
-            type: DataTypes.STRING,
-            defaultValue: '',
-        },
-        startDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Start Date must not be null',
-                },
-            },
-        },
-        endDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'End Date must not be null',
-                },
-            },
-        },
-    },
-    {
-        tableName: 'professor_event',
-        timestamps: false,
-        sequelize: sequelizeConfig,
-    }
-);

@@ -6,6 +6,12 @@ const config: Config = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     collectCoverage: true,
+    collectCoverageFrom: [
+        "src/main/**/*.ts"
+    ],
+    coveragePathIgnorePatterns: [
+        "models",
+    ],
     coverageDirectory: 'coverage',
     testPathIgnorePatterns: [
         "/node_modules/"

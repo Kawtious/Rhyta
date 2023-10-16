@@ -20,10 +20,17 @@
  */
 require('dotenv').config();
 
-import mongoose from 'mongoose';
+import {DataSourceOptions} from "typeorm/data-source/DataSourceOptions";
+import "reflect-metadata"
+import {DataSource} from "typeorm"
+import {User} from "../models/User";
 
-const DB_URI = process.env.MONGODB_URI || "";
+let dataSourceOptions: DataSourceOptions = {
+    type: "mongodb",
+    url: process.env.MONGODB_URI,
+    entities: [User],
+    synchronize: true,
+    logging: false,
+};
 
-export async function connectMongo() {
-    return mongoose.connect(DB_URI);
-}
+export const MongoDataSource = new DataSource(dataSourceOptions);

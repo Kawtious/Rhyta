@@ -18,56 +18,25 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sequelizeConfig} from '../configuration/SequelizeConfig';
-
-import {
-    CreationOptional,
-    DataTypes,
-    ForeignKey,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute
-} from "sequelize";
 import {Career} from "./Career";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation} from "typeorm";
 
-export class Course extends Model<InferAttributes<Course>, InferCreationAttributes<Course>> {
-    declare id: CreationOptional<number>;
+@Entity()
+export class Course {
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-    declare name: string;
-    declare description: CreationOptional<string>;
+    @Column({
+        nullable: false,
+    })
+    name!: string;
 
-    declare careerId: ForeignKey<Career['id']>;
-    declare career?: NonAttribute<Career>;
+    @Column()
+    description!: string;
+
+    @ManyToOne(() => Career, (career) => career.courses, {
+        nullable: false
+    })
+    @JoinColumn()
+    career!: Relation<Career>;
 }
-
-Course.init({
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true,
-            autoIncrement: true,
-            unique: true,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Name must not be null',
-                },
-                notEmpty: {
-                    msg: 'Name must not be empty',
-                },
-            },
-        },
-        description: {
-            type: DataTypes.STRING,
-            defaultValue: '',
-        },
-    },
-    {
-        tableName: 'course',
-        timestamps: false,
-        sequelize: sequelizeConfig,
-    }
-);

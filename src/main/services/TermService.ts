@@ -19,66 +19,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Term} from '../models/Term';
-import {DatabaseError} from "../errors/DatabaseError";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {termRepository} from "../repositories/TermRepository";
+import {DeleteResult} from "typeorm";
 
 class TermService {
     async getAll(): Promise<Term[]> {
-        try {
-            return await Term.findAll();
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching terms: ' + error.message);
-        }
+        return await termRepository.find();
     }
 
-    async getById(id: number): Promise<Term | null> {
-        try {
-            return await Term.findByPk(id);
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching term by ID: ' + error.message);
+    async getById(id: number): Promise<Term> {
+        const term = await termRepository.findOneBy({id: id});
+
+        if (!term) {
+            throw new EntityNotFoundError('Term not found');
         }
+
+        return term;
     }
 
     async insert(title: string, description: string, startDate: Date, endDate: Date): Promise<Term> {
-        try {
-            return await Term.create({
-                title,
-                description,
-                startDate,
-                endDate,
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error inserting term: ' + error.message);
-        }
+        const term = new Term();
+        term.title = title;
+        term.description = description;
+        term.startDate = startDate;
+        term.endDate = endDate;
+
+        return await termRepository.save(term);
     }
 
-    async update(id: number, title: string, description: string, startDate: Date, endDate: Date): Promise<[number, Term[]]> {
-        try {
-            const [count, terms] = await Term.update(
-                {
-                    title,
-                    description,
-                    startDate,
-                    endDate,
-                },
-                {
-                    where: {id},
-                    returning: true,
-                }
-            );
-            return [count, terms];
-        } catch (error: any) {
-            throw new DatabaseError('Error updating term: ' + error.message);
+    async update(id: number, title: string, description: string, startDate: Date, endDate: Date): Promise<Term> {
+        const existingTerm = await termRepository.findOneBy({id: id});
+
+        if (!existingTerm) {
+            throw new EntityNotFoundError('Term not found');
         }
+
+        existingTerm.title = title;
+        existingTerm.description = description;
+        existingTerm.startDate = startDate;
+        existingTerm.endDate = endDate;
+
+        return await termRepository.save(existingTerm);
     }
 
-    async delete(id: number): Promise<number> {
-        try {
-            return await Term.destroy({
-                where: {id},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error deleting term: ' + error.message);
-        }
+    async delete(id: number): Promise<DeleteResult> {
+        return await termRepository.delete(id);
     }
 }
 

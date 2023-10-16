@@ -21,7 +21,7 @@
 import {NextFunction, Request, Response} from 'express';
 import CareerService from '../services/CareerService';
 import HttpStatusCode from "../utils/HttpStatusCode";
-import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
 
 class CareerController {
     async getAll(req: Request, res: Response, next: NextFunction) {
@@ -39,14 +39,10 @@ class CareerController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
             const career = await CareerService.getById(id);
-
-            if (!career) {
-                throw new EntityNotFoundError('Career not found');
-            }
 
             return res.json(career);
         } catch (error) {
@@ -70,17 +66,13 @@ class CareerController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
             const {name, description} = req.body;
-            const [count, careers] = await CareerService.update(id, name, description);
+            const updatedCareer = await CareerService.update(id, name, description);
 
-            if (count === 0) {
-                throw new EntityNotFoundError('Career not found');
-            }
-
-            return res.json(careers[0]);
+            return res.json(updatedCareer);
         } catch (error) {
             next(error);
         }
@@ -91,14 +83,10 @@ class CareerController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
-            const deletedCount = await CareerService.delete(id);
-
-            if (deletedCount === 0) {
-                throw new EntityNotFoundError('Career not found');
-            }
+            await CareerService.delete(id);
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error) {

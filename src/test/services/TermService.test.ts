@@ -20,157 +20,131 @@
  */
 import TermService from '../../main/services/TermService';
 import {Term} from '../../main/models/Term';
+import {EntityNotFoundError} from '../../main/errors/EntityNotFoundError';
 
-jest.mock('../../main/models/Term');
+jest.mock('../../main/repositories/TermRepository');
 
 describe('TermService', () => {
-    let terms: { id: number; title: string; description: string; startDate: Date; endDate: Date; }[];
-    const errorMessage = 'Database error';
-    const now = new Date();
+    const termRepository = require('../../main/repositories/TermRepository').termRepository;
+    termRepository.find = jest.fn();
+    termRepository.findOneBy = jest.fn();
+    termRepository.save = jest.fn();
+    termRepository.delete = jest.fn();
 
-    beforeEach(() => {
-        terms = [
-            {id: 1, title: 'Term 1', description: 'Description 1', startDate: now, endDate: now},
-            {id: 2, title: 'Term 2', description: 'Description 2', startDate: now, endDate: now},
-        ];
-
-        (Term.findAll as jest.Mock).mockResolvedValue(terms);
-        (Term.findByPk as jest.Mock).mockResolvedValue(null);
-        (Term.create as jest.Mock).mockResolvedValue({
-            id: 3,
-            title: 'Term 3',
-            description: 'Description 3',
-            startDate: now,
-            endDate: now
-        });
-        (Term.update as jest.Mock).mockResolvedValue([1, [{
-            id: 1,
-            title: 'Updated Term 1',
-            description: 'Updated Description 1',
-            startDate: now,
-            endDate: now
-        }]]);
-        (Term.destroy as jest.Mock).mockResolvedValue(1);
-    });
+    const mockTerm = new Term();
+    mockTerm.id = 1;
+    mockTerm.title = 'Term 1';
+    mockTerm.description = 'Term Description';
+    mockTerm.startDate = new Date('2023-01-01');
+    mockTerm.endDate = new Date('2023-06-30');
 
     describe('getAll', () => {
         it('should return an array of terms', async () => {
+            termRepository.find.mockResolvedValue([mockTerm]);
+
             const result = await TermService.getAll();
 
-            expect(result).toEqual(terms);
-            expect(Term.findAll).toHaveBeenCalledWith();
+            expect(result).toEqual([mockTerm]);
+        });
+
+        it('should return an empty array if there are no terms', async () => {
+            termRepository.find.mockResolvedValue([]);
+
+            const result = await TermService.getAll();
+
+            expect(result).toEqual([]);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Term.findAll as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            termRepository.find.mockRejectedValue(new Error('Database error'));
 
-            await expect(TermService.getAll()).rejects.toThrow('Error fetching terms: ' + errorMessage);
+            await expect(TermService.getAll()).rejects.toThrow('Database error');
         });
     });
 
     describe('getById', () => {
         it('should return a term by ID', async () => {
-            const term = {id: 1, title: 'Term 1', description: 'Description 1', startDate: now, endDate: now};
-            (Term.findByPk as jest.Mock).mockResolvedValue(term);
+            termRepository.findOneBy.mockResolvedValue(mockTerm);
 
             const result = await TermService.getById(1);
 
-            expect(result).toEqual(term);
-            expect(Term.findByPk).toHaveBeenCalledWith(1);
+            expect(result).toEqual(mockTerm);
         });
 
-        it('should return null if the term does not exist', async () => {
-            (Term.findByPk as jest.Mock).mockResolvedValue(null);
+        it('should throw an EntityNotFoundError if the term does not exist', async () => {
+            termRepository.findOneBy.mockResolvedValue(null);
 
-            const result = await TermService.getById(1);
-
-            expect(result).toBeNull();
-            expect(Term.findByPk).toHaveBeenCalledWith(1);
+            await expect(TermService.getById(1)).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Term.findByPk as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            termRepository.findOneBy.mockRejectedValue(new Error('Database error'));
 
-            await expect(TermService.getById(1)).rejects.toThrow('Error fetching term by ID: ' + errorMessage);
+            await expect(TermService.getById(1)).rejects.toThrow('Database error');
         });
     });
 
     describe('insert', () => {
         it('should insert a new term and return it', async () => {
-            const newTerm = {title: 'Term 3', description: 'Description 3', startDate: now, endDate: now};
+            termRepository.save.mockResolvedValue(mockTerm);
 
-            const result = await TermService.insert(newTerm.title, newTerm.description, newTerm.startDate, newTerm.endDate);
+            const result = await TermService.insert('New Term', 'New Term Description', new Date(), new Date());
 
-            expect(result).toEqual({id: 3, ...newTerm});
-            expect(Term.create).toHaveBeenCalledWith(newTerm);
+            expect(result).toEqual(mockTerm);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Term.create as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            termRepository.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(TermService.insert('Term 3', 'Description 3', now, now)).rejects.toThrow('Error inserting term: ' + errorMessage);
+            await expect(TermService.insert('New Term', 'New Term Description', new Date(), new Date())).rejects.toThrow('Database error');
         });
     });
 
     describe('update', () => {
         it('should update an existing term and return the updated term', async () => {
-            const updatedTerm = {
-                id: 1,
-                title: 'Updated Term 1',
-                description: 'Updated Description 1',
-                startDate: now,
-                endDate: now
-            };
+            termRepository.findOneBy.mockResolvedValue(mockTerm);
+            termRepository.save.mockResolvedValue(mockTerm);
 
-            const result = await TermService.update(updatedTerm.id, updatedTerm.title, updatedTerm.description, updatedTerm.startDate, updatedTerm.endDate);
+            const result = await TermService.update(1, 'Updated Term', 'Updated Term Description', new Date(), new Date());
 
-            expect(result).toEqual([1, [updatedTerm]]);
-            expect(Term.update).toHaveBeenCalledWith(
-                {
-                    title: updatedTerm.title,
-                    description: updatedTerm.description,
-                    startDate: updatedTerm.startDate,
-                    endDate: updatedTerm.endDate
-                },
-                {
-                    where: {id: updatedTerm.id},
-                    returning: true,
-                }
-            );
+            expect(result).toEqual(mockTerm);
+        });
+
+        it('should throw an EntityNotFoundError if the term does not exist', async () => {
+            termRepository.findOneBy.mockResolvedValue(null);
+
+            await expect(TermService.update(1, 'Updated Term', 'Updated Term Description', new Date(), new Date())).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Term.update as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            termRepository.findOneBy.mockResolvedValue(mockTerm);
+            termRepository.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(TermService.update(1, 'Updated Term 1', 'Updated Description 1', now, now)).rejects.toThrow('Error updating term: ' + errorMessage);
+            await expect(TermService.update(1, 'Updated Term', 'Updated Term Description', new Date(), new Date())).rejects.toThrow('Database error');
         });
     });
 
     describe('delete', () => {
         it('should delete a term by ID and return the number of deleted terms', async () => {
+            termRepository.delete.mockResolvedValue({affected: 1});
+
             const result = await TermService.delete(1);
 
-            expect(result).toEqual(1);
-            expect(Term.destroy).toHaveBeenCalledWith({
-                where: {id: 1},
-            });
+            expect(result.affected).toEqual(1);
         });
 
         it('should return 0 if the term does not exist', async () => {
-            (Term.destroy as jest.Mock).mockResolvedValue(0);
+            termRepository.delete.mockResolvedValue({affected: 0});
 
             const result = await TermService.delete(1);
 
-            expect(result).toEqual(0);
-            expect(Term.destroy).toHaveBeenCalledWith({
-                where: {id: 1},
-            });
+            expect(result.affected).toEqual(0);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Term.destroy as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            termRepository.delete.mockRejectedValue(new Error('Database error'));
 
-            await expect(TermService.delete(1)).rejects.toThrow('Error deleting term: ' + errorMessage);
+            await expect(TermService.delete(1)).rejects.toThrow('Database error');
         });
     });
 });
