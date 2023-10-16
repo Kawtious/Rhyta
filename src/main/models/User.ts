@@ -21,16 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {Document, model, Schema} from 'mongoose';
-import {v4 as uuidv4} from 'uuid';
-
-export interface User extends Document {
-    _id: string,
-    username: string,
-    email: string,
-    password: string,
-    roles: UserRoles[]
-}
+import {Column, Entity, ObjectIdColumn} from "typeorm";
 
 export enum UserRoles {
     User = 'user',
@@ -38,16 +29,34 @@ export enum UserRoles {
     Admin = 'admin',
 }
 
-const userSchema = new Schema<User>(
-    {
-        _id: {type: String, default: uuidv4},
-        username: {type: String, required: true, unique: true},
-        email: {type: String, required: true, unique: true},
-        password: {type: String, required: true},
-        roles: [{type: String, enum: Object.values(UserRoles)}],
-    },
-    {
-        _id: false
-    });
+@Entity()
+export class User {
+    @ObjectIdColumn()
+    id!: string;
 
-export default model<User>('User', userSchema);
+    @ObjectIdColumn({name: 'id'})
+    _id!: string;
+
+    @Column({
+        nullable: false,
+        unique: true
+    })
+    username!: string;
+
+    @Column({
+        nullable: false,
+        unique: true
+    })
+    email!: string;
+
+    @Column({
+        nullable: false,
+    })
+    password!: string;
+
+    @Column({
+        type: "text",
+        array: true,
+    })
+    roles!: UserRoles[];
+}

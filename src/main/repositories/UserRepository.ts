@@ -21,11 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import HttpStatusCode from "../utils/HttpStatusCode";
-import {KnownError} from "./KnownError";
+import {User} from "../models/User";
+import {MongoDataSource} from "../configuration/MongoDataSource";
 
-export class TokenVerificationError extends KnownError {
-    constructor(message: string) {
-        super(message, HttpStatusCode.UNAUTHORIZED_401);
-    }
-}
+export const userRepository = MongoDataSource.getMongoRepository(User);

@@ -13,7 +13,7 @@
 
 This repository contains an application designed to showcase the resource storage system for an AI scheduler that
 automates the creation of schedules for professors, classrooms, and other resources in educational institutions. This
-project utilizes Node.js with Sequelize as the primary development stack and supports MySQL.
+project utilizes Node.js with Express.js and TypeORM as the primary development stack and supports MySQL and MongoDB.
 
 ## Technologies Used
 
@@ -21,8 +21,7 @@ project utilizes Node.js with Sequelize as the primary development stack and sup
     - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript.
     - [Node.js](https://nodejs.org/): A JavaScript runtime for server-side development.
     - [Express.js](https://expressjs.com/): A Node.js web application framework.
-    - [Sequelize](https://sequelize.org/): An ORM (Object-Relational Mapping) for MySQL database.
-    - [Mongoose](https://mongoosejs.com/): A MongoDB object modeling tool.
+    - [TypeORM](https://typeorm.io/): A TypeScript ORM (object-relational mapper) library.
     - [Jest](https://jestjs.io/): A JavaScript testing framework.
 
 - **Databases**:
@@ -107,7 +106,7 @@ To run this application locally, follow these steps:
     ```plaintext
     API_BASE_URL="your_api_base_url"      # "http://localhost:3000"
     ```
-   
+
    Replace `your_api_base_url` with your actual API base URL.
 
 ## Configuring Database Connections

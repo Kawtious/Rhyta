@@ -20,27 +20,31 @@
  */
 require('dotenv').config();
 
-import {Sequelize} from "sequelize";
+import {MixedList} from "typeorm/common/MixedList";
+import {DataSourceOptions} from "typeorm/data-source/DataSourceOptions";
+import "reflect-metadata"
+import {DataSource} from "typeorm"
+import {Career} from "../models/Career";
+import {Course} from "../models/Course";
+import {Professor} from "../models/Professor";
+import {ProfessorEvent} from "../models/ProfessorEvent";
+import {Term} from "../models/Term";
+import {SnakeNamingStrategy} from "typeorm-naming-strategies";
+import {EntitySchema} from "typeorm/entity-schema/EntitySchema";
 
-let sequelizeConfig: Sequelize = new Sequelize({
-    dialect: 'mysql',
-    database: process.env.MYSQLDB_NAME,
+const entities: MixedList<Function | string | EntitySchema> = [Career, Course, Professor, ProfessorEvent, Term];
+
+let dataSourceOptions: DataSourceOptions = {
+    type: "mysql",
+    host: process.env.MYSQLDB_HOST,
+    port: Number(process.env.MYSQLDB_PORT),
     username: process.env.MYSQLDB_USER,
     password: process.env.MYSQLDB_PASSWORD,
-    host: process.env.MYSQLDB_HOST,
+    database: process.env.MYSQLDB_NAME,
+    entities: entities,
+    namingStrategy: new SnakeNamingStrategy(),
+    synchronize: true,
     logging: false,
-    define: {
-        underscored: true,
-        freezeTableName: true,
-    },
-});
+};
 
-if (process.env.NODE_ENV === 'test') {
-    sequelizeConfig = new Sequelize({
-        dialect: 'sqlite',
-        storage: ':memory:',
-        logging: false,
-    });
-}
-
-export {sequelizeConfig};
+export const MySQLDataSource = new DataSource(dataSourceOptions);

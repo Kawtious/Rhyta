@@ -18,69 +18,24 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sequelizeConfig} from "../configuration/SequelizeConfig";
-
-import {
-    Association,
-    CreationOptional,
-    DataTypes,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute
-} from "sequelize";
 import {ProfessorEvent} from "./ProfessorEvent";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
-export class Professor extends Model<
-    InferAttributes<Professor, { omit: 'events' }>,
-    InferCreationAttributes<Professor, { omit: 'events' }>> {
-    declare id: CreationOptional<number>;
+@Entity()
+export class Professor {
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-    declare firstName: string;
-    declare lastName: string;
+    @Column({
+        nullable: false,
+    })
+    firstName!: string;
 
-    declare events?: NonAttribute<ProfessorEvent[]>;
-    declare static associations: {
-        events: Association<Professor, ProfessorEvent>;
-    };
+    @Column()
+    lastName!: string;
+
+    @OneToMany(() => ProfessorEvent, (event) => event.professor, {
+        cascade: true,
+    })
+    events!: ProfessorEvent[];
 }
-
-Professor.init({
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true,
-            autoIncrement: true,
-            unique: true,
-        },
-        firstName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'First name must not be null',
-                },
-                notEmpty: {
-                    msg: 'First name must not be empty',
-                },
-            },
-        },
-        lastName: {
-            type: DataTypes.STRING,
-        },
-    },
-    {
-        tableName: 'professor',
-        timestamps: false,
-        sequelize: sequelizeConfig,
-    }
-);
-
-Professor.hasMany(ProfessorEvent, {
-    sourceKey: 'id',
-    foreignKey: {
-        name: 'professorId',
-        allowNull: false
-    },
-    as: 'events'
-});
-ProfessorEvent.belongsTo(Professor);

@@ -26,8 +26,8 @@ import courseRouter from './routers/CourseRouter';
 import professorRouter from './routers/ProfessorRouter';
 import termRouter from './routers/TermRouter';
 import professorEventRouter from "./routers/ProfessorEventRouter";
-import {sequelizeConfig} from "./configuration/SequelizeConfig";
-import {connectMongo} from "./configuration/MongooseConfig";
+import {MongoDataSource} from "./configuration/MongoDataSource";
+import {MySQLDataSource} from "./configuration/MySQLDataSource";
 import {errorHandler} from "./middlewares/ErrorHandlerMiddleware";
 
 const app = express();
@@ -44,13 +44,16 @@ app.use('/terms', termRouter);
 
 app.use(errorHandler);
 
-const host: string = process.env.SERVER_HOST || 'localhost';
-const port: number = Number(process.env.SERVER_PORT as string) || 3000;
-sequelizeConfig.sync().then(() => {
-    connectMongo().then(rr => {
-            app.listen(port, host, () => {
-                console.log(`Server is running on port ${port}`);
-            });
-        }
-    );
-});
+MongoDataSource.initialize()
+    .then(() => {
+        return MySQLDataSource.initialize();
+    })
+    .then(() => {
+        const host: string = process.env.SERVER_HOST || 'localhost';
+        const port: number = Number(process.env.SERVER_PORT as string) || 3000;
+
+        app.listen(port, host, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch((error) => console.log(error));

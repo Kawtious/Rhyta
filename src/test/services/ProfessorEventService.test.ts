@@ -20,203 +20,150 @@
  */
 import ProfessorEventService from '../../main/services/ProfessorEventService';
 import {ProfessorEvent} from '../../main/models/ProfessorEvent';
+import {EntityNotFoundError} from "../../main/errors/EntityNotFoundError";
+import {Professor} from "../../main/models/Professor";
 
-jest.mock('../../main/models/ProfessorEvent');
+jest.mock('../../main/repositories/ProfessorEventRepository');
+jest.mock('../../main/repositories/ProfessorRepository');
 
 describe('ProfessorEventService', () => {
-    let professorEvents: {
-        id: number;
-        title: string;
-        description: string;
-        startDate: Date;
-        endDate: Date;
-        professorId: number;
-    }[];
-    const errorMessage = 'Database error';
-    const now = new Date();
+    const professorRepository = require('../../main/repositories/ProfessorRepository').professorRepository;
+    professorRepository.findOneBy = jest.fn();
 
-    beforeEach(() => {
-        professorEvents = [
-            {id: 1, title: 'Event 1', description: 'Description 1', startDate: now, endDate: now, professorId: 1},
-            {id: 2, title: 'Event 2', description: 'Description 2', startDate: now, endDate: now, professorId: 1},
-        ];
+    const professorEventRepository = require('../../main/repositories/ProfessorEventRepository').professorEventRepository;
+    professorEventRepository.findBy = jest.fn();
+    professorEventRepository.findOneBy = jest.fn();
+    professorEventRepository.save = jest.fn();
+    professorEventRepository.delete = jest.fn();
 
-        (ProfessorEvent.findAll as jest.Mock).mockResolvedValue(professorEvents);
-        (ProfessorEvent.findOne as jest.Mock).mockResolvedValue(null);
-        (ProfessorEvent.create as jest.Mock).mockResolvedValue({
-            id: 3,
-            title: 'Event 3',
-            description: 'Description 3',
-            startDate: now,
-            endDate: now,
-            professorId: 2
-        });
-        (ProfessorEvent.update as jest.Mock).mockResolvedValue([1, [{
-            id: 1,
-            title: 'Updated Event 1',
-            description: 'Updated Description 1',
-            startDate: now,
-            endDate: now,
-            professorId: 1
-        }]]);
-        (ProfessorEvent.destroy as jest.Mock).mockResolvedValue(1);
-    });
+    const mockProfessorEvent = new ProfessorEvent();
+    mockProfessorEvent.id = 1;
+    mockProfessorEvent.title = 'Event 1';
+    mockProfessorEvent.description = 'Event Description';
+    mockProfessorEvent.startDate = new Date('2023-01-01');
+    mockProfessorEvent.endDate = new Date('2023-01-02');
+
+    const mockProfessor = new Professor();
+    mockProfessor.id = 1;
+    mockProfessor.firstName = 'John';
+    mockProfessor.lastName = 'Doe';
+    mockProfessor.events = [mockProfessorEvent];
 
     describe('getAllByProfessorId', () => {
-        it('should return an array of professor events by professorId', async () => {
+        it('should return an array of professor events by professor ID', async () => {
+            professorEventRepository.findBy.mockResolvedValue([mockProfessorEvent]);
+
             const result = await ProfessorEventService.getAllByProfessorId(1);
 
-            expect(result).toEqual(professorEvents);
-            expect(ProfessorEvent.findAll).toHaveBeenCalledWith({
-                where: {professorId: 1},
-            });
+            expect(result).toEqual([mockProfessorEvent]);
+        });
+
+        it('should return an empty array if there are no professor events for the professor', async () => {
+            professorEventRepository.findBy.mockResolvedValue([]);
+
+            const result = await ProfessorEventService.getAllByProfessorId(1);
+
+            expect(result).toEqual([]);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (ProfessorEvent.findAll as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            professorEventRepository.findBy.mockRejectedValue(new Error('Database error'));
 
-            await expect(ProfessorEventService.getAllByProfessorId(1)).rejects.toThrow('Error fetching professor events: ' + errorMessage);
+            await expect(ProfessorEventService.getAllByProfessorId(1)).rejects.toThrow('Database error');
         });
     });
 
     describe('getByProfessorId', () => {
-        it('should return a professor event by professorId and eventId', async () => {
-            const professorEvent = {
-                id: 1,
-                title: 'Event 1',
-                description: 'Description 1',
-                startDate: now,
-                endDate: now,
-                professorId: 1
-            };
-            (ProfessorEvent.findOne as jest.Mock).mockResolvedValue(professorEvent);
+        it('should return a professor event by professor ID and event ID', async () => {
+            professorEventRepository.findOneBy.mockResolvedValue(mockProfessorEvent);
 
             const result = await ProfessorEventService.getByProfessorId(1, 1);
 
-            expect(result).toEqual(professorEvent);
-            expect(ProfessorEvent.findOne).toHaveBeenCalledWith({
-                where: {professorId: 1, id: 1},
-            });
+            expect(result).toEqual(mockProfessorEvent);
         });
 
-        it('should return null if the professor event does not exist', async () => {
-            (ProfessorEvent.findOne as jest.Mock).mockResolvedValue(null);
+        it('should throw an EntityNotFoundError if the professor event does not exist', async () => {
+            professorEventRepository.findOneBy.mockResolvedValue(null);
 
-            const result = await ProfessorEventService.getByProfessorId(1, 1);
-
-            expect(result).toBeNull();
-            expect(ProfessorEvent.findOne).toHaveBeenCalledWith({
-                where: {professorId: 1, id: 1},
-            });
+            await expect(ProfessorEventService.getByProfessorId(1, 1)).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (ProfessorEvent.findOne as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            professorEventRepository.findOneBy.mockRejectedValue(new Error('Database error'));
 
-            await expect(ProfessorEventService.getByProfessorId(1, 1)).rejects.toThrow('Error fetching professor event: ' + errorMessage);
+            await expect(ProfessorEventService.getByProfessorId(1, 1)).rejects.toThrow('Database error');
         });
     });
 
     describe('insertByProfessorId', () => {
         it('should insert a new professor event and return it', async () => {
-            const newEvent = {
-                title: 'Event 3',
-                description: 'Description 3',
-                startDate: now,
-                endDate: now,
-                professorId: 2
-            };
+            professorEventRepository.save.mockResolvedValue(mockProfessorEvent);
+            professorRepository.findOneBy.mockResolvedValue(mockProfessor);
 
-            const result = await ProfessorEventService.insertByProfessorId(
-                newEvent.professorId,
-                newEvent.title,
-                newEvent.description,
-                newEvent.startDate,
-                newEvent.endDate
-            );
+            const result = await ProfessorEventService.insertByProfessorId(1, 'New Event', 'New Event Description', new Date(), new Date());
 
-            expect(result).toEqual({id: 3, ...newEvent});
-            expect(ProfessorEvent.create).toHaveBeenCalledWith(newEvent);
+            expect(result).toEqual(mockProfessorEvent);
+        });
+
+        it('should throw an EntityNotFoundError if the professor does not exist', async () => {
+            professorRepository.findOneBy.mockResolvedValue(null);
+
+            await expect(ProfessorEventService.insertByProfessorId(1, 'New Event', 'New Event Description', new Date(), new Date())).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (ProfessorEvent.create as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            professorEventRepository.save.mockRejectedValue(new Error('Database error'));
+            professorRepository.findOneBy.mockResolvedValue(mockProfessor);
 
-            await expect(
-                ProfessorEventService.insertByProfessorId(2, 'Event 3', 'Description 3', now, now)
-            ).rejects.toThrow('Error inserting professor event: ' + errorMessage);
+            await expect(ProfessorEventService.insertByProfessorId(1, 'New Event', 'New Event Description', new Date(), new Date())).rejects.toThrow('Database error');
         });
     });
 
     describe('updateByProfessorId', () => {
-        it('should update an existing professor event and return the updated event', async () => {
-            const updatedEvent = {
-                id: 1,
-                title: 'Updated Event 1',
-                description: 'Updated Description 1',
-                startDate: now,
-                endDate: now,
-                professorId: 1
-            };
+        it('should update an existing professor event and return the updated professor event', async () => {
+            professorEventRepository.findOneBy.mockResolvedValue(mockProfessorEvent);
+            professorEventRepository.save.mockResolvedValue(mockProfessorEvent);
 
-            const result = await ProfessorEventService.updateByProfessorId(
-                updatedEvent.professorId,
-                updatedEvent.id,
-                updatedEvent.title,
-                updatedEvent.description,
-                updatedEvent.startDate,
-                updatedEvent.endDate
-            );
+            const result = await ProfessorEventService.updateByProfessorId(1, 1, 'Updated Event', 'Updated Event Description', new Date(), new Date());
 
-            expect(result).toEqual([1, [updatedEvent]]);
-            expect(ProfessorEvent.update).toHaveBeenCalledWith(
-                {
-                    title: updatedEvent.title,
-                    description: updatedEvent.description,
-                    startDate: updatedEvent.startDate,
-                    endDate: updatedEvent.endDate,
-                },
-                {
-                    where: {professorId: updatedEvent.professorId, id: updatedEvent.id},
-                    returning: true,
-                }
-            );
+            expect(result).toEqual(mockProfessorEvent);
+        });
+
+        it('should throw an EntityNotFoundError if the professor event does not exist', async () => {
+            professorEventRepository.findOneBy.mockResolvedValue(null);
+
+            await expect(ProfessorEventService.updateByProfessorId(1, 1, 'Updated Event', 'Updated Event Description', new Date(), new Date())).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (ProfessorEvent.update as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            professorEventRepository.findOneBy.mockResolvedValue(mockProfessorEvent);
+            professorEventRepository.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(
-                ProfessorEventService.updateByProfessorId(1, 1, 'Updated Event 1', 'Updated Description 1', now, now)
-            ).rejects.toThrow('Error updating professor event: ' + errorMessage);
+            await expect(ProfessorEventService.updateByProfessorId(1, 1, 'Updated Event', 'Updated Event Description', new Date(), new Date())).rejects.toThrow('Database error');
         });
     });
 
     describe('deleteByProfessorId', () => {
-        it('should delete a professor event by professorId and eventId and return the number of deleted events', async () => {
+        it('should delete a professor event by professor ID and event ID and return the number of deleted professor events', async () => {
+            professorEventRepository.delete.mockResolvedValue({affected: 1});
+
             const result = await ProfessorEventService.deleteByProfessorId(1, 1);
 
-            expect(result).toEqual(1);
-            expect(ProfessorEvent.destroy).toHaveBeenCalledWith({
-                where: {professorId: 1, id: 1},
-            });
+            expect(result.affected).toEqual(1);
         });
 
         it('should return 0 if the professor event does not exist', async () => {
-            (ProfessorEvent.destroy as jest.Mock).mockResolvedValue(0);
+            professorEventRepository.delete.mockResolvedValue({affected: 0});
 
             const result = await ProfessorEventService.deleteByProfessorId(1, 1);
 
-            expect(result).toEqual(0);
-            expect(ProfessorEvent.destroy).toHaveBeenCalledWith({
-                where: {professorId: 1, id: 1},
-            });
+            expect(result.affected).toEqual(0);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (ProfessorEvent.destroy as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            professorEventRepository.delete.mockRejectedValue(new Error('Database error'));
 
-            await expect(ProfessorEventService.deleteByProfessorId(1, 1)).rejects.toThrow('Error deleting professor event: ' + errorMessage);
+            await expect(ProfessorEventService.deleteByProfessorId(1, 1)).rejects.toThrow('Database error');
         });
     });
 });

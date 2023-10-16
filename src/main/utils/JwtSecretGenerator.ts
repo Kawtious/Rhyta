@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import HttpStatusCode from "../utils/HttpStatusCode";
-import {KnownError} from "./KnownError";
+import crypto from 'crypto';
 
-export class TokenVerificationError extends KnownError {
-    constructor(message: string) {
-        super(message, HttpStatusCode.UNAUTHORIZED_401);
+export class JwtSecretGenerator {
+    static generate(secretLength: number) {
+        return crypto.randomBytes(secretLength).toString('base64');
     }
 }

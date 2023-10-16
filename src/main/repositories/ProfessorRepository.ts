@@ -21,11 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import HttpStatusCode from "../utils/HttpStatusCode";
-import {KnownError} from "./KnownError";
+import {MySQLDataSource} from "../configuration/MySQLDataSource";
+import {Professor} from "../models/Professor";
 
-export class TokenVerificationError extends KnownError {
-    constructor(message: string) {
-        super(message, HttpStatusCode.UNAUTHORIZED_401);
-    }
-}
+export const professorRepository = MySQLDataSource.getRepository(Professor);

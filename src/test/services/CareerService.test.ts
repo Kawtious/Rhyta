@@ -20,125 +20,143 @@
  */
 import CareerService from '../../main/services/CareerService';
 import {Career} from '../../main/models/Career';
+import {EntityNotFoundError} from '../../main/errors/EntityNotFoundError';
+import {Course} from "../../main/models/Course";
 
-jest.mock('../../main/models/Career');
+jest.mock('../../main/repositories/CareerRepository');
 
 describe('CareerService', () => {
-    let careers: { id: number; name: string; description: string; }[];
-    const errorMessage = 'Database error';
+    const careerRepository = require('../../main/repositories/CareerRepository').careerRepository;
+    careerRepository.find = jest.fn();
+    careerRepository.findOneBy = jest.fn();
+    careerRepository.save = jest.fn();
+    careerRepository.delete = jest.fn();
 
-    beforeEach(() => {
-        careers = [{id: 1, name: 'Career 1', description: 'Description 1'}];
+    const mockCourse = new Course();
+    mockCourse.id = 1;
+    mockCourse.name = 'Course 1';
+    mockCourse.description = 'Description 1';
 
-        (Career.findAll as jest.Mock).mockResolvedValue(careers);
-        (Career.findByPk as jest.Mock).mockResolvedValue(null);
-        (Career.create as jest.Mock).mockResolvedValue({id: 1, name: 'Career 1', description: 'Description 1'});
-        (Career.update as jest.Mock).mockResolvedValue([1, [{
-            id: 1,
-            name: 'Updated Career 1',
-            description: 'Updated Description 1'
-        }]]);
-        (Career.destroy as jest.Mock).mockResolvedValue(1);
-    });
+    const mockCareer = new Career();
+    mockCareer.id = 1;
+    mockCareer.name = 'Career 1';
+    mockCareer.description = 'Description 1';
+    mockCareer.courses = [mockCourse];
 
     describe('getAll', () => {
         it('should return an array of careers', async () => {
+            const careers = [mockCareer];
+            careerRepository.find.mockResolvedValue(careers);
+
             const result = await CareerService.getAll();
 
             expect(result).toEqual(careers);
-            expect(Career.findAll).toHaveBeenCalledWith();
+        });
+
+        it('should return an empty array if there are no careers', async () => {
+            careerRepository.find.mockResolvedValue([]);
+
+            const result = await CareerService.getAll();
+
+            expect(result).toEqual([]);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Career.findAll as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            careerRepository.find.mockRejectedValue(new Error('Database error'));
 
-            await expect(CareerService.getAll()).rejects.toThrow('Error fetching careers: ' + errorMessage);
+            await expect(CareerService.getAll()).rejects.toThrow('Database error');
         });
     });
 
     describe('getById', () => {
         it('should return a career by ID', async () => {
-            const career = {id: 1, name: 'Career 1', description: 'Description 1'};
-            (Career.findByPk as jest.Mock).mockResolvedValue(career);
+            careerRepository.findOneBy.mockResolvedValue(mockCareer);
 
             const result = await CareerService.getById(1);
 
-            expect(result).toEqual(career);
-            expect(Career.findByPk).toHaveBeenCalledWith(1);
+            expect(result).toEqual(mockCareer);
         });
 
         it('should return null if the career does not exist', async () => {
-            const result = await CareerService.getById(1);
+            careerRepository.findOneBy.mockResolvedValue(null);
 
-            expect(result).toBeNull();
-            expect(Career.findByPk).toHaveBeenCalledWith(1);
+            await expect(CareerService.getById(1)).rejects.toThrow(EntityNotFoundError);
+        });
+
+        it('should throw an EntityNotFoundError if the career does not exist', async () => {
+            careerRepository.findOneBy.mockResolvedValue(null);
+
+            await expect(CareerService.getById(1)).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Career.findByPk as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            careerRepository.findOneBy.mockRejectedValue(new Error('Database error'));
 
-            await expect(CareerService.getById(1)).rejects.toThrow('Error fetching career by ID: ' + errorMessage);
+            await expect(CareerService.getById(1)).rejects.toThrow('Database error');
         });
     });
 
     describe('insert', () => {
         it('should insert a new career and return it', async () => {
-            const newCareer = {name: 'Career 1', description: 'Description 1'};
+            careerRepository.save.mockResolvedValue(mockCareer);
 
-            const result = await CareerService.insert(newCareer.name, newCareer.description);
+            const result = await CareerService.insert(mockCareer.name, mockCareer.description);
 
-            expect(result).toEqual({id: 1, ...newCareer});
-            expect(Career.create).toHaveBeenCalledWith(newCareer);
+            expect(result).toEqual(mockCareer);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Career.create as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            careerRepository.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(CareerService.insert('Career 1', 'Description 1')).rejects.toThrow('Error inserting career: ' + errorMessage);
+            await expect(CareerService.insert('Career 1', 'Description 1')).rejects.toThrow('Database error');
         });
     });
 
     describe('update', () => {
         it('should update an existing career and return the updated career', async () => {
-            const updatedCareer = {id: 1, name: 'Updated Career 1', description: 'Updated Description 1'};
+            careerRepository.findOneBy.mockResolvedValue(mockCareer);
+            careerRepository.save.mockResolvedValue(mockCareer);
 
-            const result = await CareerService.update(updatedCareer.id, updatedCareer.name, updatedCareer.description);
+            const result = await CareerService.update(1, 'Updated Career 1', 'Updated Description 1');
 
-            expect(result).toEqual([1, [updatedCareer]]);
-            expect(Career.update).toHaveBeenCalledWith(
-                {name: updatedCareer.name, description: updatedCareer.description},
-                {where: {id: updatedCareer.id}, returning: true}
-            );
+            expect(result).toEqual(mockCareer);
+        });
+
+        it('should throw an EntityNotFoundError if the career does not exist', async () => {
+            careerRepository.findOneBy.mockResolvedValue(null);
+
+            await expect(CareerService.update(1, 'Updated Career 1', 'Updated Description 1')).rejects.toThrow(EntityNotFoundError);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Career.update as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            careerRepository.findOneBy.mockResolvedValue(mockCareer);
+            careerRepository.save.mockRejectedValue(new Error('Database error'));
 
-            await expect(CareerService.update(1, 'Updated Career 1', 'Updated Description 1')).rejects.toThrow('Error updating career: ' + errorMessage);
+            await expect(CareerService.update(1, 'Updated Career 1', 'Updated Description 1')).rejects.toThrow('Database error');
         });
     });
 
     describe('delete', () => {
         it('should delete a career by ID and return the number of deleted careers', async () => {
+            careerRepository.delete.mockResolvedValue({affected: 1});
+
             const result = await CareerService.delete(1);
 
-            expect(result).toEqual(1);
-            expect(Career.destroy).toHaveBeenCalledWith({where: {id: 1}});
+            expect(result.affected).toEqual(1);
         });
 
         it('should return 0 if the career does not exist', async () => {
-            (Career.destroy as jest.Mock).mockResolvedValue(0);
+            careerRepository.delete.mockResolvedValue({affected: 0});
 
             const result = await CareerService.delete(1);
 
-            expect(result).toEqual(0);
-            expect(Career.destroy).toHaveBeenCalledWith({where: {id: 1}});
+            expect(result.affected).toEqual(0);
         });
 
         it('should throw an error if there is a database error', async () => {
-            (Career.destroy as jest.Mock).mockRejectedValue(new Error(errorMessage));
+            careerRepository.delete.mockRejectedValue(new Error('Database error'));
 
-            await expect(CareerService.delete(1)).rejects.toThrow('Error deleting career: ' + errorMessage);
+            await expect(CareerService.delete(1)).rejects.toThrow('Database error');
         });
     });
 });

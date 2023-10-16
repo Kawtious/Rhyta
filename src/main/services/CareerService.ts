@@ -19,62 +19,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Career} from '../models/Career';
-import {DatabaseError} from "../errors/DatabaseError";
+import {careerRepository} from "../repositories/CareerRepository";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {DeleteResult} from "typeorm";
 
 class CareerService {
     async getAll(): Promise<Career[]> {
-        try {
-            return await Career.findAll();
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching careers: ' + error.message);
-        }
+        return await careerRepository.find();
     }
 
-    async getById(id: number): Promise<Career | null> {
-        try {
-            return await Career.findByPk(id);
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching career by ID: ' + error.message);
+    async getById(id: number): Promise<Career> {
+        const career = await careerRepository.findOneBy({id: id});
+
+        if (!career) {
+            throw new EntityNotFoundError('Career not found');
         }
+
+        return career;
     }
 
     async insert(name: string, description: string): Promise<Career> {
-        try {
-            return await Career.create({
-                name,
-                description,
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error inserting career: ' + error.message);
-        }
+        const career = new Career();
+        career.name = name;
+        career.description = description;
+
+        return await careerRepository.save(career);
     }
 
-    async update(id: number, name: string, description: string): Promise<[number, Career[]]> {
-        try {
-            const [count, careers] = await Career.update(
-                {
-                    name,
-                    description,
-                },
-                {
-                    where: {id},
-                    returning: true,
-                }
-            );
-            return [count, careers];
-        } catch (error: any) {
-            throw new DatabaseError('Error updating career: ' + error.message);
+    async update(id: number, name: string, description: string): Promise<Career> {
+        const existingCareer = await careerRepository.findOneBy({id: id});
+
+        if (!existingCareer) {
+            throw new EntityNotFoundError('Career not found');
         }
+
+        existingCareer.name = name;
+        existingCareer.description = description;
+
+        return await careerRepository.save(existingCareer);
     }
 
-    async delete(id: number): Promise<number> {
-        try {
-            return await Career.destroy({
-                where: {id},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error deleting career: ' + error.message);
-        }
+    async delete(id: number): Promise<DeleteResult> {
+        return await careerRepository.delete(id);
     }
 }
 

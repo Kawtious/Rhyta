@@ -18,64 +18,28 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sequelizeConfig} from '../configuration/SequelizeConfig';
+import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
-import {CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model} from "sequelize";
+@Entity()
+export class Term {
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-export class Term extends Model<InferAttributes<Term>, InferCreationAttributes<Term>> {
-    declare id: CreationOptional<number>;
+    @Column({
+        nullable: false,
+    })
+    title!: string;
 
-    declare title: string;
-    declare description: CreationOptional<string>;
-    declare startDate: Date;
-    declare endDate: Date;
+    @Column()
+    description!: string;
+
+    @Column({
+        nullable: false,
+    })
+    startDate!: Date;
+
+    @Column({
+        nullable: false,
+    })
+    endDate!: Date;
 }
-
-Term.init({
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true,
-            autoIncrement: true,
-            unique: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Title must not be null',
-                },
-                notEmpty: {
-                    msg: 'Title must not be empty',
-                },
-            },
-        },
-        description: {
-            type: DataTypes.STRING,
-            defaultValue: '',
-        },
-        startDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Start Date must not be null',
-                },
-            },
-        },
-        endDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'End Date must not be null',
-                },
-            },
-        },
-    },
-    {
-        tableName: 'term',
-        timestamps: false,
-        sequelize: sequelizeConfig,
-    }
-);

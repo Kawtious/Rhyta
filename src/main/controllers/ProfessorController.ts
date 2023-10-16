@@ -21,7 +21,7 @@
 import {NextFunction, Request, Response} from 'express';
 import ProfessorService from '../services/ProfessorService';
 import HttpStatusCode from "../utils/HttpStatusCode";
-import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
 
 class ProfessorController {
     async getAll(req: Request, res: Response, next: NextFunction) {
@@ -39,14 +39,10 @@ class ProfessorController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
             const professor = await ProfessorService.getById(id);
-
-            if (!professor) {
-                throw new EntityNotFoundError('Professor not found');
-            }
 
             return res.json(professor);
         } catch (error) {
@@ -70,17 +66,13 @@ class ProfessorController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
             const {firstName, lastName} = req.body;
-            const [count, professors] = await ProfessorService.update(id, firstName, lastName);
+            const updatedProfessor = await ProfessorService.update(id, firstName, lastName);
 
-            if (count === 0) {
-                throw new EntityNotFoundError('Professor not found');
-            }
-
-            return res.json(professors[0]);
+            return res.json(updatedProfessor);
         } catch (error) {
             next(error);
         }
@@ -91,14 +83,10 @@ class ProfessorController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
-            const deletedCount = await ProfessorService.delete(id);
-
-            if (deletedCount === 0) {
-                throw new EntityNotFoundError('Professor not found');
-            }
+            await ProfessorService.delete(id);
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error) {

@@ -19,64 +19,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Course} from '../models/Course';
-import {DatabaseError} from "../errors/DatabaseError";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {courseRepository} from "../repositories/CourseRepository";
+import {DeleteResult} from "typeorm";
+import {careerRepository} from "../repositories/CareerRepository";
 
 class CourseService {
     async getAll(): Promise<Course[]> {
-        try {
-            return await Course.findAll();
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching courses: ' + error.message);
-        }
+        return await courseRepository.find();
     }
 
-    async getById(id: number): Promise<Course | null> {
-        try {
-            return await Course.findByPk(id);
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching course by ID: ' + error.message);
+    async getById(id: number): Promise<Course> {
+        const course = await courseRepository.findOneBy({id: id});
+
+        if (!course) {
+            throw new EntityNotFoundError('Course not found');
         }
+
+        return course;
     }
 
     async insert(name: string, description: string, careerId: number): Promise<Course> {
-        try {
-            return await Course.create({
-                name,
-                description,
-                careerId,
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error inserting course: ' + error.message);
+        const existingCareer = await careerRepository.findOneBy({id: careerId});
+
+        if (!existingCareer) {
+            throw new EntityNotFoundError('Career not found');
         }
+
+        const course = new Course();
+        course.name = name;
+        course.description = description;
+        course.career = existingCareer;
+
+        return await courseRepository.save(course);
     }
 
-    async update(id: number, name: string, description: string, careerId: number): Promise<[number, Course[]]> {
-        try {
-            const [count, courses] = await Course.update(
-                {
-                    name,
-                    description,
-                    careerId,
-                },
-                {
-                    where: {id},
-                    returning: true,
-                }
-            );
-            return [count, courses];
-        } catch (error: any) {
-            throw new DatabaseError('Error updating course: ' + error.message);
+    async update(id: number, name: string, description: string, careerId: number): Promise<Course> {
+        const existingCourse = await courseRepository.findOneBy({id: id});
+
+        if (!existingCourse) {
+            throw new EntityNotFoundError('Course not found');
         }
+
+        const existingCareer = await careerRepository.findOneBy({id: careerId});
+
+        if (!existingCareer) {
+            throw new EntityNotFoundError('Career not found');
+        }
+
+        existingCourse.name = name;
+        existingCourse.description = description;
+        existingCourse.career = existingCareer;
+
+        return await courseRepository.save(existingCourse);
     }
 
-    async delete(id: number): Promise<number> {
-        try {
-            return await Course.destroy({
-                where: {id},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error deleting course: ' + error.message);
-        }
+    async delete(id: number): Promise<DeleteResult> {
+        return await courseRepository.delete(id);
     }
 }
 

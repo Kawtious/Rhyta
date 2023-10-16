@@ -18,69 +18,25 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sequelizeConfig} from '../configuration/SequelizeConfig';
-
-import {
-    Association,
-    CreationOptional,
-    DataTypes,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute
-} from "sequelize";
 import {Course} from "./Course";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
-export class Career extends Model<InferAttributes<Career, { omit: 'courses' }>,
-    InferCreationAttributes<Career, { omit: 'courses' }>> {
-    declare id: CreationOptional<number>;
+@Entity()
+export class Career {
 
-    declare name: string;
-    declare description: string | null;
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-    declare courses?: NonAttribute<Course[]>;
-    declare static associations: {
-        courses: Association<Career, Course>;
-    };
+    @Column({
+        nullable: false,
+    })
+    name!: string;
+
+    @Column()
+    description!: string;
+
+    @OneToMany(() => Course, (course) => course.career, {
+        cascade: true,
+    })
+    courses!: Course[];
 }
-
-Career.init({
-        id: {
-            type: DataTypes.BIGINT,
-            primaryKey: true,
-            autoIncrement: true,
-            unique: true,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: 'Name must not be null',
-                },
-                notEmpty: {
-                    msg: 'Name must not be empty',
-                },
-            },
-        },
-        description: {
-            type: DataTypes.STRING,
-            defaultValue: '',
-        },
-    },
-    {
-        tableName: 'career',
-        timestamps: false,
-        sequelize: sequelizeConfig,
-    }
-);
-
-Career.hasMany(Course, {
-    sourceKey: 'id',
-    foreignKey: {
-        name: 'careerId',
-        allowNull: false
-    },
-    as: 'courses'
-});
-Course.belongsTo(Career);

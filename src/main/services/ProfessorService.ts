@@ -19,53 +19,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {Professor} from '../models/Professor';
-import {DatabaseError} from "../errors/DatabaseError";
+import {EntityNotFoundError} from "../errors/EntityNotFoundError";
+import {professorRepository} from "../repositories/ProfessorRepository";
+import {DeleteResult} from "typeorm";
 
 class ProfessorService {
     async getAll(): Promise<Professor[]> {
-        try {
-            return await Professor.findAll();
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching professors: ' + error.message);
-        }
+        return await professorRepository.find();
     }
 
-    async getById(id: number): Promise<Professor | null> {
-        try {
-            return await Professor.findByPk(id);
-        } catch (error: any) {
-            throw new DatabaseError('Error fetching professor by ID: ' + error.message);
+    async getById(id: number): Promise<Professor> {
+        const professor = await professorRepository.findOneBy({id: id});
+
+        if (!professor) {
+            throw new EntityNotFoundError('Professor not found');
         }
+
+        return professor;
     }
 
     async insert(firstName: string, lastName: string): Promise<Professor> {
-        try {
-            return await Professor.create({firstName, lastName});
-        } catch (error: any) {
-            throw new DatabaseError('Error inserting professor: ' + error.message);
-        }
+        const professor = new Professor();
+        professor.firstName = firstName;
+        professor.lastName = lastName;
+
+        return await professorRepository.save(professor);
     }
 
-    async update(id: number, firstName: string, lastName: string): Promise<[number, Professor[]]> {
-        try {
-            const [count, professors] = await Professor.update({firstName, lastName}, {
-                where: {id},
-                returning: true,
-            });
-            return [count, professors];
-        } catch (error: any) {
-            throw new DatabaseError('Error updating professor: ' + error.message);
+    async update(id: number, firstName: string, lastName: string): Promise<Professor> {
+        const existingProfessor = await professorRepository.findOneBy({id: id});
+
+        if (!existingProfessor) {
+            throw new EntityNotFoundError('Professor not found');
         }
+
+        existingProfessor.firstName = firstName;
+        existingProfessor.lastName = lastName;
+
+        return await professorRepository.save(existingProfessor);
     }
 
-    async delete(id: number): Promise<number> {
-        try {
-            return await Professor.destroy({
-                where: {id},
-            });
-        } catch (error: any) {
-            throw new DatabaseError('Error deleting professor: ' + error.message);
-        }
+    async delete(id: number): Promise<DeleteResult> {
+        return await professorRepository.delete(id);
     }
 }
 

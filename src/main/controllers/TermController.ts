@@ -21,7 +21,6 @@
 import {NextFunction, Request, Response} from 'express';
 import HttpStatusCode from "../utils/HttpStatusCode";
 import TermService from '../services/TermService';
-import {EntityNotFoundError} from "../errors/EntityNotFoundError";
 import {MethodArgumentNotValidError} from "../errors/MethodArgumentNotValidError";
 
 class TermController {
@@ -45,10 +44,6 @@ class TermController {
 
             const term = await TermService.getById(id);
 
-            if (!term) {
-                throw new EntityNotFoundError('Term not found');
-            }
-
             return res.json(term);
         } catch (error) {
             next(error);
@@ -71,17 +66,13 @@ class TermController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
             const {title, description, startDate, endDate} = req.body;
-            const [count, terms] = await TermService.update(id, title, description, startDate, endDate);
+            const updatedTerm = await TermService.update(id, title, description, startDate, endDate);
 
-            if (count === 0) {
-                throw new EntityNotFoundError('Term not found');
-            }
-
-            return res.json(terms[0]);
+            return res.json(updatedTerm);
         } catch (error) {
             next(error);
         }
@@ -92,14 +83,10 @@ class TermController {
             const id = Number(req.params.id);
 
             if (isNaN(id)) {
-                return res.status(HttpStatusCode.BAD_REQUEST_400).json({error: 'Invalid ID'});
+                throw new MethodArgumentNotValidError('Invalid ID');
             }
 
-            const deletedCount = await TermService.delete(id);
-
-            if (deletedCount === 0) {
-                throw new EntityNotFoundError('Term not found');
-            }
+            await TermService.delete(id);
 
             return res.status(HttpStatusCode.NO_CONTENT_204).send();
         } catch (error) {

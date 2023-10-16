@@ -22,11 +22,12 @@
  * THE SOFTWARE.
  */
 import {EntityNotFoundError} from "../errors/EntityNotFoundError";
-import User, {UserRoles} from '../models/User';
+import {User, UserRoles} from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt, {Secret} from 'jsonwebtoken';
 import {PasswordMismatchError} from "../errors/PasswordMismatchError";
-import {JwtGenerationError} from "../errors/JwtGenerationError";
+import {userRepository} from "../repositories/UserRepository";
+import {randomUUID} from "crypto";
 
 require('dotenv').config();
 
@@ -34,18 +35,20 @@ class AuthService {
     async register(username: string, email: string, password: string, roles: UserRoles[]) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({
-            username,
-            email,
-            password: hashedPassword,
-            roles,
-        });
-        return await user.save();
+        const user = new User();
+        user._id = randomUUID();
+        user.username = username;
+        user.email = email;
+        user.password = hashedPassword;
+        user.roles = roles;
+        return await userRepository.save(user);
     }
 
-    async login(identifier: string, password: string): Promise<string | null> {
-        const user = await User.findOne({
-            $or: [{username: identifier}, {email: identifier}],
+    async login(identifier: string, password: string): Promise<string> {
+        const user = await userRepository.findOne({
+            where: {
+                $or: [{username: identifier}, {email: identifier}]
+            },
         });
 
         if (!user) {
@@ -58,13 +61,7 @@ class AuthService {
             throw new PasswordMismatchError('Invalid password');
         }
 
-        const token = this.generateToken(user.username, user.roles);
-
-        if (!token) {
-            throw new JwtGenerationError('Failed to create token');
-        }
-
-        return token;
+        return this.generateToken(user.username, user.roles);
     }
 
     private generateToken(username: string, roles: UserRoles[]): string {
