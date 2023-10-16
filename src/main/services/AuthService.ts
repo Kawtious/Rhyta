@@ -27,6 +27,7 @@ import bcrypt from 'bcrypt';
 import jwt, {Secret} from 'jsonwebtoken';
 import {PasswordMismatchError} from "../errors/PasswordMismatchError";
 import {userRepository} from "../repositories/UserRepository";
+import {randomUUID} from "crypto";
 
 require('dotenv').config();
 
@@ -35,6 +36,7 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new User();
+        user._id = randomUUID();
         user.username = username;
         user.email = email;
         user.password = hashedPassword;

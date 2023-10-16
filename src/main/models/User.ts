@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ObjectIdColumn} from "typeorm";
 
 export enum UserRoles {
     User = 'user',
@@ -31,8 +31,11 @@ export enum UserRoles {
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn("uuid")
+    @ObjectIdColumn()
     id!: string;
+
+    @ObjectIdColumn({name: 'id'})
+    _id!: string;
 
     @Column({
         nullable: false,
