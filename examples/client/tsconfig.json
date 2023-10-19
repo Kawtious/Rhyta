@@ -110,6 +110,7 @@
     "src/main"
   ],
   "exclude": [
-    "src/test"
+    "src/test",
+    "src/examples"
   ]
 }

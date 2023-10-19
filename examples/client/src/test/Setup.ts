@@ -18,23 +18,8 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-require('dotenv').config();
-
-import axios, {AxiosInstance} from 'axios';
-
-export const axiosInstance: AxiosInstance = axios.create({
-    baseURL: process.env.API_BASE_URL,
-    timeout: 5000,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+beforeAll(async () => {
 });
 
-let authToken: string | null = 'YOUR_INITIAL_BEARER_TOKEN';
-
-axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-
-export function updateAuthToken(newToken: string) {
-    authToken = newToken;
-    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-}
+afterAll(async () => {
+});

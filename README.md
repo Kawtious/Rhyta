@@ -91,24 +91,6 @@ To run this application locally, follow these steps:
     npm run start
     ```
 
-9. (Optional) Start the example client application:
-
-   A small example CLI client is included in this repository to test the server endpoints. In order to run the client,
-   just run this command:
-
-    ```bash
-    # Assuming you're in the root directory of the project
-    npx ts-node src/examples/client/App.ts
-    ```
-
-   Also make sure to configure the API base URL in your `.env` file:
-
-    ```plaintext
-    API_BASE_URL="your_api_base_url"      # "http://localhost:3000"
-    ```
-
-   Replace `your_api_base_url` with your actual API base URL.
-
 ## Configuring Database Connections
 
 To configure the MySQL connection, you must create a `.env` file in the root directory of the project. This file will
