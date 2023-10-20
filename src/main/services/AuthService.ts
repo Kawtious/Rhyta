@@ -72,11 +72,11 @@ class AuthService {
             throw new PasswordMismatchError('Invalid password');
         }
 
-        return this.generateToken(user.username, user.roles);
+        return this.generateToken(identifier);
     }
 
-    private generateToken(username: string, roles: UserRoles[]): string {
-        return jwt.sign({username, roles}, process.env.JWT_SECRET as Secret, {expiresIn: process.env.JWT_EXPIRATION});
+    private generateToken(identifier: string): string {
+        return jwt.sign({identifier}, process.env.JWT_SECRET as Secret, {expiresIn: process.env.JWT_EXPIRATION});
     }
 }
 

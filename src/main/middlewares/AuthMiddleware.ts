@@ -26,6 +26,7 @@ import jwt, {Secret} from 'jsonwebtoken';
 import {UserRoles} from '../models/User';
 import {TokenVerificationError} from "../errors/TokenVerificationError";
 import {UnauthorizedResourceAccessError} from "../errors/UnauthorizedResourceAccessError";
+import {userRepository} from "../repositories/UserRepository";
 
 const authMiddleware = (allowedRoles: UserRoles[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -47,13 +48,24 @@ const authMiddleware = (allowedRoles: UserRoles[]) => {
             let decodedToken;
 
             try {
-                decodedToken = jwt.verify(token, secret) as { username: string; roles: UserRoles[] };
+                decodedToken = jwt.verify(token, secret) as { identifier: string };
             } catch (error: any) {
                 throw new TokenVerificationError(error.message);
             }
 
-            const userRoles = decodedToken.roles;
-            const hasAllowedRole = userRoles.some((role) => allowedRoles.includes(role));
+            const identifier = decodedToken.identifier;
+
+            const user = await userRepository.findOne({
+                where: {
+                    $or: [{username: identifier}, {email: identifier}]
+                },
+            });
+
+            if (!user) {
+                throw new TokenVerificationError('Access denied. Invalid token provided.');
+            }
+
+            const hasAllowedRole = user.roles.some((role) => allowedRoles.includes(role));
 
             if (!hasAllowedRole) {
                 throw new UnauthorizedResourceAccessError('Access denied. Insufficient permissions.');
