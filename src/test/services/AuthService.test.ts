@@ -27,6 +27,7 @@ import {PasswordMismatchError} from "../../main/errors/PasswordMismatchError";
 import {randomUUID} from "crypto";
 import {EntityNotFoundError} from "../../main/errors/EntityNotFoundError";
 import {JwtSecretGenerator} from "../../main/utils/JwtSecretGenerator";
+import {UserConflictError} from "../../main/errors/UserConflictError";
 
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
@@ -65,6 +66,12 @@ describe('AuthService', () => {
             const result = await AuthService.register('user1', 'user1@example.com', 'password', [UserRoles.User]);
 
             expect(result).toEqual(mockUser);
+        });
+
+        it('should throw a UserConflictError if a user with the same username/email exists', async () => {
+            userRepository.findOne.mockResolvedValue(mockUser);
+
+            await expect(AuthService.register('user1', 'user1@example.com', 'password', [UserRoles.User])).rejects.toThrow(UserConflictError);
         });
     });
 
