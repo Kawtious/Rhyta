@@ -28,11 +28,22 @@ import jwt, {Secret} from 'jsonwebtoken';
 import {PasswordMismatchError} from "../errors/PasswordMismatchError";
 import {userRepository} from "../repositories/UserRepository";
 import {randomUUID} from "crypto";
+import {UserConflictError} from "../errors/UserConflictError";
 
 require('dotenv').config();
 
 class AuthService {
     async register(username: string, email: string, password: string, roles: UserRoles[]) {
+        const existingUser = await userRepository.findOne({
+            where: {
+                $or: [{username: username}, {email: email}]
+            },
+        });
+
+        if (existingUser) {
+            throw new UserConflictError("A user already exists with the same username or email");
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new User();
