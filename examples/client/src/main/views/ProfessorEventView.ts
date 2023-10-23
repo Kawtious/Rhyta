@@ -1,17 +1,17 @@
 /*
  * MIT License
- * 
+ *
  * Copyright (c) 2023 Kawtious, Zeferito
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import readlineSync from 'readline-sync';
-import {axiosInstance} from "../configuration/AxiosConfig";
+import { axiosInstance } from '../configuration/AxiosConfig';
 
 class ProfessorEventView {
     private readonly professorEventEndpoint: string;
@@ -30,12 +30,12 @@ class ProfessorEventView {
 
     async show() {
         while (true) {
-            console.log('\nProfessor Event CLI');
-            console.log('1. Get All Professor Events');
-            console.log('2. Get Professor Event by ID');
-            console.log('3. Insert Professor Event');
-            console.log('4. Update Professor Event by ID');
-            console.log('5. Delete Professor Event by ID');
+            console.log('\nProfessorModel Event CLI');
+            console.log('1. Get All ProfessorModel Events');
+            console.log('2. Get ProfessorModel Event by ID');
+            console.log('3. Insert ProfessorModel Event');
+            console.log('4. Update ProfessorModel Event by ID');
+            console.log('5. Delete ProfessorModel Event by ID');
             console.log('0. Return');
 
             const choice = readlineSync.question('Enter your choice: ');
@@ -65,12 +65,13 @@ class ProfessorEventView {
     }
 
     private async getAllProfessorEvents() {
-        const professorId = readlineSync.question('Enter Professor ID: ');
+        const professorId = readlineSync.question('Enter ProfessorModel ID: ');
 
         try {
-            const response = await axiosInstance.get(`/${this.professorEventEndpoint}/${professorId}`
+            const response = await axiosInstance.get(
+                `/${this.professorEventEndpoint}/${professorId}`
             );
-            console.log('\nAll Professor Events:');
+            console.log('\nAll ProfessorModel Events:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError fetching professor events:');
@@ -83,13 +84,16 @@ class ProfessorEventView {
     }
 
     private async getProfessorEventById() {
-        const professorId = readlineSync.question('Enter Professor ID: ');
-        const eventId = readlineSync.question('Enter Professor Event ID: ');
+        const professorId = readlineSync.question('Enter ProfessorModel ID: ');
+        const eventId = readlineSync.question(
+            'Enter ProfessorModel Event ID: '
+        );
 
         try {
-            const response = await axiosInstance.get(`/${this.professorEventEndpoint}/${professorId}/${eventId}`
+            const response = await axiosInstance.get(
+                `/${this.professorEventEndpoint}/${professorId}/${eventId}`
             );
-            console.log('\nProfessor Event by ID:');
+            console.log('\nProfessorModel Event by ID:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError fetching professor event by ID:');
@@ -102,22 +106,31 @@ class ProfessorEventView {
     }
 
     private async insertProfessorEvent() {
-        const professorId = readlineSync.question('Enter Professor ID: ');
-        const title = readlineSync.question('Enter Professor Event Title: ');
-        const description = readlineSync.question('Enter Professor Event Description: ');
-        const startDate = readlineSync.question('Enter Professor Event Start Date (YYYY-MM-DD): ');
-        const endDate = readlineSync.question('Enter Professor Event End Date (YYYY-MM-DD): ');
+        const professorId = readlineSync.question('Enter ProfessorModel ID: ');
+        const title = readlineSync.question(
+            'Enter ProfessorModel Event Title: '
+        );
+        const description = readlineSync.question(
+            'Enter ProfessorModel Event Description: '
+        );
+        const startDate = readlineSync.question(
+            'Enter ProfessorModel Event Start Date (YYYY-MM-DD): '
+        );
+        const endDate = readlineSync.question(
+            'Enter ProfessorModel Event End Date (YYYY-MM-DD): '
+        );
 
         try {
-            const response = await axiosInstance.post(`/${this.professorEventEndpoint}/${professorId}`,
+            const response = await axiosInstance.post(
+                `/${this.professorEventEndpoint}/${professorId}`,
                 {
                     title,
                     description,
                     startDate,
-                    endDate,
+                    endDate
                 }
             );
-            console.log('\nInserted Professor Event:');
+            console.log('\nInserted ProfessorModel Event:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError inserting professor event:');
@@ -130,23 +143,34 @@ class ProfessorEventView {
     }
 
     private async updateProfessorEventById() {
-        const professorId = readlineSync.question('Enter Professor ID: ');
-        const eventId = readlineSync.question('Enter Professor Event ID: ');
-        const title = readlineSync.question('Enter Professor Event Title: ');
-        const description = readlineSync.question('Enter Professor Event Description: ');
-        const startDate = readlineSync.question('Enter Professor Event Start Date (YYYY-MM-DD): ');
-        const endDate = readlineSync.question('Enter Professor Event End Date (YYYY-MM-DD): ');
+        const professorId = readlineSync.question('Enter ProfessorModel ID: ');
+        const eventId = readlineSync.question(
+            'Enter ProfessorModel Event ID: '
+        );
+        const title = readlineSync.question(
+            'Enter ProfessorModel Event Title: '
+        );
+        const description = readlineSync.question(
+            'Enter ProfessorModel Event Description: '
+        );
+        const startDate = readlineSync.question(
+            'Enter ProfessorModel Event Start Date (YYYY-MM-DD): '
+        );
+        const endDate = readlineSync.question(
+            'Enter ProfessorModel Event End Date (YYYY-MM-DD): '
+        );
 
         try {
-            const response = await axiosInstance.put(`/${this.professorEventEndpoint}/${professorId}/${eventId}`,
+            const response = await axiosInstance.put(
+                `/${this.professorEventEndpoint}/${professorId}/${eventId}`,
                 {
                     title,
                     description,
                     startDate,
-                    endDate,
+                    endDate
                 }
             );
-            console.log('\nUpdated Professor Event:');
+            console.log('\nUpdated ProfessorModel Event:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError updating professor event:');
@@ -159,13 +183,16 @@ class ProfessorEventView {
     }
 
     private async deleteProfessorEventById() {
-        const professorId = readlineSync.question('Enter Professor ID: ');
-        const eventId = readlineSync.question('Enter Professor Event ID: ');
+        const professorId = readlineSync.question('Enter ProfessorModel ID: ');
+        const eventId = readlineSync.question(
+            'Enter ProfessorModel Event ID: '
+        );
 
         try {
-            await axiosInstance.delete(`/${this.professorEventEndpoint}/${professorId}/${eventId}`
+            await axiosInstance.delete(
+                `/${this.professorEventEndpoint}/${professorId}/${eventId}`
             );
-            console.log('\nDeleted Professor Event with ID:', eventId);
+            console.log('\nDeleted ProfessorModel Event with ID:', eventId);
         } catch (error: any) {
             console.error('\nError deleting professor event:');
             if (error.response) {

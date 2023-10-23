@@ -1,17 +1,17 @@
 /*
  * MIT License
- * 
+ *
  * Copyright (c) 2023 Kawtious, Zeferito
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import readlineSync from 'readline-sync';
-import {axiosInstance} from "../configuration/AxiosConfig";
+import { axiosInstance } from '../configuration/AxiosConfig';
 
 class CourseView {
     private readonly courseEndpoint: string;
@@ -30,12 +30,12 @@ class CourseView {
 
     async show() {
         while (true) {
-            console.log('\nCourse CLI');
+            console.log('\nCourseModel CLI');
             console.log('1. Get All Courses');
-            console.log('2. Get Course by ID');
-            console.log('3. Insert Course');
-            console.log('4. Update Course by ID');
-            console.log('5. Delete Course by ID');
+            console.log('2. Get CourseModel by ID');
+            console.log('3. Insert CourseModel');
+            console.log('4. Update CourseModel by ID');
+            console.log('5. Delete CourseModel by ID');
             console.log('0. Return');
 
             const choice = readlineSync.question('Enter your choice: ');
@@ -80,11 +80,13 @@ class CourseView {
     }
 
     private async getCourseById() {
-        const id = readlineSync.question('Enter Course ID: ');
+        const id = readlineSync.question('Enter CourseModel ID: ');
 
         try {
-            const response = await axiosInstance.get(`/${this.courseEndpoint}/${id}`);
-            console.log('\nCourse by ID:');
+            const response = await axiosInstance.get(
+                `/${this.courseEndpoint}/${id}`
+            );
+            console.log('\nCourseModel by ID:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError fetching course by ID:');
@@ -97,17 +99,22 @@ class CourseView {
     }
 
     private async insertCourse() {
-        const name = readlineSync.question('Enter Course Name: ');
-        const description = readlineSync.question('Enter Course Description: ');
-        const careerId = readlineSync.question('Enter Career ID: ');
+        const name = readlineSync.question('Enter CourseModel Name: ');
+        const description = readlineSync.question(
+            'Enter CourseModel Description: '
+        );
+        const careerId = readlineSync.question('Enter CareerModel ID: ');
 
         try {
-            const response = await axiosInstance.post(`/${this.courseEndpoint}`, {
-                name,
-                description,
-                careerId
-            });
-            console.log('\nInserted Course:');
+            const response = await axiosInstance.post(
+                `/${this.courseEndpoint}`,
+                {
+                    name,
+                    description,
+                    careerId
+                }
+            );
+            console.log('\nInserted CourseModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError inserting course:');
@@ -120,18 +127,23 @@ class CourseView {
     }
 
     private async updateCourseById() {
-        const id = readlineSync.question('Enter Course ID: ');
-        const name = readlineSync.question('Enter Course Name: ');
-        const description = readlineSync.question('Enter Course Description: ');
-        const careerId = readlineSync.question('Enter Career ID: ');
+        const id = readlineSync.question('Enter CourseModel ID: ');
+        const name = readlineSync.question('Enter CourseModel Name: ');
+        const description = readlineSync.question(
+            'Enter CourseModel Description: '
+        );
+        const careerId = readlineSync.question('Enter CareerModel ID: ');
 
         try {
-            const response = await axiosInstance.put(`/${this.courseEndpoint}/${id}`, {
-                name,
-                description,
-                careerId
-            });
-            console.log('\nUpdated Course:');
+            const response = await axiosInstance.put(
+                `/${this.courseEndpoint}/${id}`,
+                {
+                    name,
+                    description,
+                    careerId
+                }
+            );
+            console.log('\nUpdated CourseModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError updating course:');
@@ -144,11 +156,11 @@ class CourseView {
     }
 
     private async deleteCourseById() {
-        const id = readlineSync.question('Enter Course ID: ');
+        const id = readlineSync.question('Enter CourseModel ID: ');
 
         try {
             await axiosInstance.delete(`/${this.courseEndpoint}/${id}`);
-            console.log('\nDeleted Course with ID:', id);
+            console.log('\nDeleted CourseModel with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting course:');
             if (error.response) {

@@ -1,17 +1,17 @@
 /*
  * MIT License
- * 
+ *
  * Copyright (c) 2023 Kawtious, Zeferito
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import readlineSync from 'readline-sync';
-import {axiosInstance} from "../configuration/AxiosConfig";
+import { axiosInstance } from '../configuration/AxiosConfig';
 
 class ProfessorView {
     private readonly professorEndpoint: string;
@@ -30,12 +30,12 @@ class ProfessorView {
 
     async show() {
         while (true) {
-            console.log('\nProfessor CLI');
+            console.log('\nProfessorModel CLI');
             console.log('1. Get All Professors');
-            console.log('2. Get Professor by ID');
-            console.log('3. Insert Professor');
-            console.log('4. Update Professor by ID');
-            console.log('5. Delete Professor by ID');
+            console.log('2. Get ProfessorModel by ID');
+            console.log('3. Insert ProfessorModel');
+            console.log('4. Update ProfessorModel by ID');
+            console.log('5. Delete ProfessorModel by ID');
             console.log('0. Return');
 
             const choice = readlineSync.question('Enter your choice: ');
@@ -66,7 +66,9 @@ class ProfessorView {
 
     private async getAllProfessors() {
         try {
-            const response = await axiosInstance.get(`/${this.professorEndpoint}`);
+            const response = await axiosInstance.get(
+                `/${this.professorEndpoint}`
+            );
             console.log('\nAll Professors:');
             console.log(response.data);
         } catch (error: any) {
@@ -80,11 +82,13 @@ class ProfessorView {
     }
 
     private async getProfessorById() {
-        const id = readlineSync.question('Enter Professor ID: ');
+        const id = readlineSync.question('Enter ProfessorModel ID: ');
 
         try {
-            const response = await axiosInstance.get(`/${this.professorEndpoint}/${id}`);
-            console.log('\nProfessor by ID:');
+            const response = await axiosInstance.get(
+                `/${this.professorEndpoint}/${id}`
+            );
+            console.log('\nProfessorModel by ID:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError fetching professor by ID:');
@@ -97,15 +101,22 @@ class ProfessorView {
     }
 
     private async insertProfessor() {
-        const firstName = readlineSync.question('Enter Professor First Name: ');
-        const lastName = readlineSync.question('Enter Professor Last Name: ');
+        const firstName = readlineSync.question(
+            'Enter ProfessorModel First Name: '
+        );
+        const lastName = readlineSync.question(
+            'Enter ProfessorModel Last Name: '
+        );
 
         try {
-            const response = await axiosInstance.post(`/${this.professorEndpoint}`, {
-                firstName,
-                lastName,
-            });
-            console.log('\nInserted Professor:');
+            const response = await axiosInstance.post(
+                `/${this.professorEndpoint}`,
+                {
+                    firstName,
+                    lastName
+                }
+            );
+            console.log('\nInserted ProfessorModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError inserting professor:');
@@ -118,16 +129,23 @@ class ProfessorView {
     }
 
     private async updateProfessorById() {
-        const id = readlineSync.question('Enter Professor ID: ');
-        const firstName = readlineSync.question('Enter Professor First Name: ');
-        const lastName = readlineSync.question('Enter Professor Last Name: ');
+        const id = readlineSync.question('Enter ProfessorModel ID: ');
+        const firstName = readlineSync.question(
+            'Enter ProfessorModel First Name: '
+        );
+        const lastName = readlineSync.question(
+            'Enter ProfessorModel Last Name: '
+        );
 
         try {
-            const response = await axiosInstance.put(`/${this.professorEndpoint}/${id}`, {
-                firstName,
-                lastName,
-            });
-            console.log('\nUpdated Professor:');
+            const response = await axiosInstance.put(
+                `/${this.professorEndpoint}/${id}`,
+                {
+                    firstName,
+                    lastName
+                }
+            );
+            console.log('\nUpdated ProfessorModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError updating professor:');
@@ -140,11 +158,11 @@ class ProfessorView {
     }
 
     private async deleteProfessorById() {
-        const id = readlineSync.question('Enter Professor ID: ');
+        const id = readlineSync.question('Enter ProfessorModel ID: ');
 
         try {
             await axiosInstance.delete(`/${this.professorEndpoint}/${id}`);
-            console.log('\nDeleted Professor with ID:', id);
+            console.log('\nDeleted ProfessorModel with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting professor:');
             if (error.response) {

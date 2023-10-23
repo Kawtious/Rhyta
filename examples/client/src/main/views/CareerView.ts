@@ -1,17 +1,17 @@
 /*
  * MIT License
- * 
+ *
  * Copyright (c) 2023 Kawtious, Zeferito
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import readlineSync from 'readline-sync';
-import {axiosInstance} from "../configuration/AxiosConfig";
+import { axiosInstance } from '../configuration/AxiosConfig';
 
 class CareerView {
     private readonly careerEndpoint: string;
@@ -30,12 +30,12 @@ class CareerView {
 
     async show() {
         while (true) {
-            console.log('\nCareer CLI');
+            console.log('\nCareerModel CLI');
             console.log('1. Get All Careers');
-            console.log('2. Get Career by ID');
-            console.log('3. Insert Career');
-            console.log('4. Update Career by ID');
-            console.log('5. Delete Career by ID');
+            console.log('2. Get CareerModel by ID');
+            console.log('3. Insert CareerModel');
+            console.log('4. Update CareerModel by ID');
+            console.log('5. Delete CareerModel by ID');
             console.log('0. Return');
 
             const choice = readlineSync.question('Enter your choice: ');
@@ -80,11 +80,13 @@ class CareerView {
     }
 
     private async getCareerById() {
-        const id = readlineSync.question('Enter Career ID: ');
+        const id = readlineSync.question('Enter CareerModel ID: ');
 
         try {
-            const response = await axiosInstance.get(`/${this.careerEndpoint}/${id}`);
-            console.log('\nCareer by ID:');
+            const response = await axiosInstance.get(
+                `/${this.careerEndpoint}/${id}`
+            );
+            console.log('\nCareerModel by ID:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError fetching career by ID:');
@@ -97,15 +99,20 @@ class CareerView {
     }
 
     private async insertCareer() {
-        const name = readlineSync.question('Enter Career Name: ');
-        const description = readlineSync.question('Enter Career Description: ');
+        const name = readlineSync.question('Enter CareerModel Name: ');
+        const description = readlineSync.question(
+            'Enter CareerModel Description: '
+        );
 
         try {
-            const response = await axiosInstance.post(`/${this.careerEndpoint}`, {
-                name,
-                description,
-            });
-            console.log('\nInserted Career:');
+            const response = await axiosInstance.post(
+                `/${this.careerEndpoint}`,
+                {
+                    name,
+                    description
+                }
+            );
+            console.log('\nInserted CareerModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError inserting career:');
@@ -118,16 +125,21 @@ class CareerView {
     }
 
     private async updateCareerById() {
-        const id = readlineSync.question('Enter Career ID: ');
-        const name = readlineSync.question('Enter Career Name: ');
-        const description = readlineSync.question('Enter Career Description: ');
+        const id = readlineSync.question('Enter CareerModel ID: ');
+        const name = readlineSync.question('Enter CareerModel Name: ');
+        const description = readlineSync.question(
+            'Enter CareerModel Description: '
+        );
 
         try {
-            const response = await axiosInstance.put(`/${this.careerEndpoint}/${id}`, {
-                name,
-                description,
-            });
-            console.log('\nUpdated Career:');
+            const response = await axiosInstance.put(
+                `/${this.careerEndpoint}/${id}`,
+                {
+                    name,
+                    description
+                }
+            );
+            console.log('\nUpdated CareerModel:');
             console.log(response.data);
         } catch (error: any) {
             console.error('\nError updating career:');
@@ -140,11 +152,11 @@ class CareerView {
     }
 
     private async deleteCareerById() {
-        const id = readlineSync.question('Enter Career ID: ');
+        const id = readlineSync.question('Enter CareerModel ID: ');
 
         try {
             await axiosInstance.delete(`/${this.careerEndpoint}/${id}`);
-            console.log('\nDeleted Career with ID:', id);
+            console.log('\nDeleted CareerModel with ID:', id);
         } catch (error: any) {
             console.error('\nError deleting career:');
             if (error.response) {

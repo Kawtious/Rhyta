@@ -24,7 +24,7 @@
 require('dotenv').config();
 
 import readlineSync from 'readline-sync';
-import AuthView from "./views/AuthView";
+import AuthView from './views/AuthView';
 import CareerView from './views/CareerView';
 import CourseView from './views/CourseView';
 import ProfessorView from './views/ProfessorView';
@@ -42,17 +42,19 @@ const authView: AuthView = new AuthView(authEndpoint);
 const careerView: CareerView = new CareerView(careerEndpoint);
 const courseView: CourseView = new CourseView(courseEndpoint);
 const professorView: ProfessorView = new ProfessorView(professorEndpoint);
-const professorEventView: ProfessorEventView = new ProfessorEventView(professorEventEndpoint);
+const professorEventView: ProfessorEventView = new ProfessorEventView(
+    professorEventEndpoint
+);
 const termView: TermView = new TermView(termEndpoint);
 
 (async () => {
     while (true) {
         console.log('\nMain Menu');
-        console.log('1. Career');
-        console.log('2. Course');
-        console.log('3. Professor');
-        console.log('4. Professor Event');
-        console.log('5. Term');
+        console.log('1. CareerModel');
+        console.log('2. CourseModel');
+        console.log('3. ProfessorModel');
+        console.log('4. ProfessorModel Event');
+        console.log('5. TermModel');
         console.log('6. Auth');
         console.log('0. Exit');
 
