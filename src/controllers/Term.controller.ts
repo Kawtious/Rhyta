@@ -30,73 +30,83 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
 import { TermService } from '../services/Term.service';
 import { TermDto } from '../payloads/dto/TermDto';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Roles.enum';
 
-@Controller()
+@Controller('terms')
 export class TermController {
     constructor(private readonly termService: TermService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async getAll() {
         return await this.termService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getById(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async getById(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.termService.getById(_id);
+        return await this.termService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async insert(@Body() body: TermDto) {
-        return await this.termService.insert(
-            body.title,
-            body.description,
-            body.startDate,
-            body.endDate
-        );
+    @Roles(Role.Admin)
+    async insert(@Body() termDto: TermDto) {
+        return await this.termService.insert(termDto);
     }
 
     @Put(':id')
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id') id: string, @Body() body: TermDto) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async update(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string,
+        @Body() termDto: TermDto
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.termService.update(
-            _id,
-            body.title,
-            body.description,
-            body.startDate,
-            body.endDate
-        );
+        return await this.termService.update(Number(id), termDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async delete(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.termService.delete(_id);
+        await this.termService.delete(Number(id));
 
         return;
     }

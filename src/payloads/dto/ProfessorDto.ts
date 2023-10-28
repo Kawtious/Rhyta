@@ -21,7 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export interface ProfessorDto {
-    firstName: string;
-    lastName: string;
+import { IsNotEmpty } from 'class-validator';
+
+export class ProfessorDto {
+    @IsNotEmpty()
+    firstName!: string;
+
+    lastName?: string;
 }

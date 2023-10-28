@@ -21,11 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { UserRoles } from '../../models/User.model';
+import { Role } from '../../enums/Roles.enum';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
-export interface RegisterUserDto {
-    username: string;
-    email: string;
-    password: string;
-    roles: UserRoles[];
+export class RegisterUserDto {
+    @IsNotEmpty()
+    username!: string;
+
+    @IsEmail()
+    email!: string;
+
+    @IsNotEmpty()
+    password!: string;
+
+    @IsNotEmpty()
+    roles!: Role[];
 }

@@ -21,27 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { MongoDataSource } from './configuration/MongoDataSource';
-import { MySQLDataSource } from './configuration/MySQLDataSource';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/App.module';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './filters/HttpException.filter';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    const host: string = process.env.SERVER_HOST || 'localhost';
-    const port: number = Number(process.env.SERVER_PORT as string) || 3000;
+    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalFilters(new HttpExceptionFilter());
+
+    const configService = app.get(ConfigService);
+
+    const host = configService.get<string>('SERVER_HOST') || 'localhost';
+    const port = configService.get<number>('SERVER_PORT') || 3000;
 
     return app.listen(port, host, () => {
         console.log(`Server is running on port ${port}`);
     });
 }
 
-MongoDataSource.initialize()
-    .then(() => {
-        return MySQLDataSource.initialize();
-    })
-    .then(() => {
-        return bootstrap();
-    })
-    .catch((error) => console.log(error));
+(async () => {
+    await bootstrap();
+})();

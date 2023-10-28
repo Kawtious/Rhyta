@@ -21,12 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthController } from '../controllers/Auth.controller';
 import { AuthService } from '../services/Auth.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './User.module';
 
+@Global()
 @Module({
+    imports: [
+        UserModule,
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                secret: configService.get<string>('JWT_SECRET'),
+                signOptions: {
+                    expiresIn:
+                        configService.get<string>('JWT_EXPIRATION') || '1h'
+                }
+            }),
+            inject: [ConfigService]
+        }),
+        ConfigModule
+    ],
+    providers: [AuthService],
     controllers: [AuthController],
-    providers: [AuthService]
+    exports: [AuthService, JwtModule]
 })
 export class AuthModule {}

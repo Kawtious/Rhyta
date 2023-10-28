@@ -21,19 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { ProfessorEventModel } from '../models/ProfessorEvent.model';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { professorEventRepository } from '../repositories/ProfessorEvent.repository';
-import { DeleteResult } from 'typeorm';
-import { professorRepository } from '../repositories/Professor.repository';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { ProfessorEventDto } from '../payloads/dto/ProfessorEventDto';
+import { Professor } from '../entities/Professor.entity';
 
 @Injectable()
 export class ProfessorEventService {
-    async getAllByProfessorId(
-        professorId: number
-    ): Promise<ProfessorEventModel[]> {
-        return await professorEventRepository.findBy({
+    constructor(
+        @InjectRepository(ProfessorEvent, 'mySqlConnection')
+        private readonly professorEventRepository: Repository<ProfessorEvent>,
+        @InjectRepository(Professor, 'mySqlConnection')
+        private readonly professorRepository: Repository<Professor>
+    ) {}
+
+    async getAllByProfessorId(professorId: number): Promise<ProfessorEvent[]> {
+        return await this.professorEventRepository.findBy({
             professor: { id: professorId }
         });
     }
@@ -41,14 +47,14 @@ export class ProfessorEventService {
     async getByProfessorId(
         professorId: number,
         eventId: number
-    ): Promise<ProfessorEventModel> {
-        const professorEvent = await professorEventRepository.findOneBy({
+    ): Promise<ProfessorEvent> {
+        const professorEvent = await this.professorEventRepository.findOneBy({
             id: eventId,
             professor: { id: professorId }
         });
 
         if (!professorEvent) {
-            throw new EntityNotFoundError('ProfessorModel event not found');
+            throw new EntityNotFoundError('Professor event not found');
         }
 
         return professorEvent;
@@ -56,59 +62,64 @@ export class ProfessorEventService {
 
     async insertByProfessorId(
         professorId: number,
-        title: string,
-        description: string,
-        startDate: Date,
-        endDate: Date
-    ): Promise<ProfessorEventModel> {
-        const existingProfessor = await professorRepository.findOneBy({
+        professorEventDto: ProfessorEventDto
+    ): Promise<ProfessorEvent> {
+        const existingProfessor = await this.professorRepository.findOneBy({
             id: professorId
         });
 
         if (!existingProfessor) {
-            throw new EntityNotFoundError('ProfessorModel not found');
+            throw new EntityNotFoundError('Professor not found');
         }
 
-        const professorEvent = new ProfessorEventModel();
+        const professorEvent = new ProfessorEvent();
 
-        professorEvent.title = title;
-        professorEvent.description = description;
-        professorEvent.startDate = startDate;
-        professorEvent.endDate = endDate;
+        professorEvent.title = professorEventDto.title;
+
+        if (professorEventDto.description != null) {
+            professorEvent.description = professorEventDto.description;
+        }
+
+        professorEvent.startDate = professorEventDto.startDate;
+        professorEvent.endDate = professorEventDto.endDate;
+
         professorEvent.professor = existingProfessor;
 
-        return await professorEventRepository.save(professorEvent);
+        return await this.professorEventRepository.save(professorEvent);
     }
 
     async updateByProfessorId(
         professorId: number,
         eventId: number,
-        title: string,
-        description: string,
-        startDate: Date,
-        endDate: Date
-    ): Promise<ProfessorEventModel> {
-        const existingProfessorEvent = await professorEventRepository.findOneBy(
-            { id: eventId, professor: { id: professorId } }
-        );
+        professorEventDto: ProfessorEventDto
+    ): Promise<ProfessorEvent> {
+        const existingProfessorEvent =
+            await this.professorEventRepository.findOneBy({
+                id: eventId,
+                professor: { id: professorId }
+            });
 
         if (!existingProfessorEvent) {
-            throw new EntityNotFoundError('ProfessorModel event not found');
+            throw new EntityNotFoundError('Professor event not found');
         }
 
-        existingProfessorEvent.title = title;
-        existingProfessorEvent.description = description;
-        existingProfessorEvent.startDate = startDate;
-        existingProfessorEvent.endDate = endDate;
+        existingProfessorEvent.title = professorEventDto.title;
 
-        return await professorEventRepository.save(existingProfessorEvent);
+        if (professorEventDto.description != null) {
+            existingProfessorEvent.description = professorEventDto.description;
+        }
+
+        existingProfessorEvent.startDate = professorEventDto.startDate;
+        existingProfessorEvent.endDate = professorEventDto.endDate;
+
+        return await this.professorEventRepository.save(existingProfessorEvent);
     }
 
     async deleteByProfessorId(
         professorId: number,
         eventId: number
     ): Promise<DeleteResult> {
-        return await professorEventRepository.delete({
+        return await this.professorEventRepository.delete({
             id: eventId,
             professor: { id: professorId }
         });

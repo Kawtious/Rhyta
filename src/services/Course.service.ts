@@ -21,78 +21,88 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { CourseModel } from '../models/Course.model';
+import { Course } from '../entities/Course.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { courseRepository } from '../repositories/Course.repository';
-import { DeleteResult } from 'typeorm';
-import { careerRepository } from '../repositories/Career.repository';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CourseDto } from '../payloads/dto/CourseDto';
+import { Career } from '../entities/Career.entity';
 
 @Injectable()
 export class CourseService {
-    async getAll(): Promise<CourseModel[]> {
-        return await courseRepository.find();
+    constructor(
+        @InjectRepository(Course, 'mySqlConnection')
+        private readonly courseRepository: Repository<Course>,
+        @InjectRepository(Career, 'mySqlConnection')
+        private readonly careerRepository: Repository<Career>
+    ) {}
+
+    async getAll(): Promise<Course[]> {
+        return await this.courseRepository.find();
     }
 
-    async getById(id: number): Promise<CourseModel> {
-        const course = await courseRepository.findOneBy({ id: id });
+    async getById(id: number): Promise<Course> {
+        const course = await this.courseRepository.findOneBy({ id: id });
 
         if (!course) {
-            throw new EntityNotFoundError('CourseModel not found');
+            throw new EntityNotFoundError('Course not found');
         }
 
         return course;
     }
 
-    async insert(
-        name: string,
-        description: string,
-        careerId: number
-    ): Promise<CourseModel> {
-        const existingCareer = await careerRepository.findOneBy({
-            id: careerId
+    async insert(courseDto: CourseDto): Promise<Course> {
+        const existingCareer = await this.careerRepository.findOneBy({
+            id: courseDto.careerId
         });
 
         if (!existingCareer) {
-            throw new EntityNotFoundError('CareerModel not found');
+            throw new EntityNotFoundError('Career not found');
         }
 
-        const course = new CourseModel();
-        course.name = name;
-        course.description = description;
+        const course = new Course();
+
+        course.name = courseDto.name;
+
+        if (courseDto.description != null) {
+            course.description = courseDto.description;
+        }
+
         course.career = existingCareer;
 
-        return await courseRepository.save(course);
+        return await this.courseRepository.save(course);
     }
 
-    async update(
-        id: number,
-        name: string,
-        description: string,
-        careerId: number
-    ): Promise<CourseModel> {
-        const existingCourse = await courseRepository.findOneBy({ id: id });
+    async update(id: number, courseDto: CourseDto): Promise<Course> {
+        const existingCourse = await this.courseRepository.findOneBy({
+            id: id
+        });
 
         if (!existingCourse) {
-            throw new EntityNotFoundError('CourseModel not found');
+            throw new EntityNotFoundError('Course not found');
         }
 
-        const existingCareer = await careerRepository.findOneBy({
-            id: careerId
+        const existingCareer = await this.careerRepository.findOneBy({
+            id: courseDto.careerId
         });
 
         if (!existingCareer) {
-            throw new EntityNotFoundError('CareerModel not found');
+            throw new EntityNotFoundError('Career not found');
         }
 
-        existingCourse.name = name;
-        existingCourse.description = description;
+        existingCourse.name = courseDto.name;
+
+        if (courseDto.description != null) {
+            existingCourse.description = courseDto.description;
+        }
+
         existingCourse.career = existingCareer;
 
-        return await courseRepository.save(existingCourse);
+        return await this.courseRepository.save(existingCourse);
     }
 
     async delete(id: number): Promise<DeleteResult> {
-        return await courseRepository.delete(id);
+        return await this.courseRepository.delete(id);
     }
 }

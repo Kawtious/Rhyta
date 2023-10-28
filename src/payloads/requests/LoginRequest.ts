@@ -21,7 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export interface LoginRequest {
-    identifier: string;
-    password: string;
+import { IsNotEmpty } from 'class-validator';
+
+export class LoginRequest {
+    @IsNotEmpty()
+    identifier!: string;
+
+    @IsNotEmpty()
+    password!: string;
 }

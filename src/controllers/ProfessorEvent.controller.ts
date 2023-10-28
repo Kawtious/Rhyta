@@ -30,13 +30,16 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
 import { ProfessorEventService } from '../services/ProfessorEvent.service';
 import { ProfessorEventDto } from '../payloads/dto/ProfessorEventDto';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Roles.enum';
 
-@Controller()
+@Controller('events')
 export class ProfessorEventController {
     constructor(
         private readonly professorEventService: ProfessorEventService
@@ -44,100 +47,118 @@ export class ProfessorEventController {
 
     @Get(':professorId')
     @HttpCode(HttpStatus.OK)
-    async getAllByProfessorId(@Param('professorId') professorId: string) {
-        const _professorId = Number(professorId);
-
-        if (isNaN(_professorId)) {
+    @Roles(Role.Admin)
+    async getAllByProfessorId(
+        @Param(
+            'professorId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        professorId: string
+    ) {
+        if (isNaN(Number(professorId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
         return await this.professorEventService.getAllByProfessorId(
-            _professorId
+            Number(professorId)
         );
     }
 
     @Get(':professorId/:eventId')
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async getByProfessorId(
-        @Param('professorId') professorId: string,
-        @Param('eventId') eventId: string
+        @Param(
+            'professorId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        professorId: string,
+        @Param(
+            'eventId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        eventId: string
     ) {
-        const _professorId = Number(professorId);
-        const _eventId = Number(eventId);
-
-        if (isNaN(_professorId) || isNaN(_eventId)) {
+        if (isNaN(Number(professorId)) || isNaN(Number(eventId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        const event = await this.professorEventService.getByProfessorId(
-            _professorId,
-            _eventId
+        return await this.professorEventService.getByProfessorId(
+            Number(professorId),
+            Number(eventId)
         );
-
-        return event;
     }
 
     @Post(':professorId')
     @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     async insertByProfessorId(
-        @Param('professorId') professorId: string,
-        @Body() body: ProfessorEventDto
+        @Param(
+            'professorId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        professorId: string,
+        @Body() professorEventDto: ProfessorEventDto
     ) {
-        const _professorId = Number(professorId);
-
-        if (isNaN(_professorId)) {
+        if (isNaN(Number(professorId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
         return await this.professorEventService.insertByProfessorId(
-            _professorId,
-            body.title,
-            body.description,
-            body.startDate,
-            body.endDate
+            Number(professorId),
+            professorEventDto
         );
     }
 
     @Put(':professorId/:eventId')
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async updateByProfessorId(
-        @Param('professorId') professorId: string,
-        @Param('eventId') eventId: string,
-        @Body() body: ProfessorEventDto
+        @Param(
+            'professorId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        professorId: string,
+        @Param(
+            'eventId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        eventId: string,
+        @Body() professorEventDto: ProfessorEventDto
     ) {
-        const _professorId = Number(professorId);
-        const _eventId = Number(eventId);
-
-        if (isNaN(_professorId) || isNaN(_eventId)) {
+        if (isNaN(Number(professorId)) || isNaN(Number(eventId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
         return await this.professorEventService.updateByProfessorId(
-            _professorId,
-            _eventId,
-            body.title,
-            body.description,
-            body.startDate,
-            body.endDate
+            Number(professorId),
+            Number(eventId),
+            professorEventDto
         );
     }
 
     @Delete(':professorId/:eventId')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @Roles(Role.Admin)
     async deleteByProfessorId(
-        @Param('professorId') professorId: string,
-        @Param('eventId') eventId: string
+        @Param(
+            'professorId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        professorId: string,
+        @Param(
+            'eventId',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        eventId: string
     ) {
-        const _professorId = Number(professorId);
-        const _eventId = Number(eventId);
-
-        if (isNaN(_professorId) || isNaN(_eventId)) {
+        if (isNaN(Number(professorId)) || isNaN(Number(eventId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
         await this.professorEventService.deleteByProfessorId(
-            _professorId,
-            _eventId
+            Number(professorId),
+            Number(eventId)
         );
 
         return;

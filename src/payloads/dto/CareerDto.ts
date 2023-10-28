@@ -21,7 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export interface CareerDto {
-    name: string;
-    description: string;
+import { IsNotEmpty } from 'class-validator';
+
+export class CareerDto {
+    @IsNotEmpty()
+    name!: string;
+
+    description?: string;
 }

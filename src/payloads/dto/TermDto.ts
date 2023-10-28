@@ -21,9 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export interface TermDto {
-    title: string;
-    description: string;
-    startDate: Date;
-    endDate: Date;
+import { IsDate, IsNotEmpty } from 'class-validator';
+
+export class TermDto {
+    @IsNotEmpty()
+    title!: string;
+
+    description?: string;
+
+    @IsDate()
+    startDate!: Date;
+
+    @IsDate()
+    endDate!: Date;
 }

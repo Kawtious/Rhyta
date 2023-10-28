@@ -21,32 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { config } from 'dotenv';
-config();
-
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { UserModel, UserRoles } from '../models/User.model';
 import bcrypt from 'bcrypt';
-import jwt, { Secret } from 'jsonwebtoken';
-import { PasswordMismatchError } from '../errors/PasswordMismatchError';
-import { userRepository } from '../repositories/User.repository';
 import { randomUUID } from 'crypto';
 import { UserConflictError } from '../errors/UserConflictError';
 import { Injectable } from '@nestjs/common';
+import { User } from '../entities/User.entity';
+import { PasswordMismatchError } from '../errors/PasswordMismatchError';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { RegisterUserDto } from '../payloads/dto/RegisterUserDto';
+import { LoginRequest } from '../payloads/requests/LoginRequest';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from './User.service';
 
 @Injectable()
 export class AuthService {
-    async register(
-        username: string,
-        email: string,
-        password: string,
-        roles: UserRoles[]
-    ) {
-        const existingUser = await userRepository.findOne({
-            where: {
-                $or: [{ username: username }, { email: email }]
-            }
-        });
+    constructor(
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService
+    ) {}
+
+    async register(registerUserDto: RegisterUserDto) {
+        const existingUser = await this.userService.getByUsernameOrEmail(
+            registerUserDto.username,
+            registerUserDto.email
+        );
 
         if (existingUser) {
             throw new UserConflictError(
@@ -54,40 +52,40 @@ export class AuthService {
             );
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
 
-        const user = new UserModel();
+        const user = new User();
+
         user._id = randomUUID();
-        user.username = username;
-        user.email = email;
+        user.username = registerUserDto.username;
+        user.email = registerUserDto.email;
         user.password = hashedPassword;
-        user.roles = roles;
-        return await userRepository.save(user);
+        user.roles = registerUserDto.roles;
+
+        return await this.userService.save(user);
     }
 
-    async login(identifier: string, password: string): Promise<string> {
-        const user = await userRepository.findOne({
-            where: {
-                $or: [{ username: identifier }, { email: identifier }]
-            }
-        });
+    async login(loginRequest: LoginRequest): Promise<string> {
+        const user = await this.userService.getByUsernameOrEmail(
+            loginRequest.identifier,
+            loginRequest.identifier
+        );
 
         if (!user) {
-            throw new EntityNotFoundError('UserModel not found');
+            throw new EntityNotFoundError('User not found');
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(
+            loginRequest.password,
+            user.password
+        );
 
         if (!passwordMatch) {
             throw new PasswordMismatchError('Invalid password');
         }
 
-        return this.generateToken(identifier);
-    }
-
-    private generateToken(identifier: string): string {
-        return jwt.sign({ identifier }, process.env.JWT_SECRET as Secret, {
-            expiresIn: process.env.JWT_EXPIRATION
+        return this.jwtService.signAsync({
+            identifier: loginRequest.identifier
         });
     }
 }

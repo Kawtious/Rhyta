@@ -32,22 +32,14 @@ export class AuthController {
 
     @Post('register')
     @HttpCode(HttpStatus.CREATED)
-    async register(@Body() body: RegisterUserDto) {
-        return await this.authService.register(
-            body.username,
-            body.email,
-            body.password,
-            body.roles
-        );
+    async register(@Body() registerUserDto: RegisterUserDto) {
+        return await this.authService.register(registerUserDto);
     }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(@Body() body: LoginRequest) {
-        const token = await this.authService.login(
-            body.identifier,
-            body.password
-        );
+    async login(@Body() loginRequest: LoginRequest) {
+        const token = await this.authService.login(loginRequest);
 
         return { accessToken: token, tokenType: 'Bearer' };
     }

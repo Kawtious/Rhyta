@@ -30,66 +30,83 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
 import { CareerService } from '../services/Career.service';
 import { CareerDto } from '../payloads/dto/CareerDto';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Roles.enum';
 
-@Controller()
+@Controller('careers')
 export class CareerController {
     constructor(private readonly careerService: CareerService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async getAll() {
         return await this.careerService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getById(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async getById(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.careerService.getById(_id);
+        return await this.careerService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async insert(@Body() body: CareerDto) {
-        return await this.careerService.insert(body.name, body.description);
+    @Roles(Role.Admin)
+    async insert(@Body() careerDto: CareerDto) {
+        return await this.careerService.insert(careerDto);
     }
 
     @Put(':id')
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id') id: string, @Body() body: CareerDto) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async update(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string,
+        @Body() careerDto: CareerDto
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.careerService.update(
-            _id,
-            body.name,
-            body.description
-        );
+        return await this.careerService.update(Number(id), careerDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async delete(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.careerService.delete(_id);
+        await this.careerService.delete(Number(id));
 
         return;
     }

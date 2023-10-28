@@ -30,71 +30,83 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
 import { CourseService } from '../services/Course.service';
 import { CourseDto } from '../payloads/dto/CourseDto';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Roles.enum';
 
-@Controller()
+@Controller('courses')
 export class CourseController {
     constructor(private readonly courseService: CourseService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async getAll() {
         return await this.courseService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getById(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async getById(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.courseService.getById(_id);
+        return await this.courseService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async insert(@Body() body: CourseDto) {
-        return await this.courseService.insert(
-            body.name,
-            body.description,
-            body.careerId
-        );
+    @Roles(Role.Admin)
+    async insert(@Body() courseDto: CourseDto) {
+        return await this.courseService.insert(courseDto);
     }
 
     @Put(':id')
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id') id: string, @Body() body: CourseDto) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async update(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string,
+        @Body() courseDto: CourseDto
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.courseService.update(
-            _id,
-            body.name,
-            body.description,
-            body.careerId
-        );
+        return await this.courseService.update(Number(id), courseDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async delete(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.courseService.delete(_id);
+        await this.courseService.delete(Number(id));
 
         return;
     }

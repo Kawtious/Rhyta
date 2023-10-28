@@ -30,69 +30,83 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
 import { ProfessorService } from '../services/Professor.service';
 import { ProfessorDto } from '../payloads/dto/ProfessorDto';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Roles.enum';
 
-@Controller()
+@Controller('professors')
 export class ProfessorController {
     constructor(private readonly professorService: ProfessorService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
     async getAll() {
         return await this.professorService.getAll();
     }
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    async getById(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async getById(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.getById(_id);
+        return await this.professorService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async insert(@Body() body: ProfessorDto) {
-        return await this.professorService.insert(
-            body.firstName,
-            body.lastName
-        );
+    @Roles(Role.Admin)
+    async insert(@Body() professorDto: ProfessorDto) {
+        return await this.professorService.insert(professorDto);
     }
 
     @Put(':id')
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id') id: string, @Body() body: ProfessorDto) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async update(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string,
+        @Body() professorDto: ProfessorDto
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.update(
-            _id,
-            body.firstName,
-            body.lastName
-        );
+        return await this.professorService.update(Number(id), professorDto);
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id') id: string) {
-        const _id = Number(id);
-
-        if (isNaN(_id)) {
+    @Roles(Role.Admin)
+    async delete(
+        @Param(
+            'id',
+            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+        )
+        id: string
+    ) {
+        if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.professorService.delete(_id);
+        await this.professorService.delete(Number(id));
 
         return;
     }

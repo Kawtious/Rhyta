@@ -21,56 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { ProfessorModel } from '../models/Professor.model';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { professorRepository } from '../repositories/Professor.repository';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Professor } from '../entities/Professor.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { ProfessorDto } from '../payloads/dto/ProfessorDto';
 
 @Injectable()
 export class ProfessorService {
-    async getAll(): Promise<ProfessorModel[]> {
-        return await professorRepository.find();
+    constructor(
+        @InjectRepository(Professor, 'mySqlConnection')
+        private readonly professorRepository: Repository<Professor>
+    ) {}
+
+    async getAll(): Promise<Professor[]> {
+        return await this.professorRepository.find();
     }
 
-    async getById(id: number): Promise<ProfessorModel> {
-        const professor = await professorRepository.findOneBy({ id: id });
+    async getById(id: number): Promise<Professor> {
+        const professor = await this.professorRepository.findOneBy({ id: id });
 
         if (!professor) {
-            throw new EntityNotFoundError('ProfessorModel not found');
+            throw new EntityNotFoundError('Professor not found');
         }
 
         return professor;
     }
 
-    async insert(firstName: string, lastName: string): Promise<ProfessorModel> {
-        const professor = new ProfessorModel();
-        professor.firstName = firstName;
-        professor.lastName = lastName;
+    async insert(professorDto: ProfessorDto): Promise<Professor> {
+        const professor = new Professor();
 
-        return await professorRepository.save(professor);
+        professor.firstName = professorDto.firstName;
+
+        if (professorDto.lastName != null) {
+            professor.lastName = professorDto.lastName;
+        }
+
+        return await this.professorRepository.save(professor);
     }
 
-    async update(
-        id: number,
-        firstName: string,
-        lastName: string
-    ): Promise<ProfessorModel> {
-        const existingProfessor = await professorRepository.findOneBy({
+    async update(id: number, professorDto: ProfessorDto): Promise<Professor> {
+        const existingProfessor = await this.professorRepository.findOneBy({
             id: id
         });
 
         if (!existingProfessor) {
-            throw new EntityNotFoundError('ProfessorModel not found');
+            throw new EntityNotFoundError('Professor not found');
         }
 
-        existingProfessor.firstName = firstName;
-        existingProfessor.lastName = lastName;
+        existingProfessor.firstName = professorDto.firstName;
 
-        return await professorRepository.save(existingProfessor);
+        if (professorDto.lastName != null) {
+            existingProfessor.lastName = professorDto.lastName;
+        }
+
+        return await this.professorRepository.save(existingProfessor);
     }
 
     async delete(id: number): Promise<DeleteResult> {
-        return await professorRepository.delete(id);
+        return await this.professorRepository.delete(id);
     }
 }

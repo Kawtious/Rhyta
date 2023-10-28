@@ -21,65 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { TermModel } from '../models/Term.model';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { termRepository } from '../repositories/Term.repository';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Term } from '../entities/Term.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { TermDto } from '../payloads/dto/TermDto';
 
 @Injectable()
 export class TermService {
-    async getAll(): Promise<TermModel[]> {
-        return await termRepository.find();
+    constructor(
+        @InjectRepository(Term, 'mySqlConnection')
+        private readonly termRepository: Repository<Term>
+    ) {}
+
+    async getAll(): Promise<Term[]> {
+        return await this.termRepository.find();
     }
 
-    async getById(id: number): Promise<TermModel> {
-        const term = await termRepository.findOneBy({ id: id });
+    async getById(id: number): Promise<Term> {
+        const term = await this.termRepository.findOneBy({ id: id });
 
         if (!term) {
-            throw new EntityNotFoundError('TermModel not found');
+            throw new EntityNotFoundError('Term not found');
         }
 
         return term;
     }
 
-    async insert(
-        title: string,
-        description: string,
-        startDate: Date,
-        endDate: Date
-    ): Promise<TermModel> {
-        const term = new TermModel();
-        term.title = title;
-        term.description = description;
-        term.startDate = startDate;
-        term.endDate = endDate;
+    async insert(termDto: TermDto): Promise<Term> {
+        const term = new Term();
 
-        return await termRepository.save(term);
-    }
+        term.title = termDto.title;
 
-    async update(
-        id: number,
-        title: string,
-        description: string,
-        startDate: Date,
-        endDate: Date
-    ): Promise<TermModel> {
-        const existingTerm = await termRepository.findOneBy({ id: id });
-
-        if (!existingTerm) {
-            throw new EntityNotFoundError('TermModel not found');
+        if (termDto.description != null) {
+            term.description = termDto.description;
         }
 
-        existingTerm.title = title;
-        existingTerm.description = description;
-        existingTerm.startDate = startDate;
-        existingTerm.endDate = endDate;
+        term.startDate = termDto.startDate;
+        term.endDate = termDto.endDate;
 
-        return await termRepository.save(existingTerm);
+        return await this.termRepository.save(term);
+    }
+
+    async update(id: number, termDto: TermDto): Promise<Term> {
+        const existingTerm = await this.termRepository.findOneBy({ id: id });
+
+        if (!existingTerm) {
+            throw new EntityNotFoundError('Term not found');
+        }
+
+        existingTerm.title = termDto.title;
+
+        if (termDto.description != null) {
+            existingTerm.description = termDto.description;
+        }
+
+        existingTerm.startDate = termDto.startDate;
+        existingTerm.endDate = termDto.endDate;
+
+        return await this.termRepository.save(existingTerm);
     }
 
     async delete(id: number): Promise<DeleteResult> {
-        return await termRepository.delete(id);
+        return await this.termRepository.delete(id);
     }
 }

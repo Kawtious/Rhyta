@@ -24,9 +24,16 @@
 import { Module } from '@nestjs/common';
 import { ProfessorEventService } from '../services/ProfessorEvent.service';
 import { ProfessorEventController } from '../controllers/ProfessorEvent.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
+import { Professor } from '../entities/Professor.entity';
 
 @Module({
+    imports: [
+        TypeOrmModule.forFeature([ProfessorEvent, Professor], 'mySqlConnection')
+    ],
+    providers: [ProfessorEventService],
     controllers: [ProfessorEventController],
-    providers: [ProfessorEventService]
+    exports: [ProfessorEventService]
 })
 export class ProfessorEventModule {}

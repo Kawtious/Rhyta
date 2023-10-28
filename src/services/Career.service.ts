@@ -21,54 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { CareerModel } from '../models/Career.model';
-import { careerRepository } from '../repositories/Career.repository';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Career } from '../entities/Career.entity';
+import { CareerDto } from '../payloads/dto/CareerDto';
 
 @Injectable()
 export class CareerService {
-    async getAll(): Promise<CareerModel[]> {
-        return await careerRepository.find();
+    constructor(
+        @InjectRepository(Career, 'mySqlConnection')
+        private readonly careerRepository: Repository<Career>
+    ) {}
+
+    async getAll(): Promise<Career[]> {
+        return await this.careerRepository.find();
     }
 
-    async getById(id: number): Promise<CareerModel> {
-        const career = await careerRepository.findOneBy({ id: id });
+    async getById(id: number): Promise<Career> {
+        const career = await this.careerRepository.findOneBy({ id: id });
 
         if (!career) {
-            throw new EntityNotFoundError('CareerModel not found');
+            throw new EntityNotFoundError('Career not found');
         }
 
         return career;
     }
 
-    async insert(name: string, description: string): Promise<CareerModel> {
-        const career = new CareerModel();
-        career.name = name;
-        career.description = description;
+    async insert(careerDto: CareerDto): Promise<Career> {
+        const career = new Career();
 
-        return await careerRepository.save(career);
-    }
+        career.name = careerDto.name;
 
-    async update(
-        id: number,
-        name: string,
-        description: string
-    ): Promise<CareerModel> {
-        const existingCareer = await careerRepository.findOneBy({ id: id });
-
-        if (!existingCareer) {
-            throw new EntityNotFoundError('CareerModel not found');
+        if (careerDto.description != null) {
+            career.description = careerDto.description;
         }
 
-        existingCareer.name = name;
-        existingCareer.description = description;
+        return await this.careerRepository.save(career);
+    }
 
-        return await careerRepository.save(existingCareer);
+    async update(id: number, careerDto: CareerDto): Promise<Career> {
+        const existingCareer = await this.careerRepository.findOneBy({
+            id: id
+        });
+
+        if (!existingCareer) {
+            throw new EntityNotFoundError('Career not found');
+        }
+
+        existingCareer.name = careerDto.name;
+
+        if (careerDto.description != null) {
+            existingCareer.description = careerDto.description;
+        }
+
+        return await this.careerRepository.save(existingCareer);
     }
 
     async delete(id: number): Promise<DeleteResult> {
-        return await careerRepository.delete(id);
+        return await this.careerRepository.delete(id);
     }
 }

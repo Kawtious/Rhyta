@@ -24,9 +24,14 @@
 import { Module } from '@nestjs/common';
 import { CourseController } from '../controllers/Course.controller';
 import { CourseService } from '../services/Course.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Course } from '../entities/Course.entity';
+import { Career } from '../entities/Career.entity';
 
 @Module({
+    imports: [TypeOrmModule.forFeature([Course, Career], 'mySqlConnection')],
+    providers: [CourseService],
     controllers: [CourseController],
-    providers: [CourseService]
+    exports: [CourseService]
 })
 export class CourseModule {}

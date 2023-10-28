@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Usuario, Zeferito
+ * Copyright (c) 2023 Kawtious, Zeferito
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,15 +28,38 @@ import { CourseModule } from './Course.module';
 import { ProfessorModule } from './Professor.module';
 import { ProfessorEventModule } from './ProfessorEvent.module';
 import { TermModule } from './Term.module';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '../guards/Auth.guard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MySqlConfigService } from '../services/MySqlConfig.service';
+import { MongoConfigService } from '../services/MongoConfig.service';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true
+        }),
+        TypeOrmModule.forRootAsync({
+            name: 'mySqlConnection',
+            useClass: MySqlConfigService
+        }),
+        TypeOrmModule.forRootAsync({
+            name: 'mongoConnection',
+            useClass: MongoConfigService
+        }),
         AuthModule,
         CareerModule,
         CourseModule,
         ProfessorModule,
         ProfessorEventModule,
         TermModule
+    ],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: AuthGuard
+        }
     ]
 })
 export class AppModule {}
