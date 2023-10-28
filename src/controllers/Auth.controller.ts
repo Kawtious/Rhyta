@@ -26,7 +26,7 @@ import { AuthService } from '../services/Auth.service';
 import { LoginRequest } from '../payloads/requests/LoginRequest';
 import { RegisterUserDto } from '../payloads/dto/RegisterUserDto';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 

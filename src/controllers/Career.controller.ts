@@ -39,7 +39,7 @@ import { CareerDto } from '../payloads/dto/CareerDto';
 import { Roles } from '../decorators/Roles.decorator';
 import { Role } from '../enums/Roles.enum';
 
-@Controller('careers')
+@Controller({ path: 'careers', version: '1' })
 export class CareerController {
     constructor(private readonly careerService: CareerService) {}
 

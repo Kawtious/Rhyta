@@ -25,10 +25,12 @@ require('dotenv').config();
 
 import axios, { AxiosInstance } from 'axios';
 
-const apiUrl = process.env.API_BASE_URL;
+const apiUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+
+const apiVersion = Number(process.env.API_VERSION) || 1;
 
 export const axiosInstance: AxiosInstance = axios.create({
-    baseURL: apiUrl,
+    baseURL: apiUrl + '/rhyta/api/v' + apiVersion,
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'

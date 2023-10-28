@@ -39,7 +39,7 @@ import { ProfessorEventDto } from '../payloads/dto/ProfessorEventDto';
 import { Roles } from '../decorators/Roles.decorator';
 import { Role } from '../enums/Roles.enum';
 
-@Controller('events')
+@Controller({ path: 'events', version: '1' })
 export class ProfessorEventController {
     constructor(
         private readonly professorEventService: ProfessorEventService

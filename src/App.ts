@@ -23,12 +23,18 @@
  */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/App.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    app.setGlobalPrefix('rhyta/api');
+
+    app.enableVersioning({
+        type: VersioningType.URI
+    });
 
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());

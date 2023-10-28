@@ -39,7 +39,7 @@ import { TermDto } from '../payloads/dto/TermDto';
 import { Roles } from '../decorators/Roles.decorator';
 import { Role } from '../enums/Roles.enum';
 
-@Controller('terms')
+@Controller({ path: 'terms', version: '1' })
 export class TermController {
     constructor(private readonly termService: TermService) {}
 

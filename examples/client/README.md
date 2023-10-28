@@ -43,9 +43,10 @@ To run this application locally, follow these steps:
 
     ```plaintext
     API_BASE_URL="your_api_base_url"      # "http://localhost:3000"
+    API_VERSION=api_version               # 1
     ```
 
-    Replace `your_api_base_url` with the actual API base URL.
+    Replace `your_api_base_url` and `api_version` with the actual API base URL and the API version.
 
 5. Build the application:
 
