@@ -79,7 +79,7 @@
             "**/*.(t|j)s"
         ],
         "coveragePathIgnorePatterns": [
-            "models"
+            "entities"
         ],
         "coverageDirectory": "../coverage",
         "testEnvironment": "node",
