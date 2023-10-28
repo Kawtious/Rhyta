@@ -28,7 +28,7 @@ import {
     Inject
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 import { ROLES_KEY } from '../decorators/Roles.decorator';
 import { Request } from 'express';
 import { TokenVerificationError } from '../errors/TokenVerificationError';

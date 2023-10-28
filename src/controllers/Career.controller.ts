@@ -36,7 +36,7 @@ import {
 import { CareerService } from '../services/Career.service';
 import { CareerDto } from '../dto/Career.dto';
 import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 import {
     ApiBearerAuth,
     ApiBody,

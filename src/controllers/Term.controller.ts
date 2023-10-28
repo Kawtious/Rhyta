@@ -36,7 +36,7 @@ import {
 import { TermService } from '../services/Term.service';
 import { TermDto } from '../dto/Term.dto';
 import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 import {
     ApiBearerAuth,
     ApiBody,

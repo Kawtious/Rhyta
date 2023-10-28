@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 import { SetMetadata } from '@nestjs/common';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 
 export const ROLES_KEY = 'roles';
 

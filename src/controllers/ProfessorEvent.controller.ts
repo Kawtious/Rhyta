@@ -36,7 +36,7 @@ import {
 import { ProfessorEventService } from '../services/ProfessorEvent.service';
 import { ProfessorEventDto } from '../dto/ProfessorEvent.dto';
 import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 import {
     ApiBearerAuth,
     ApiBody,

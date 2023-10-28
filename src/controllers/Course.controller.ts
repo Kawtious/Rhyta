@@ -36,7 +36,7 @@ import {
 import { CourseService } from '../services/Course.service';
 import { CourseDto } from '../dto/Course.dto';
 import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Roles.enum';
+import { Role } from '../enums/Role.enum';
 import {
     ApiBearerAuth,
     ApiBody,
