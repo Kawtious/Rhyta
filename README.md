@@ -87,6 +87,13 @@ To run this application locally, follow these steps:
     nest start
     ```
 
+9. Access OpenAPI interface:
+
+    This project hosts an interface where you can test the API endpoints by going to the API URL of the server.
+
+    Assuming the server is hosted on `localhost:3000` and is currently running, you can access the OpenAPI interface
+    through [this link.](http://localhost:3000/rhyta/api)
+
 ## Configuring Database Connections
 
 To configure the MySQL connection, you must create a `.env` file in the root directory of the project. This file will
