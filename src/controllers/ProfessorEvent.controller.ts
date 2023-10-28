@@ -30,7 +30,6 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
@@ -74,13 +73,10 @@ export class ProfessorEventController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async getAllByProfessorId(
-        @Param(
-            'professorId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('professorId')
         professorId: string
     ) {
         if (isNaN(Number(professorId))) {
@@ -111,18 +107,12 @@ export class ProfessorEventController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async getByProfessorId(
-        @Param(
-            'professorId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('professorId')
         professorId: string,
-        @Param(
-            'eventId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('eventId')
         eventId: string
     ) {
         if (isNaN(Number(professorId)) || isNaN(Number(eventId))) {
@@ -157,13 +147,10 @@ export class ProfessorEventController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async insertByProfessorId(
-        @Param(
-            'professorId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('professorId')
         professorId: string,
         @Body() professorEventDto: ProfessorEventDto
     ) {
@@ -199,18 +186,12 @@ export class ProfessorEventController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async updateByProfessorId(
-        @Param(
-            'professorId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('professorId')
         professorId: string,
-        @Param(
-            'eventId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('eventId')
         eventId: string,
         @Body() professorEventDto: ProfessorEventDto
     ) {
@@ -248,18 +229,12 @@ export class ProfessorEventController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async deleteByProfessorId(
-        @Param(
-            'professorId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('professorId')
         professorId: string,
-        @Param(
-            'eventId',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('eventId')
         eventId: string
     ) {
         if (isNaN(Number(professorId)) || isNaN(Number(eventId))) {

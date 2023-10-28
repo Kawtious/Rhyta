@@ -30,7 +30,6 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    ParseIntPipe,
     Post,
     Put
 } from '@nestjs/common';
@@ -64,7 +63,7 @@ export class CourseController {
     @ApiResponse({ status: HttpStatus.OK, description: 'List of courses' })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async getAll() {
         return await this.courseService.getAll();
@@ -89,13 +88,10 @@ export class CourseController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async getById(
-        @Param(
-            'id',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('id')
         id: string
     ) {
         if (isNaN(Number(id))) {
@@ -118,7 +114,7 @@ export class CourseController {
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Course created' })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async insert(@Body() courseDto: CourseDto) {
         return await this.courseService.insert(courseDto);
@@ -145,13 +141,10 @@ export class CourseController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async update(
-        @Param(
-            'id',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('id')
         id: string,
         @Body() courseDto: CourseDto
     ) {
@@ -184,13 +177,10 @@ export class CourseController {
     })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided.'
+        description: 'Access denied. No valid token provided'
     })
     async delete(
-        @Param(
-            'id',
-            new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-        )
+        @Param('id')
         id: string
     ) {
         if (isNaN(Number(id))) {
