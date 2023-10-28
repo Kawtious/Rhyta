@@ -70,11 +70,7 @@ export class AuthController {
     @ApiBody({ type: LoginRequestDto })
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'User authenticated successfully',
-        type: Object,
-        schema: {
-            $ref: getSchemaPath(JwtAuthResponseDto)
-        }
+        description: 'User authenticated successfully'
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
