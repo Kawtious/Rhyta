@@ -31,6 +31,17 @@ import helmet from 'helmet';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    const configService = app.get(ConfigService);
+
+    const allowedOrigins =
+        configService.get<string>('CLIENT_URL') || 'http://localhost:3001';
+
+    app.enableCors({
+        origin: [allowedOrigins],
+        methods: ['GET', 'PUT', 'POST', 'DELETE'],
+        credentials: true
+    });
+
     app.use(helmet());
 
     app.setGlobalPrefix('rhyta/api');
@@ -41,8 +52,6 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());
-
-    const configService = app.get(ConfigService);
 
     const host = configService.get<string>('SERVER_HOST') || 'localhost';
     const port = configService.get<number>('SERVER_PORT') || 3000;
