@@ -30,8 +30,7 @@ import {
     ApiConsumes,
     ApiOperation,
     ApiResponse,
-    ApiTags,
-    getSchemaPath
+    ApiTags
 } from '@nestjs/swagger';
 import { JwtAuthResponseDto } from '../dto/JwtAuthResponse.dto';
 
