@@ -4,6 +4,15 @@
     "sourceRoot": "src",
     "entryFile": "App.js",
     "compilerOptions": {
-        "deleteOutDir": true
+        "deleteOutDir": true,
+        "plugins": [
+            {
+                "name": "@nestjs/swagger",
+                "options": {
+                    "classValidatorShim": false,
+                    "introspectComments": true
+                }
+            }
+        ]
     }
 }

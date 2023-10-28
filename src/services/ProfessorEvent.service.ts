@@ -26,7 +26,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { ProfessorEventDto } from '../payloads/dto/ProfessorEventDto';
+import { ProfessorEventDto } from '../dto/ProfessorEvent.dto';
 import { Professor } from '../entities/Professor.entity';
 
 @Injectable()
@@ -54,7 +54,9 @@ export class ProfessorEventService {
         });
 
         if (!professorEvent) {
-            throw new EntityNotFoundError('Professor event not found');
+            throw new EntityNotFoundError(
+                'Professor, event, or both not found'
+            );
         }
 
         return professorEvent;
@@ -100,7 +102,9 @@ export class ProfessorEventService {
             });
 
         if (!existingProfessorEvent) {
-            throw new EntityNotFoundError('Professor event not found');
+            throw new EntityNotFoundError(
+                'Professor, event, or both not found'
+            );
         }
 
         existingProfessorEvent.title = professorEventDto.title;

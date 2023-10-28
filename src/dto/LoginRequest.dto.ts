@@ -21,19 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Role } from '../../enums/Roles.enum';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class RegisterUserDto {
+export class LoginRequestDto {
     @IsNotEmpty()
-    username!: string;
-
-    @IsEmail()
-    email!: string;
+    @ApiProperty({
+        name: 'identifier',
+        description: 'The identifier of the User',
+        nullable: false,
+        type: String
+    })
+    identifier!: string;
 
     @IsNotEmpty()
+    @ApiProperty({
+        name: 'password',
+        description: 'The password of the User',
+        nullable: false,
+        type: String
+    })
     password!: string;
-
-    @IsNotEmpty()
-    roles!: Role[];
 }

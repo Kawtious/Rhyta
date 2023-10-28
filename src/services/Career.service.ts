@@ -26,7 +26,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Career } from '../entities/Career.entity';
-import { CareerDto } from '../payloads/dto/CareerDto';
+import { CareerDto } from '../dto/Career.dto';
 
 @Injectable()
 export class CareerService {

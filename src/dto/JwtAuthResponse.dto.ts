@@ -21,12 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginRequest {
-    @IsNotEmpty()
-    identifier!: string;
+export class JwtAuthResponseDto {
+    @ApiProperty({
+        name: 'accessToken',
+        description: 'Access token',
+        type: String
+    })
+    accessToken!: string;
 
-    @IsNotEmpty()
-    password!: string;
+    @ApiProperty({
+        name: 'tokenType',
+        description: 'Token type (Bearer)',
+        type: String
+    })
+    tokenType!: string;
 }

@@ -26,7 +26,7 @@ import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CourseDto } from '../payloads/dto/CourseDto';
+import { CourseDto } from '../dto/Course.dto';
 import { Career } from '../entities/Career.entity';
 
 @Injectable()

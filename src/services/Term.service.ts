@@ -26,7 +26,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Term } from '../entities/Term.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { TermDto } from '../payloads/dto/TermDto';
+import { TermDto } from '../dto/Term.dto';
 
 @Injectable()
 export class TermService {

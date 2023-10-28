@@ -21,11 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class ProfessorDto {
+export class ProfessorEventDto {
     @IsNotEmpty()
-    firstName!: string;
+    @ApiProperty({
+        name: 'title',
+        description: 'The title of the event',
+        nullable: false,
+        type: String
+    })
+    title!: string;
 
-    lastName?: string;
+    @ApiPropertyOptional({
+        name: 'description',
+        description: 'The description of the Event',
+        nullable: true,
+        type: String
+    })
+    description?: string;
+
+    @IsDate()
+    @ApiProperty({
+        name: 'startDate',
+        description: 'The starting date of the Event',
+        nullable: false,
+        type: Date
+    })
+    startDate!: Date;
+
+    @IsDate()
+    @ApiProperty({
+        name: 'endDate',
+        description: 'The ending date of the Event',
+        nullable: false,
+        type: Date
+    })
+    endDate!: Date;
 }

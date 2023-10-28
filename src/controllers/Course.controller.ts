@@ -35,10 +35,20 @@ import {
     Put
 } from '@nestjs/common';
 import { CourseService } from '../services/Course.service';
-import { CourseDto } from '../payloads/dto/CourseDto';
+import { CourseDto } from '../dto/Course.dto';
 import { Roles } from '../decorators/Roles.decorator';
 import { Role } from '../enums/Roles.enum';
+import {
+    ApiBearerAuth,
+    ApiBody,
+    ApiConsumes,
+    ApiOperation,
+    ApiResponse,
+    ApiTags
+} from '@nestjs/swagger';
 
+@ApiTags('Courses')
+@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'courses', version: '1' })
 export class CourseController {
     constructor(private readonly courseService: CourseService) {}
@@ -46,6 +56,16 @@ export class CourseController {
     @Get()
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Get all courses',
+        description: 'Retrieve a list of all courses.'
+    })
+    @ApiBearerAuth('JWT-auth')
+    @ApiResponse({ status: HttpStatus.OK, description: 'List of courses' })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Access denied. No valid token provided.'
+    })
     async getAll() {
         return await this.courseService.getAll();
     }
@@ -53,6 +73,24 @@ export class CourseController {
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Get course by ID',
+        description: 'Retrieve a course by its ID.'
+    })
+    @ApiBearerAuth('JWT-auth')
+    @ApiResponse({ status: HttpStatus.OK, description: 'Course details' })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Course not found'
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Invalid ID'
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Access denied. No valid token provided.'
+    })
     async getById(
         @Param(
             'id',
@@ -70,6 +108,18 @@ export class CourseController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Create a new course',
+        description: 'Create a new course with the provided data.'
+    })
+    @ApiConsumes('application/json')
+    @ApiBody({ type: CourseDto })
+    @ApiBearerAuth('JWT-auth')
+    @ApiResponse({ status: HttpStatus.CREATED, description: 'Course created' })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Access denied. No valid token provided.'
+    })
     async insert(@Body() courseDto: CourseDto) {
         return await this.courseService.insert(courseDto);
     }
@@ -77,6 +127,26 @@ export class CourseController {
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Update a course',
+        description: 'Update an existing course with the provided data.'
+    })
+    @ApiConsumes('application/json')
+    @ApiBody({ type: CourseDto })
+    @ApiBearerAuth('JWT-auth')
+    @ApiResponse({ status: HttpStatus.OK, description: 'Course updated' })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Course not found'
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Invalid ID'
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Access denied. No valid token provided.'
+    })
     async update(
         @Param(
             'id',
@@ -95,6 +165,27 @@ export class CourseController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Delete a course',
+        description: 'Delete a course by its ID.'
+    })
+    @ApiBearerAuth('JWT-auth')
+    @ApiResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: 'Course deleted'
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Course not found'
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Invalid ID'
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Access denied. No valid token provided.'
+    })
     async delete(
         @Param(
             'id',

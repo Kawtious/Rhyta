@@ -26,7 +26,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { ProfessorDto } from '../payloads/dto/ProfessorDto';
+import { ProfessorDto } from '../dto/Professor.dto';
 
 @Injectable()
 export class ProfessorService {

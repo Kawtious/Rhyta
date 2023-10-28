@@ -27,6 +27,11 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
+import {
+    DocumentBuilder,
+    SwaggerDocumentOptions,
+    SwaggerModule
+} from '@nestjs/swagger';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -44,7 +49,9 @@ async function bootstrap() {
 
     app.use(helmet());
 
-    app.setGlobalPrefix('rhyta/api');
+    const apiPath = 'rhyta/api';
+
+    app.setGlobalPrefix(apiPath);
 
     app.enableVersioning({
         type: VersioningType.URI
@@ -52,6 +59,31 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());
+
+    const options: SwaggerDocumentOptions = {
+        operationIdFactory: (controllerKey: string, methodKey: string) =>
+            methodKey
+    };
+
+    const config = new DocumentBuilder()
+        .setTitle('Rhyta API')
+        .setVersion('1.0')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                name: 'JWT',
+                description: 'Enter JWT token',
+                in: 'header'
+            },
+            'JWT-auth'
+        )
+        .build();
+
+    const document = SwaggerModule.createDocument(app, config, options);
+
+    SwaggerModule.setup(apiPath, app, document);
 
     const host = configService.get<string>('SERVER_HOST') || 'localhost';
     const port = configService.get<number>('SERVER_PORT') || 3000;

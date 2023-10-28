@@ -28,8 +28,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from '../entities/User.entity';
 import { PasswordMismatchError } from '../errors/PasswordMismatchError';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { RegisterUserDto } from '../payloads/dto/RegisterUserDto';
-import { LoginRequest } from '../payloads/requests/LoginRequest';
+import { RegisterUserDto } from '../dto/RegisterUser.dto';
+import { LoginRequestDto } from '../dto/LoginRequest.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './User.service';
 
@@ -65,7 +65,7 @@ export class AuthService {
         return await this.userService.save(user);
     }
 
-    async login(loginRequest: LoginRequest): Promise<string> {
+    async login(loginRequest: LoginRequestDto): Promise<string> {
         const user = await this.userService.getByUsernameOrEmail(
             loginRequest.identifier,
             loginRequest.identifier

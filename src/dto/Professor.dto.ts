@@ -22,10 +22,23 @@
  * THE SOFTWARE.
  */
 import { IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CareerDto {
+export class ProfessorDto {
     @IsNotEmpty()
-    name!: string;
+    @ApiProperty({
+        name: 'firstName',
+        description: 'The name of the Professor',
+        nullable: false,
+        type: String
+    })
+    firstName!: string;
 
-    description?: string;
+    @ApiPropertyOptional({
+        name: 'lastName',
+        description: 'The last name of the Professor',
+        nullable: true,
+        type: String
+    })
+    lastName?: string;
 }

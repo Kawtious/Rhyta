@@ -22,16 +22,41 @@
  * THE SOFTWARE.
  */
 import { IsDate, IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class TermDto {
     @IsNotEmpty()
+    @ApiProperty({
+        name: 'title',
+        description: 'The title of the Term',
+        nullable: false,
+        type: String
+    })
     title!: string;
 
+    @ApiPropertyOptional({
+        name: 'description',
+        description: 'The description of the Term',
+        nullable: true,
+        type: String
+    })
     description?: string;
 
     @IsDate()
+    @ApiProperty({
+        name: 'startDate',
+        description: 'The starting date of the Term',
+        nullable: false,
+        type: Date
+    })
     startDate!: Date;
 
     @IsDate()
+    @ApiProperty({
+        name: 'endDate',
+        description: 'The ending date of the Term',
+        nullable: false,
+        type: Date
+    })
     endDate!: Date;
 }
