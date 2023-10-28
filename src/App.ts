@@ -26,9 +26,12 @@ import { AppModule } from './modules/App.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    app.use(helmet());
 
     app.setGlobalPrefix('rhyta/api');
 
