@@ -1,18 +1,14 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-import type {Config} from 'jest';
+import type { Config } from 'jest';
 
 const config: Config = {
     roots: ['<rootDir>/src/test'],
     preset: 'ts-jest',
     testEnvironment: 'node',
     collectCoverage: true,
-    collectCoverageFrom: [
-        "src/main/**/*.ts"
-    ],
+    collectCoverageFrom: ['src/main/**/*.ts'],
     coverageDirectory: 'coverage',
-    testPathIgnorePatterns: [
-        "/node_modules/"
-    ],
+    testPathIgnorePatterns: ['/node_modules/'],
     verbose: true,
     coverageThreshold: {
         global: {
@@ -22,7 +18,7 @@ const config: Config = {
             statements: 100
         }
     },
-    setupFilesAfterEnv: ['<rootDir>/src/test/Setup.ts']
+    setupFilesAfterEnv: ['<rootDir>/src/test/Setup.spec.ts']
 };
 
 export default config;
