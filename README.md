@@ -1,11 +1,8 @@
 # RhytaServerJS
 
 [issues-shield]: https://img.shields.io/github/issues/Kawtious/RhytaServerJS.svg?style=for-the-badge
-
 [issues-url]: https://github.com/Kawtious/RhytaServerJS/issues
-
 [license-shield]: https://img.shields.io/github/license/Kawtious/RhytaServerJS.svg?style=for-the-badge
-
 [license-url]: https://github.com/Kawtious/RhytaServerJS/blob/master/LICENSE
 
 [![Issues][issues-shield]][issues-url]
@@ -13,20 +10,20 @@
 
 This repository contains an application designed to showcase the resource storage system for an AI scheduler that
 automates the creation of schedules for professors, classrooms, and other resources in educational institutions. This
-project utilizes Node.js with Express.js and TypeORM as the primary development stack and supports MySQL and MongoDB.
+project utilizes NestJS with TypeORM as the primary development stack and supports MySQL and MongoDB.
 
 ## Technologies Used
 
-- **Application**:
-    - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript.
-    - [Node.js](https://nodejs.org/): A JavaScript runtime for server-side development.
-    - [Express.js](https://expressjs.com/): A Node.js web application framework.
-    - [TypeORM](https://typeorm.io/): A TypeScript ORM (object-relational mapper) library.
-    - [Jest](https://jestjs.io/): A JavaScript testing framework.
+-   **Application**:
 
-- **Databases**:
-    - [MySQL](https://www.mysql.com/): A widely used relational database management system.
-    - [MongoDB](https://www.mongodb.com/): An open source NoSQL database management program.
+    -   [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript.
+    -   [NestJS](https://nestjs.com/): A progressive Node.js framework that helps build server-side applications.
+    -   [TypeORM](https://typeorm.io/): A TypeScript ORM (object-relational mapper) library.
+    -   [Jest](https://jestjs.io/): A JavaScript testing framework.
+
+-   **Databases**:
+    -   [MySQL](https://www.mysql.com/): A widely used relational database management system.
+    -   [MongoDB](https://www.mongodb.com/): An open source NoSQL database management program.
 
 ## Getting Started
 
@@ -52,43 +49,50 @@ To run this application locally, follow these steps:
 
 4. Configure the Databases:
 
-   Configure the databases by following the instructions in
-   the [Configuring Database Connections](#configuring-database-connections) section of this README.
+    Configure the databases by following the instructions in
+    the [Configuring Database Connections](#configuring-database-connections) section of this README.
 
 5. Configure the server:
 
-   If you followed the instructions in [Configuring Database Connections](#configuring-database-connections), you can
-   just open the `.env` file once again using a text editor and add the following environment variables:
+    If you followed the instructions in [Configuring Database Connections](#configuring-database-connections), you can
+    just open the `.env` file once again using a text editor and add the following environment variables:
 
     ```plaintext
     SERVER_HOST="your_server_host"             # "localhost"
     SERVER_PORT=your_server_port               # 3000
     ```
 
-   Replace `your_server_host`, and `your_server_port` with your preferred connection details.
+    Replace `your_server_host`, and `your_server_port` with your preferred connection details.
 
 6. Configure JWT:
 
-   In the `.env` file, add the following environment variables:
+    In the `.env` file, add the following environment variables:
 
     ```plaintext
     JWT_SECRET="your_jwt_secret"                 # "AVeeeeeeeeeeeeeryLongSecret"
     JWT_EXPIRATION="your_jwt_expiration_time"    # "1h"
     ```
 
-   Replace `your_jwt_secret`, and `your_jwt_expiration_time` with your preferred JWT details.
+    Replace `your_jwt_secret`, and `your_jwt_expiration_time` with your preferred JWT details.
 
 7. Build the application:
 
     ```bash
-    npm run build
+    nest build
     ```
 
 8. Start the application:
 
     ```bash
-    npm run start
+    nest start
     ```
+
+9. Access OpenAPI interface:
+
+    This project hosts an interface where you can test the API endpoints by going to the API URL of the server.
+
+    Assuming the server is hosted on `localhost:3000` and is currently running, you can access the OpenAPI interface
+    through [this link.](http://localhost:3000/rhyta/api)
 
 ## Configuring Database Connections
 
@@ -115,8 +119,8 @@ contain environment variables that store the database connection information. He
     MYSQLDB_NAME="your_mysql_database_name"    # "mydb"
     ```
 
-   Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
-   and `your_mysql_database_name` with your actual MySQL database details.
+    Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
+    and `your_mysql_database_name` with your actual MySQL database details.
 
 ### MongoDB Configuration
 
@@ -128,7 +132,7 @@ contain environment variables that store the database connection information. He
     MONGODB_URI="your_mongodb_uri"             # "mongodb://localhost/your-database-name"
     ```
 
-   Replace `your_mongodb_uri` with your actual MongoDB database details.
+    Replace `your_mongodb_uri` with your actual MongoDB database details.
 
 ## Contributing
 
@@ -142,8 +146,8 @@ This application is open-source and available under the [MIT License](LICENSE).
 
 ## Authors
 
-- [Kawtious](https://github.com/Kawtious)
+-   [Kawtious](https://github.com/Kawtious)
 
-- [Zeferito](https://github.com/Zeferito)
+-   [Zeferito](https://github.com/Zeferito)
 
 Feel free to reach out if you have any questions or need assistance with this application.

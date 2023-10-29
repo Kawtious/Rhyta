@@ -4,10 +4,10 @@ A small example CLI client is included in this repository to test the API endpoi
 
 ## Technologies Used
 
-- **Application**:
-    - [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript.
-    - [Axios](https://axios-http.com/): A simple promise based HTTP client for the browser and Node.js.
-    - [Jest](https://jestjs.io/): A JavaScript testing framework.
+-   **Application**:
+    -   [TypeScript](https://www.typescriptlang.org/): A strongly typed programming language that builds on JavaScript.
+    -   [Axios](https://axios-http.com/): A simple promise based HTTP client for the browser and Node.js.
+    -   [Jest](https://jestjs.io/): A JavaScript testing framework.
 
 ## Getting Started
 
@@ -33,19 +33,20 @@ To run this application locally, follow these steps:
 
 4. Configure the API URL:
 
-   In the root directory of the example client project, create a `.env` file:
+    In the root directory of the example client project, create a `.env` file:
 
     ```bash
     touch .env
     ```
 
-   Open the `.env` file using a text editor and make sure to configure the API base URL:
+    Open the `.env` file using a text editor and make sure to configure the API base URL:
 
     ```plaintext
     API_BASE_URL="your_api_base_url"      # "http://localhost:3000"
+    API_VERSION=api_version               # 1
     ```
 
-   Replace `your_api_base_url` with the actual API base URL.
+    Replace `your_api_base_url` and `api_version` with the actual API base URL and the API version.
 
 5. Build the application:
 
