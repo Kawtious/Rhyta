@@ -95,7 +95,7 @@
             }
         },
         "setupFilesAfterEnv": [
-            "<rootDir>/Setup.ts"
+            "../src/spec/Setup.spec.ts"
         ]
     }
 }
