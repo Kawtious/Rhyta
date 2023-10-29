@@ -21,6 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Repository } from 'typeorm';
+
+export type MockType<T> = {
+    [P in keyof T]?: jest.Mock<NonNullable<unknown>>;
+};
+
+export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
+    () => ({
+        findOne: jest.fn((entity) => entity)
+    })
+);
+
 beforeAll(async () => {});
 
 afterAll(async () => {});
