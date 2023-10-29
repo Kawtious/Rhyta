@@ -21,16 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
 import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
-import { UserConflictError } from '../errors/UserConflictError';
-import { Injectable } from '@nestjs/common';
-import { User } from '../entities/User.entity';
-import { PasswordMismatchError } from '../errors/PasswordMismatchError';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { RegisterUserDto } from '../dto/RegisterUser.dto';
+
 import { LoginRequestDto } from '../dto/LoginRequest.dto';
-import { JwtService } from '@nestjs/jwt';
+import { RegisterUserDto } from '../dto/RegisterUser.dto';
+import { User } from '../entities/User.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { PasswordMismatchError } from '../errors/PasswordMismatchError';
+import { UserConflictError } from '../errors/UserConflictError';
 import { UserService } from './User.service';
 
 @Injectable()

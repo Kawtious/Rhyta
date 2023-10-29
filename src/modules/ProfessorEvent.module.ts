@@ -22,11 +22,12 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { ProfessorEventService } from '../services/ProfessorEvent.service';
-import { ProfessorEventController } from '../controllers/ProfessorEvent.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
+
+import { ProfessorEventController } from '../controllers/ProfessorEvent.controller';
 import { Professor } from '../entities/Professor.entity';
+import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
+import { ProfessorEventService } from '../services/ProfessorEvent.service';
 
 @Module({
     imports: [

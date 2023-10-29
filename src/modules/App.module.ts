@@ -22,18 +22,19 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AuthGuard } from '../guards/Auth.guard';
+import { MongoConfigService } from '../services/MongoConfig.service';
+import { MySqlConfigService } from '../services/MySqlConfig.service';
 import { AuthModule } from './Auth.module';
 import { CareerModule } from './Career.module';
 import { CourseModule } from './Course.module';
 import { ProfessorModule } from './Professor.module';
 import { ProfessorEventModule } from './ProfessorEvent.module';
 import { TermModule } from './Term.module';
-import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '../guards/Auth.guard';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MySqlConfigService } from '../services/MySqlConfig.service';
-import { MongoConfigService } from '../services/MongoConfig.service';
 
 @Module({
     imports: [

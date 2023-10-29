@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { ProfessorEvent } from './ProfessorEvent.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { ProfessorEvent } from './ProfessorEvent.entity';
 
 @Entity()
 export class Professor {

@@ -22,9 +22,6 @@
  * THE SOFTWARE.
  */
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthService } from '../services/Auth.service';
-import { LoginRequestDto } from '../dto/LoginRequest.dto';
-import { RegisterUserDto } from '../dto/RegisterUser.dto';
 import {
     ApiBody,
     ApiConsumes,
@@ -32,7 +29,11 @@ import {
     ApiResponse,
     ApiTags
 } from '@nestjs/swagger';
+
 import { JwtAuthResponseDto } from '../dto/JwtAuthResponse.dto';
+import { LoginRequestDto } from '../dto/LoginRequest.dto';
+import { RegisterUserDto } from '../dto/RegisterUser.dto';
+import { AuthService } from '../services/Auth.service';
 
 @ApiTags('Authentication')
 @Controller({ path: 'auth', version: '1' })

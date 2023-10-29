@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Professor } from './Professor.entity';
 import {
     Column,
     Entity,
@@ -30,6 +29,8 @@ import {
     PrimaryGeneratedColumn,
     Relation
 } from 'typeorm';
+
+import { Professor } from './Professor.entity';
 
 @Entity()
 export class ProfessorEvent {

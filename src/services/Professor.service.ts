@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { DeleteResult, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { DeleteResult, Repository } from 'typeorm';
+
+import { ProfessorDto } from '../dto/Professor.dto';
 import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { ProfessorDto } from '../dto/Professor.dto';
 
 @Injectable()
 export class ProfessorService {

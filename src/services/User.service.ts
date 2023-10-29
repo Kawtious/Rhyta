@@ -21,11 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { DeleteResult, MongoRepository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+
+import { DeleteResult, MongoRepository } from 'typeorm';
+
 import { User } from '../entities/User.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 
 @Injectable()
 export class UserService {

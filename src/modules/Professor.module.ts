@@ -22,10 +22,11 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { ProfessorController } from '../controllers/Professor.controller';
-import { ProfessorService } from '../services/Professor.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ProfessorController } from '../controllers/Professor.controller';
 import { Professor } from '../entities/Professor.entity';
+import { ProfessorService } from '../services/Professor.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Professor], 'mySqlConnection')],

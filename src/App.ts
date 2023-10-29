@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/App.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { ConfigService } from '@nestjs/config';
-import helmet from 'helmet';
+import { NestFactory } from '@nestjs/core';
 import {
     DocumentBuilder,
     SwaggerDocumentOptions,
     SwaggerModule
 } from '@nestjs/swagger';
+
+import helmet from 'helmet';
+
+import { HttpExceptionFilter } from './filters/HttpException.filter';
+import { AppModule } from './modules/App.module';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);

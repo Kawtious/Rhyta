@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Role } from '../enums/Role.enum';
-import { IsEmail, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+import { Role } from '../enums/Role.enum';
 
 export class RegisterUserDto {
     @IsNotEmpty()

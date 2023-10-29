@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
 import {
     Body,
     Controller,
@@ -33,10 +32,6 @@ import {
     Post,
     Put
 } from '@nestjs/common';
-import { ProfessorService } from '../services/Professor.service';
-import { ProfessorDto } from '../dto/Professor.dto';
-import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Role.enum';
 import {
     ApiBearerAuth,
     ApiBody,
@@ -45,6 +40,12 @@ import {
     ApiResponse,
     ApiTags
 } from '@nestjs/swagger';
+
+import { Roles } from '../decorators/Roles.decorator';
+import { ProfessorDto } from '../dto/Professor.dto';
+import { Role } from '../enums/Role.enum';
+import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
+import { ProfessorService } from '../services/Professor.service';
 
 @ApiTags('Professors')
 @ApiBearerAuth('JWT-auth')

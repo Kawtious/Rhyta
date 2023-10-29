@@ -22,10 +22,11 @@
  * THE SOFTWARE.
  */
 import { Module } from '@nestjs/common';
-import { CareerController } from '../controllers/Career.controller';
-import { CareerService } from '../services/Career.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { CareerController } from '../controllers/Career.controller';
 import { Career } from '../entities/Career.entity';
+import { CareerService } from '../services/Career.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Career], 'mySqlConnection')],

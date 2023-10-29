@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { Role } from '../enums/Role.enum';
-import { ROLES_KEY } from '../decorators/Roles.decorator';
-import { Request } from 'express';
-import { TokenVerificationError } from '../errors/TokenVerificationError';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+
+import { Request } from 'express';
+
+import { ROLES_KEY } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Role.enum';
+import { TokenVerificationError } from '../errors/TokenVerificationError';
 import { UserService } from '../services/User.service';
 
 @Injectable()

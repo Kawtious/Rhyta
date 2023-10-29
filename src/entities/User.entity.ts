@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
+
 import { Role } from '../enums/Role.enum';
 
 @Entity()
