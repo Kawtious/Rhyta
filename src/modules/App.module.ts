@@ -26,6 +26,8 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import Joi from 'joi';
+
 import { AuthGuard } from '../guards/Auth.guard';
 import { MongoConfigService } from '../services/MongoConfig.service';
 import { MySqlConfigService } from '../services/MySqlConfig.service';
@@ -39,7 +41,28 @@ import { TermModule } from './Term.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            isGlobal: true
+            isGlobal: true,
+            cache: true,
+            validationSchema: Joi.object({
+                NODE_ENV: Joi.string()
+                    .valid('development', 'production', 'test', 'provision')
+                    .default('development'),
+                SERVER_PORT: Joi.number().port().default(3000),
+                JWT_SECRET: Joi.string().required(),
+                JWT_EXPIRATION: Joi.string().required(),
+                MYSQL_HOST: Joi.string().default('localhost'),
+                MYSQL_PORT: Joi.number().port().default(3306),
+                MYSQL_USER: Joi.string().default('root'),
+                MYSQL_PASSWORD: Joi.string().default('password'),
+                MYSQL_NAME: Joi.string().default('mydb'),
+                MYSQL_SYNCHRONIZE: Joi.boolean().default(true),
+                MONGO_URI: Joi.string().default('mongodb://localhost:27017'),
+                MONGO_SYNCHRONIZE: Joi.boolean().default(true)
+            }),
+            validationOptions: {
+                allowUnknown: true,
+                abortEarly: true
+            }
         }),
         TypeOrmModule.forRootAsync({
             name: 'mySqlConnection',

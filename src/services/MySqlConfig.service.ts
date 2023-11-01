@@ -34,15 +34,12 @@ export class MySqlConfigService implements TypeOrmOptionsFactory {
     createTypeOrmOptions(): TypeOrmModuleOptions {
         return {
             type: 'mysql',
-            host: this.configService.get<string>('MYSQLDB_HOST') || 'localhost',
-            port: this.configService.get<number>('MYSQLDB_PORT') || 3306,
-            username: this.configService.get<string>('MYSQLDB_USER') || 'root',
-            password:
-                this.configService.get<string>('MYSQLDB_PASSWORD') ||
-                'password',
-            database: this.configService.get<string>('MYSQLDB_NAME') || 'mydb',
-            synchronize:
-                this.configService.get<boolean>('MYSQLDB_SYNCHRONIZE') || true,
+            host: this.configService.get<string>('MYSQL_HOST'),
+            port: this.configService.get<number>('MYSQL_PORT'),
+            username: this.configService.get<string>('MYSQL_USER'),
+            password: this.configService.get<string>('MYSQL_PASSWORD'),
+            database: this.configService.get<string>('MYSQL_NAME'),
+            synchronize: this.configService.get<boolean>('MYSQL_SYNCHRONIZE'),
             keepConnectionAlive: true,
             autoLoadEntities: true,
             namingStrategy: new SnakeNamingStrategy(),

@@ -58,11 +58,10 @@ To run this application locally, follow these steps:
     just open the `.env` file once again using a text editor and add the following environment variables:
 
     ```plaintext
-    SERVER_HOST="your_server_host"             # "localhost"
     SERVER_PORT=your_server_port               # 3000
     ```
 
-    Replace `your_server_host`, and `your_server_port` with your preferred connection details.
+    Replace `your_server_port` with your preferred connection details.
 
 6. Configure JWT:
 
@@ -112,11 +111,11 @@ contain environment variables that store the database connection information. He
 2. Add the following environment variables with your MySQL database information:
 
     ```plaintext
-    MYSQLDB_HOST="your_mysql_host"             # "localhost"
-    MYSQLDB_PORT=your_mysql_port               # 3306
-    MYSQLDB_USER="your_mysql_user"             # "user"
-    MYSQLDB_PASSWORD="your_mysql_password"     # "password"
-    MYSQLDB_NAME="your_mysql_database_name"    # "mydb"
+    MYSQL_HOST="your_mysql_host"             # "localhost"
+    MYSQL_PORT=your_mysql_port               # 3306
+    MYSQL_USER="your_mysql_user"             # "user"
+    MYSQL_PASSWORD="your_mysql_password"     # "password"
+    MYSQL_NAME="your_mysql_database_name"    # "mydb"
     ```
 
     Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
@@ -129,7 +128,7 @@ contain environment variables that store the database connection information. He
 2. Add the following environment variables with your MongoDB database information:
 
     ```plaintext
-    MONGODB_URI="your_mongodb_uri"             # "mongodb://localhost/your-database-name"
+    MONGO_URI="your_mongodb_uri"             # "mongodb://localhost/your-database-name"
     ```
 
     Replace `your_mongodb_uri` with your actual MongoDB database details.

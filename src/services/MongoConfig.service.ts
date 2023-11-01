@@ -32,11 +32,8 @@ export class MongoConfigService implements TypeOrmOptionsFactory {
     createTypeOrmOptions(): TypeOrmModuleOptions {
         return {
             type: 'mongodb',
-            url:
-                this.configService.get<string>('MONGODB_URI') ||
-                'mongodb://localhost:27017',
-            synchronize:
-                this.configService.get<boolean>('MONGODB_SYNCHRONIZE') || true,
+            url: this.configService.get<string>('MONGO_URI'),
+            synchronize: this.configService.get<boolean>('MONGO_SYNCHRONIZE'),
             keepConnectionAlive: true,
             autoLoadEntities: true,
             logging: false
