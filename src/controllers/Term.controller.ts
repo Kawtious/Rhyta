@@ -33,7 +33,6 @@ import {
     Put
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
     ApiBody,
     ApiConsumes,
     ApiOperation,
@@ -48,7 +47,6 @@ import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidErr
 import { TermService } from '../services/Term.service';
 
 @ApiTags('Terms')
-@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'terms', version: '1' })
 export class TermController {
     constructor(private readonly termService: TermService) {}
@@ -60,12 +58,7 @@ export class TermController {
         summary: 'Get all terms',
         description: 'Retrieve a list of all terms.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'List of terms' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async getAll() {
         return await this.termService.getAll();
     }
@@ -77,7 +70,6 @@ export class TermController {
         summary: 'Get term by ID',
         description: 'Retrieve a term by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Term details' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -86,10 +78,6 @@ export class TermController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getById(
         @Param('id')
@@ -111,12 +99,7 @@ export class TermController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: TermDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Term created' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async insert(@Body() termDto: TermDto) {
         return await this.termService.insert(termDto);
     }
@@ -130,7 +113,6 @@ export class TermController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: TermDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Term updated' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -139,10 +121,6 @@ export class TermController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async update(
         @Param('id')
@@ -163,7 +141,6 @@ export class TermController {
         summary: 'Delete a term',
         description: 'Delete a term by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.NO_CONTENT, description: 'Term deleted' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -172,10 +149,6 @@ export class TermController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async delete(
         @Param('id')

@@ -33,7 +33,6 @@ import {
     Put
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
     ApiBody,
     ApiConsumes,
     ApiOperation,
@@ -48,7 +47,6 @@ import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidErr
 import { CareerService } from '../services/Career.service';
 
 @ApiTags('Careers')
-@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'careers', version: '1' })
 export class CareerController {
     constructor(private readonly careerService: CareerService) {}
@@ -60,12 +58,7 @@ export class CareerController {
         summary: 'Get all careers',
         description: 'Retrieve a list of all careers.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'List of careers' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async getAll() {
         return await this.careerService.getAll();
     }
@@ -77,7 +70,6 @@ export class CareerController {
         summary: 'Get career by ID',
         description: 'Retrieve a career by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Career details' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -86,10 +78,6 @@ export class CareerController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getById(
         @Param('id')
@@ -111,12 +99,7 @@ export class CareerController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: CareerDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Career created' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async insert(@Body() careerDto: CareerDto) {
         return await this.careerService.insert(careerDto);
     }
@@ -130,7 +113,6 @@ export class CareerController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: CareerDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Career updated' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -139,10 +121,6 @@ export class CareerController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async update(
         @Param('id')
@@ -163,7 +141,6 @@ export class CareerController {
         summary: 'Delete a career',
         description: 'Delete a career by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'Career deleted'
@@ -175,10 +152,6 @@ export class CareerController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async delete(
         @Param('id')

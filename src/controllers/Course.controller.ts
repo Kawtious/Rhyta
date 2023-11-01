@@ -33,7 +33,6 @@ import {
     Put
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
     ApiBody,
     ApiConsumes,
     ApiOperation,
@@ -48,7 +47,6 @@ import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidErr
 import { CourseService } from '../services/Course.service';
 
 @ApiTags('Courses')
-@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'courses', version: '1' })
 export class CourseController {
     constructor(private readonly courseService: CourseService) {}
@@ -60,12 +58,7 @@ export class CourseController {
         summary: 'Get all courses',
         description: 'Retrieve a list of all courses.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'List of courses' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async getAll() {
         return await this.courseService.getAll();
     }
@@ -77,7 +70,6 @@ export class CourseController {
         summary: 'Get course by ID',
         description: 'Retrieve a course by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Course details' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -86,10 +78,6 @@ export class CourseController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getById(
         @Param('id')
@@ -111,12 +99,7 @@ export class CourseController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: CourseDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Course created' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async insert(@Body() courseDto: CourseDto) {
         return await this.courseService.insert(courseDto);
     }
@@ -130,7 +113,6 @@ export class CourseController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: CourseDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Course updated' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -139,10 +121,6 @@ export class CourseController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async update(
         @Param('id')
@@ -163,7 +141,6 @@ export class CourseController {
         summary: 'Delete a course',
         description: 'Delete a course by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'Course deleted'
@@ -175,10 +152,6 @@ export class CourseController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async delete(
         @Param('id')

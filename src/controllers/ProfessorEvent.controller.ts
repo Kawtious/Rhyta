@@ -33,7 +33,6 @@ import {
     Put
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
     ApiBody,
     ApiConsumes,
     ApiOperation,
@@ -48,7 +47,6 @@ import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidErr
 import { ProfessorEventService } from '../services/ProfessorEvent.service';
 
 @ApiTags('Professor Events')
-@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'events', version: '1' })
 export class ProfessorEventController {
     constructor(
@@ -62,7 +60,6 @@ export class ProfessorEventController {
         summary: 'Get all events by professor ID',
         description: 'Retrieve a list of all events for a specific professor.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'List of events' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -71,10 +68,6 @@ export class ProfessorEventController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getAllByProfessorId(
         @Param('professorId')
@@ -96,7 +89,6 @@ export class ProfessorEventController {
         summary: 'Get event by professor and event ID',
         description: 'Retrieve an event by professor and event ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Event details' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -105,10 +97,6 @@ export class ProfessorEventController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getByProfessorId(
         @Param('professorId')
@@ -136,7 +124,6 @@ export class ProfessorEventController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: ProfessorEventDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.CREATED, description: 'Event created' })
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
@@ -145,10 +132,6 @@ export class ProfessorEventController {
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
         description: 'Professor not found'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async insertByProfessorId(
         @Param('professorId')
@@ -175,7 +158,6 @@ export class ProfessorEventController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: ProfessorEventDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Event updated' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -184,10 +166,6 @@ export class ProfessorEventController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async updateByProfessorId(
         @Param('professorId')
@@ -215,7 +193,6 @@ export class ProfessorEventController {
         description:
             'Delete an event for a specific professor by professor and event ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'Event deleted'
@@ -227,10 +204,6 @@ export class ProfessorEventController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async deleteByProfessorId(
         @Param('professorId')

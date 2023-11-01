@@ -33,7 +33,6 @@ import {
     Put
 } from '@nestjs/common';
 import {
-    ApiBearerAuth,
     ApiBody,
     ApiConsumes,
     ApiOperation,
@@ -48,7 +47,6 @@ import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidErr
 import { ProfessorService } from '../services/Professor.service';
 
 @ApiTags('Professors')
-@ApiBearerAuth('JWT-auth')
 @Controller({ path: 'professors', version: '1' })
 export class ProfessorController {
     constructor(private readonly professorService: ProfessorService) {}
@@ -60,12 +58,7 @@ export class ProfessorController {
         summary: 'Get all professors',
         description: 'Retrieve a list of all professors.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'List of professors' })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
-    })
     async getAll() {
         return await this.professorService.getAll();
     }
@@ -77,7 +70,6 @@ export class ProfessorController {
         summary: 'Get professor by ID',
         description: 'Retrieve a professor by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Professor details' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -86,10 +78,6 @@ export class ProfessorController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async getById(
         @Param('id')
@@ -111,14 +99,9 @@ export class ProfessorController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: ProfessorDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'Professor created'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async insert(@Body() professorDto: ProfessorDto) {
         return await this.professorService.insert(professorDto);
@@ -133,7 +116,6 @@ export class ProfessorController {
     })
     @ApiConsumes('application/json')
     @ApiBody({ type: ProfessorDto })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({ status: HttpStatus.OK, description: 'Professor updated' })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -142,10 +124,6 @@ export class ProfessorController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async update(
         @Param('id')
@@ -166,7 +144,6 @@ export class ProfessorController {
         summary: 'Delete a professor',
         description: 'Delete a professor by its ID.'
     })
-    @ApiBearerAuth('JWT-auth')
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'Professor deleted'
@@ -178,10 +155,6 @@ export class ProfessorController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'Invalid ID'
-    })
-    @ApiResponse({
-        status: HttpStatus.UNAUTHORIZED,
-        description: 'Access denied. No valid token provided'
     })
     async delete(
         @Param('id')
