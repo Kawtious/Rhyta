@@ -50,18 +50,15 @@ export class UserService {
         return user;
     }
 
-    async getByUsernameOrEmail(username: string, email: string): Promise<User> {
-        const user = await this.userRepository.findOne({
+    async getByUsernameOrEmail(
+        username: string,
+        email: string
+    ): Promise<User | null> {
+        return await this.userRepository.findOne({
             where: {
                 $or: [{ username: username }, { email: email }]
             }
         });
-
-        if (!user) {
-            throw new EntityNotFoundError('User not found');
-        }
-
-        return user;
     }
 
     async save(user: User): Promise<User> {
