@@ -49,7 +49,7 @@ import { TermModule } from './Term.module';
                     .default('development'),
                 SERVER_PORT: Joi.number().port().default(3000),
                 JWT_SECRET: Joi.string().required(),
-                JWT_EXPIRATION: Joi.string().required(),
+                JWT_EXPIRATION: Joi.string().default('1h'),
                 MYSQL_HOST: Joi.string().default('localhost'),
                 MYSQL_PORT: Joi.number().port().default(3306),
                 MYSQL_USER: Joi.string().default('root'),
