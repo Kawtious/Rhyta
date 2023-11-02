@@ -30,6 +30,7 @@ import { randomUUID } from 'crypto';
 import { LoginRequestDto } from '../dto/LoginRequest.dto';
 import { RegisterUserDto } from '../dto/RegisterUser.dto';
 import { User } from '../entities/User.entity';
+import { Role } from '../enums/Role.enum';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { PasswordMismatchError } from '../errors/PasswordMismatchError';
 import { UserConflictError } from '../errors/UserConflictError';
@@ -62,7 +63,7 @@ export class AuthService {
         user.username = registerUserDto.username;
         user.email = registerUserDto.email;
         user.password = hashedPassword;
-        user.roles = registerUserDto.roles;
+        user.roles = [Role.User];
 
         return await this.userService.save(user);
     }
