@@ -23,6 +23,7 @@
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty } from 'class-validator';
 
 export class ProfessorEventDto {
@@ -50,6 +51,7 @@ export class ProfessorEventDto {
         nullable: false,
         type: Date
     })
+    @Type(() => Date)
     startDate!: Date;
 
     @IsDate()
@@ -59,5 +61,6 @@ export class ProfessorEventDto {
         nullable: false,
         type: Date
     })
+    @Type(() => Date)
     endDate!: Date;
 }
