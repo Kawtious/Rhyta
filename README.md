@@ -80,6 +80,12 @@ To run this application locally, follow these steps:
     nest build
     ```
 
+    In case you get an error saying `nest` is not recognized as a command, you need to install the Nest CLI:
+
+    ```bash
+    npm install -g @nestjs/cli
+    ```
+
 8. Start the application:
 
     ```bash
