@@ -21,35 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+    ValidationArguments,
+    ValidationOptions,
+    ValidatorConstraint,
+    ValidatorConstraintInterface,
+    registerDecorator
+} from 'class-validator';
 
-import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+@ValidatorConstraint({ async: true })
+export class IsDateAfterConstraint implements ValidatorConstraintInterface {
+    validate(value: Date, args: ValidationArguments) {
+        const otherDate = (args.object as Record<string, unknown>)[
+            args.constraints[0]
+        ] as Date;
 
-export class CourseDto {
-    @IsNotEmpty()
-    @ApiProperty({
-        name: 'name',
-        description: 'The name of the Course',
-        nullable: false,
-        type: String
-    })
-    name!: string;
+        return value.valueOf() > otherDate.valueOf();
+    }
 
-    @IsOptional()
-    @ApiPropertyOptional({
-        name: 'description',
-        description: 'The description of the Course',
-        nullable: true,
-        type: String
-    })
-    description?: string;
+    defaultMessage(args: ValidationArguments) {
+        return `${args.property} cannot be after ${args.constraints[0]}`;
+    }
+}
 
-    @IsInt()
-    @ApiProperty({
-        name: 'careerId',
-        description: 'The Career that the Course belongs to',
-        nullable: false,
-        type: Number
-    })
-    careerId!: number;
+export function IsDateAfter(
+    property: string,
+    validationOptions?: ValidationOptions
+) {
+    return function (object: Object, propertyName: string) {
+        registerDecorator({
+            target: object.constructor,
+            propertyName: propertyName,
+            options: validationOptions,
+            constraints: [property],
+            validator: IsDateAfterConstraint
+        });
+    };
 }

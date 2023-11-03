@@ -24,7 +24,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional } from 'class-validator';
+
+import { IsDateAfter } from '../decorators/IsDateAfter.decorator';
+import { IsDateBefore } from '../decorators/IsDateBefore.decorator';
 
 export class ProfessorEventDto {
     @IsNotEmpty()
@@ -36,6 +39,7 @@ export class ProfessorEventDto {
     })
     title!: string;
 
+    @IsOptional()
     @ApiPropertyOptional({
         name: 'description',
         description: 'The description of the Event',
@@ -45,6 +49,7 @@ export class ProfessorEventDto {
     description?: string;
 
     @IsDate()
+    @IsDateBefore('endDate')
     @ApiProperty({
         name: 'startDate',
         description: 'The starting date of the Event',
@@ -55,6 +60,7 @@ export class ProfessorEventDto {
     startDate!: Date;
 
     @IsDate()
+    @IsDateAfter('startDate')
     @ApiProperty({
         name: 'endDate',
         description: 'The ending date of the Event',

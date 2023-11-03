@@ -23,7 +23,7 @@
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class ProfessorDto {
     @IsNotEmpty()
@@ -35,6 +35,7 @@ export class ProfessorDto {
     })
     firstName!: string;
 
+    @IsOptional()
     @ApiPropertyOptional({
         name: 'lastName',
         description: 'The last name of the Professor',
