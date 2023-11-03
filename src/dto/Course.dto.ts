@@ -23,7 +23,7 @@
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CourseDto {
     @IsNotEmpty()
@@ -43,7 +43,7 @@ export class CourseDto {
     })
     description?: string;
 
-    @IsNumberString()
+    @IsInt()
     @ApiProperty({
         name: 'careerId',
         description: 'The Career that the Course belongs to',
