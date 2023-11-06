@@ -29,6 +29,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { TermDto } from '../dto/Term.dto';
 import { Term } from '../entities/Term.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
 @Injectable()
 export class TermService {
@@ -71,6 +72,22 @@ export class TermService {
 
         if (!existingTerm) {
             throw new EntityNotFoundError('Term not found');
+        }
+
+        if (termDto.version == null) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingTerm.version,
+                -1
+            );
+        }
+
+        if (termDto.version !== existingTerm.version) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingTerm.version,
+                termDto.version
+            );
         }
 
         existingTerm.title = termDto.title;

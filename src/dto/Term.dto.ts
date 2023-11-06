@@ -24,12 +24,22 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 import { IsDateAfter } from '../decorators/IsDateAfter.decorator';
 import { IsDateBefore } from '../decorators/IsDateBefore.decorator';
 
 export class TermDto {
+    @IsOptional()
+    @IsNumber()
+    @ApiProperty({
+        name: 'version',
+        description: 'The version of the resource',
+        nullable: false,
+        type: Number
+    })
+    version?: number;
+
     @IsNotEmpty()
     @ApiProperty({
         name: 'title',

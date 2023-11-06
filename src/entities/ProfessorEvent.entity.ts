@@ -23,11 +23,14 @@
  */
 import {
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
-    Relation
+    Relation,
+    UpdateDateColumn,
+    VersionColumn
 } from 'typeorm';
 
 import { Professor } from './Professor.entity';
@@ -36,6 +39,15 @@ import { Professor } from './Professor.entity';
 export class ProfessorEvent {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @CreateDateColumn()
+    createdDate!: Date;
+
+    @UpdateDateColumn()
+    updatedDate!: Date;
+
+    @VersionColumn()
+    version!: number;
 
     @Column({
         nullable: false

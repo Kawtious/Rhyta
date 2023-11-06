@@ -23,9 +23,19 @@
  */
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CourseDto {
+    @IsOptional()
+    @IsNumber()
+    @ApiProperty({
+        name: 'version',
+        description: 'The version of the resource',
+        nullable: false,
+        type: Number
+    })
+    version?: number;
+
     @IsNotEmpty()
     @ApiProperty({
         name: 'name',

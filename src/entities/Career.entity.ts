@@ -21,7 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { string } from 'joi';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    VersionColumn
+} from 'typeorm';
 
 import { Course } from './Course.entity';
 
@@ -29,6 +38,15 @@ import { Course } from './Course.entity';
 export class Career {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @CreateDateColumn()
+    createdDate!: Date;
+
+    @UpdateDateColumn()
+    updatedDate!: Date;
+
+    @VersionColumn()
+    version!: number;
 
     @Column({
         nullable: false

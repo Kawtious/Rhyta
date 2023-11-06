@@ -21,7 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    VersionColumn
+} from 'typeorm';
 
 import { ProfessorEvent } from './ProfessorEvent.entity';
 
@@ -29,6 +37,15 @@ import { ProfessorEvent } from './ProfessorEvent.entity';
 export class Professor {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @CreateDateColumn()
+    createdDate!: Date;
+
+    @UpdateDateColumn()
+    updatedDate!: Date;
+
+    @VersionColumn()
+    version!: number;
 
     @Column({
         nullable: false

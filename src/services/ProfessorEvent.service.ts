@@ -30,6 +30,7 @@ import { ProfessorEventDto } from '../dto/ProfessorEvent.dto';
 import { Professor } from '../entities/Professor.entity';
 import { ProfessorEvent } from '../entities/ProfessorEvent.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
 @Injectable()
 export class ProfessorEventService {
@@ -106,6 +107,22 @@ export class ProfessorEventService {
         if (!existingProfessorEvent) {
             throw new EntityNotFoundError(
                 'Professor, event, or both not found'
+            );
+        }
+
+        if (professorEventDto.version == null) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingProfessorEvent.version,
+                -1
+            );
+        }
+
+        if (professorEventDto.version !== existingProfessorEvent.version) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingProfessorEvent.version,
+                professorEventDto.version
             );
         }
 

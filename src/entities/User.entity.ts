@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ObjectIdColumn } from 'typeorm';
 
 import { Role } from '../enums/Role.enum';
 
@@ -32,6 +32,9 @@ export class User {
 
     @ObjectIdColumn({ name: 'id' })
     _id!: string;
+
+    @CreateDateColumn()
+    createdDate!: Date;
 
     @Column({
         nullable: false,

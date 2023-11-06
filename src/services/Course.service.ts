@@ -30,6 +30,7 @@ import { CourseDto } from '../dto/Course.dto';
 import { Career } from '../entities/Career.entity';
 import { Course } from '../entities/Course.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
 @Injectable()
 export class CourseService {
@@ -83,6 +84,22 @@ export class CourseService {
 
         if (!existingCourse) {
             throw new EntityNotFoundError('Course not found');
+        }
+
+        if (courseDto.version == null) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingCourse.version,
+                -1
+            );
+        }
+
+        if (courseDto.version !== existingCourse.version) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingCourse.version,
+                courseDto.version
+            );
         }
 
         const existingCareer = await this.careerRepository.findOneBy({

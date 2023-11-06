@@ -21,12 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    VersionColumn
+} from 'typeorm';
 
 @Entity()
 export class Term {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @CreateDateColumn()
+    createdDate!: Date;
+
+    @UpdateDateColumn()
+    updatedDate!: Date;
+
+    @VersionColumn()
+    version!: number;
 
     @Column({
         nullable: false

@@ -29,6 +29,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { ProfessorDto } from '../dto/Professor.dto';
 import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
 @Injectable()
 export class ProfessorService {
@@ -70,6 +71,22 @@ export class ProfessorService {
 
         if (!existingProfessor) {
             throw new EntityNotFoundError('Professor not found');
+        }
+
+        if (professorDto.version == null) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingProfessor.version,
+                -1
+            );
+        }
+
+        if (professorDto.version !== existingProfessor.version) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingProfessor.version,
+                professorDto.version
+            );
         }
 
         existingProfessor.firstName = professorDto.firstName;

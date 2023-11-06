@@ -29,6 +29,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { CareerDto } from '../dto/Career.dto';
 import { Career } from '../entities/Career.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
 @Injectable()
 export class CareerService {
@@ -70,6 +71,22 @@ export class CareerService {
 
         if (!existingCareer) {
             throw new EntityNotFoundError('Career not found');
+        }
+
+        if (careerDto.version == null) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingCareer.version,
+                -1
+            );
+        }
+
+        if (careerDto.version !== existingCareer.version) {
+            throw new OptimisticLockingFailureError(
+                'Resource versions do not match',
+                existingCareer.version,
+                careerDto.version
+            );
         }
 
         existingCareer.name = careerDto.name;
