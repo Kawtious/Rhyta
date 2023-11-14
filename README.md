@@ -10,7 +10,7 @@
 
 This repository contains an application designed to showcase the resource storage system for an AI scheduler that
 automates the creation of schedules for professors, classrooms, and other resources in educational institutions. This
-project utilizes NestJS with TypeORM as the primary development stack and supports MySQL and MongoDB.
+project utilizes NestJS with TypeORM as the primary development stack and supports MySQL.
 
 ## Technologies Used
 
@@ -23,7 +23,6 @@ project utilizes NestJS with TypeORM as the primary development stack and suppor
 
 -   **Databases**:
     -   [MySQL](https://www.mysql.com/): A widely used relational database management system.
-    -   [MongoDB](https://www.mongodb.com/): An open source NoSQL database management program.
 
 ## Getting Started
 
@@ -49,13 +48,33 @@ To run this application locally, follow these steps:
 
 4. Configure the Databases:
 
-    Configure the databases by following the instructions in
-    the [Configuring Database Connections](#configuring-database-connections) section of this README.
+    To configure the MySQL connection, you must create a `.env` file in the root directory of the project. This file will
+    contain environment variables that store the database connection information. Here's how to set it up:
+
+    In the root directory of the project, create a `.env` file:
+
+    ```bash
+    touch .env
+    ```
+
+    Open the `.env` file using a text editor.
+
+    Add the following environment variables with your MySQL database information:
+
+    ```plaintext
+    MYSQL_HOST="your_mysql_host"             # "localhost"
+    MYSQL_PORT=your_mysql_port               # 3306
+    MYSQL_USER="your_mysql_user"             # "user"
+    MYSQL_PASSWORD="your_mysql_password"     # "password"
+    MYSQL_NAME="your_mysql_database_name"    # "mydb"
+    ```
+
+    Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
+    and `your_mysql_database_name` with your actual MySQL database details.
 
 5. Configure the server:
 
-    If you followed the instructions in [Configuring Database Connections](#configuring-database-connections), you can
-    just open the `.env` file once again using a text editor and add the following environment variables:
+    Open the `.env` file once again using a text editor and add the following environment variables:
 
     ```plaintext
     SERVER_PORT=your_server_port               # 3000
@@ -98,46 +117,6 @@ To run this application locally, follow these steps:
 
     Assuming the server is hosted on `localhost:3000` and is currently running, you can access the OpenAPI interface
     through [this link.](http://localhost:3000/rhyta/api)
-
-## Configuring Database Connections
-
-To configure the MySQL connection, you must create a `.env` file in the root directory of the project. This file will
-contain environment variables that store the database connection information. Here's how to set it up:
-
-1. In the root directory of the project, create a `.env` file:
-
-    ```bash
-    touch .env
-    ```
-
-### MySQL Configuration
-
-1. Open the `.env` file using a text editor.
-
-2. Add the following environment variables with your MySQL database information:
-
-    ```plaintext
-    MYSQL_HOST="your_mysql_host"             # "localhost"
-    MYSQL_PORT=your_mysql_port               # 3306
-    MYSQL_USER="your_mysql_user"             # "user"
-    MYSQL_PASSWORD="your_mysql_password"     # "password"
-    MYSQL_NAME="your_mysql_database_name"    # "mydb"
-    ```
-
-    Replace `your_mysql_host`, `your_mysql_port`, `your_mysql_user`, `your_mysql_password`,
-    and `your_mysql_database_name` with your actual MySQL database details.
-
-### MongoDB Configuration
-
-1. Open the `.env` file using a text editor.
-
-2. Add the following environment variables with your MongoDB database information:
-
-    ```plaintext
-    MONGO_URI="your_mongodb_uri"             # "mongodb://localhost/your-database-name"
-    ```
-
-    Replace `your_mongodb_uri` with your actual MongoDB database details.
 
 ## Contributing
 

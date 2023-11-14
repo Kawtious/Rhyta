@@ -29,7 +29,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 
 import { AuthGuard } from '../guards/Auth.guard';
-import { MongoConfigService } from '../services/MongoConfig.service';
 import { MySqlConfigService } from '../services/MySqlConfig.service';
 import { AuthModule } from './Auth.module';
 import { CareerModule } from './Career.module';
@@ -55,9 +54,7 @@ import { TermModule } from './Term.module';
                 MYSQL_USER: Joi.string().default('root'),
                 MYSQL_PASSWORD: Joi.string().default('password'),
                 MYSQL_NAME: Joi.string().default('mydb'),
-                MYSQL_SYNCHRONIZE: Joi.boolean().default(true),
-                MONGO_URI: Joi.string().default('mongodb://localhost:27017'),
-                MONGO_SYNCHRONIZE: Joi.boolean().default(true)
+                MYSQL_SYNCHRONIZE: Joi.boolean().default(true)
             }),
             validationOptions: {
                 allowUnknown: true,
@@ -67,10 +64,6 @@ import { TermModule } from './Term.module';
         TypeOrmModule.forRootAsync({
             name: 'mySqlConnection',
             useClass: MySqlConfigService
-        }),
-        TypeOrmModule.forRootAsync({
-            name: 'mongoConnection',
-            useClass: MongoConfigService
         }),
         AuthModule,
         CareerModule,

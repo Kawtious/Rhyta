@@ -59,7 +59,6 @@ export class AuthService {
 
         const user = new User();
 
-        user._id = randomUUID();
         user.username = registerUserDto.username;
         user.email = registerUserDto.email;
         user.password = hashedPassword;

@@ -21,20 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Column, CreateDateColumn, Entity, ObjectIdColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    VersionColumn
+} from 'typeorm';
 
 import { Role } from '../enums/Role.enum';
 
 @Entity()
 export class User {
-    @ObjectIdColumn()
-    id!: string;
-
-    @ObjectIdColumn({ name: 'id' })
-    _id!: string;
+    @PrimaryGeneratedColumn('uuid')
+    id!: number;
 
     @CreateDateColumn()
     createdDate!: Date;
+
+    @UpdateDateColumn()
+    updatedDate!: Date;
+
+    @VersionColumn()
+    version!: number;
 
     @Column({
         nullable: false,
@@ -55,8 +65,7 @@ export class User {
     password!: string;
 
     @Column({
-        type: 'text',
-        array: true
+        type: 'simple-array'
     })
     roles!: Role[];
 }

@@ -29,7 +29,7 @@ import { UserService } from '../services/User.service';
 
 @Global()
 @Module({
-    imports: [TypeOrmModule.forFeature([User], 'mongoConnection')],
+    imports: [TypeOrmModule.forFeature([User], 'mySqlConnection')],
     providers: [UserService],
     exports: [UserService]
 })

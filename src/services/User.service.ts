@@ -24,7 +24,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { DeleteResult, MongoRepository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 import { User } from '../entities/User.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -32,8 +32,8 @@ import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User, 'mongoConnection')
-        private readonly userRepository: MongoRepository<User>
+        @InjectRepository(User, 'mySqlConnection')
+        private readonly userRepository: Repository<User>
     ) {}
 
     async getAll(): Promise<User[]> {
@@ -55,9 +55,7 @@ export class UserService {
         email: string
     ): Promise<User | null> {
         return await this.userRepository.findOne({
-            where: {
-                $or: [{ username: username }, { email: email }]
-            }
+            where: { username: username, email: email }
         });
     }
 
