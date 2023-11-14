@@ -34,7 +34,7 @@ import { Role } from '../enums/Role.enum';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
