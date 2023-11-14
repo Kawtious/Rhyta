@@ -32,6 +32,7 @@ import {
 
 import helmet from 'helmet';
 
+import { CorsConfiguration } from './configuration/Cors.configuration';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { AppModule } from './modules/App.module';
 
@@ -40,14 +41,7 @@ async function bootstrap() {
 
     const configService = app.get(ConfigService);
 
-    const allowedOrigins =
-        configService.get<string>('CLIENT_URL') || 'http://localhost:3001';
-
-    app.enableCors({
-        origin: [allowedOrigins],
-        methods: ['GET', 'PUT', 'POST', 'DELETE'],
-        credentials: true
-    });
+    app.enableCors(CorsConfiguration);
 
     app.use(helmet());
 
