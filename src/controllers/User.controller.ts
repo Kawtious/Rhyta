@@ -21,31 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Headers,
+    HttpCode,
+    HttpStatus,
+    Req
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { Roles } from '../decorators/Roles.decorator';
-import { Role } from '../enums/Role.enum';
+import { Request } from 'express';
+
+import { User } from '../entities/User.entity';
+import { UserService } from '../services/User.service';
 
 @ApiTags('Users')
 @Controller({ path: 'users', version: '1' })
 export class UserController {
-    constructor() {}
+    constructor(private readonly userService: UserService) {}
 
-    @Get('validate')
+    @Get()
     @HttpCode(HttpStatus.OK)
-    @Roles(Role.User)
     @ApiOperation({
-        summary: 'Validate user',
-        description:
-            'Checks if the user trying to access this endpoint is valid.'
+        summary: 'Get user data from authorization header',
+        description: "Get a user's data through the authorization header."
     })
-    @ApiResponse({ status: HttpStatus.OK, description: 'User is valid' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'User data' })
     @ApiResponse({
         status: HttpStatus.UNAUTHORIZED,
         description: 'User is not valid and must reauthenticate'
     })
-    async validate(): Promise<boolean> {
-        return true;
+    async getFromAuthHeader(@Req() request: Request): Promise<User> {
+        return this.userService.getFromAuthHeader(request);
     }
 }

@@ -26,6 +26,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { Request, request } from 'express';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { User } from '../entities/User.entity';
@@ -93,6 +94,20 @@ export class UserService {
         }
 
         return user;
+    }
+
+    async getFromAuthHeader(request: Request): Promise<User> {
+        const authHeader = request.header('Authorization');
+
+        if (!authHeader) {
+            throw new TokenVerificationError(
+                'Access denied. No token provided.'
+            );
+        }
+
+        const token = authHeader.split(' ')[1];
+
+        return this.getByJwtToken(token);
     }
 
     async save(user: User): Promise<User> {
