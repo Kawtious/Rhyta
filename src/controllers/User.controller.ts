@@ -21,14 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import {
-    Controller,
-    Get,
-    Headers,
-    HttpCode,
-    HttpStatus,
-    Req
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Request } from 'express';
