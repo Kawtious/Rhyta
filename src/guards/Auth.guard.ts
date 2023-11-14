@@ -22,9 +22,7 @@
  * THE SOFTWARE.
  */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
 
 import { Request } from 'express';
 
@@ -37,9 +35,7 @@ import { UserService } from '../services/User.service';
 export class AuthGuard implements CanActivate {
     constructor(
         private readonly userService: UserService,
-        private readonly reflector: Reflector,
-        private readonly jwtService: JwtService,
-        private readonly configService: ConfigService
+        private readonly reflector: Reflector
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -70,30 +66,7 @@ export class AuthGuard implements CanActivate {
             );
         }
 
-        let decodedToken;
-
-        try {
-            decodedToken = (await this.jwtService.verifyAsync(token, {
-                secret: this.configService.get<string>('JWT_SECRET')
-            })) as {
-                identifier: string;
-            };
-        } catch (error: any) {
-            throw new TokenVerificationError(error.message);
-        }
-
-        const identifier = decodedToken.identifier;
-
-        const user = await this.userService.getByUsernameOrEmail(
-            identifier,
-            identifier
-        );
-
-        if (!user) {
-            throw new TokenVerificationError(
-                'Access denied. Invalid token provided.'
-            );
-        }
+        const user = await this.userService.getByJwtToken(token);
 
         return requiredRoles.some((role) => user.roles?.includes(role));
     }

@@ -22,19 +22,23 @@
  * THE SOFTWARE.
  */
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { async } from 'rxjs';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { User } from '../entities/User.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { TokenVerificationError } from '../errors/TokenVerificationError';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User, 'mySqlConnection')
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
     ) {}
 
     async getAll(): Promise<User[]> {
@@ -62,6 +66,33 @@ export class UserService {
             where: [{ username: username }, { email: email }],
             select: ['id', 'username', 'password', 'roles']
         });
+    }
+
+    async getByJwtToken(token: string): Promise<User> {
+        let decodedToken;
+
+        try {
+            decodedToken = (await this.jwtService.verifyAsync(token, {
+                secret: this.configService.get<string>('JWT_SECRET')
+            })) as {
+                identifier: string;
+            };
+        } catch (error: any) {
+            throw new TokenVerificationError(error.message);
+        }
+
+        const identifier = decodedToken.identifier;
+
+        const user = await this.userRepository.findOne({
+            where: [{ username: identifier }, { email: identifier }],
+            select: ['id', 'username', 'password', 'roles']
+        });
+
+        if (!user) {
+            throw new EntityNotFoundError('User not found');
+        }
+
+        return user;
     }
 
     async save(user: User): Promise<User> {
