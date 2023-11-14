@@ -50,23 +50,7 @@ export class AuthGuard implements CanActivate {
 
         const req: Request = context.switchToHttp().getRequest();
 
-        const authHeader = req.header('Authorization');
-
-        if (!authHeader) {
-            throw new TokenVerificationError(
-                'Access denied. No token provided.'
-            );
-        }
-
-        const token = authHeader.split(' ')[1];
-
-        if (!token) {
-            throw new TokenVerificationError(
-                'Access denied. No token provided.'
-            );
-        }
-
-        const user = await this.userService.getByJwtToken(token);
+        const user = await this.userService.getFromAuthHeader(req);
 
         return requiredRoles.some((role) => user.roles?.includes(role));
     }
