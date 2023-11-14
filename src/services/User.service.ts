@@ -42,7 +42,10 @@ export class UserService {
     }
 
     async getById(id: number): Promise<User> {
-        const user = await this.userRepository.findOneBy({ id: id });
+        const user = await this.userRepository.findOne({
+            where: { id: id },
+            select: ['id', 'username', 'password', 'roles']
+        });
 
         if (!user) {
             throw new EntityNotFoundError('User not found');
@@ -56,7 +59,8 @@ export class UserService {
         email: string
     ): Promise<User | null> {
         return await this.userRepository.findOne({
-            where: [{ username: username }, { email: email }]
+            where: [{ username: username }, { email: email }],
+            select: ['id', 'username', 'password', 'roles']
         });
     }
 
