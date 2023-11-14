@@ -21,18 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-import { Global, Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UserController } from '../controllers/User.controller';
-import { User } from '../entities/User.entity';
-import { UserService } from '../services/User.service';
+import { Roles } from '../decorators/Roles.decorator';
+import { Role } from '../enums/Role.enum';
 
-@Global()
-@Module({
-    imports: [TypeOrmModule.forFeature([User], 'mySqlConnection')],
-    providers: [UserService],
-    controllers: [UserController],
-    exports: [UserService]
-})
-export class UserModule {}
+@ApiTags('Users')
+@Controller({ path: 'users', version: '1' })
+export class UserController {
+    constructor() {}
+
+    @Get('validate')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.User)
+    @ApiOperation({
+        summary: 'Validate user',
+        description:
+            'Checks if the user trying to access this endpoint is valid.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'User is valid' })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'User is not valid and must reauthenticate'
+    })
+    async validate(): Promise<boolean> {
+        return true;
+    }
+}
