@@ -24,6 +24,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { async } from 'rxjs';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { User } from '../entities/User.entity';
@@ -55,7 +56,7 @@ export class UserService {
         email: string
     ): Promise<User | null> {
         return await this.userRepository.findOne({
-            where: { username: username, email: email }
+            where: [{ username: username }, { email: email }]
         });
     }
 
