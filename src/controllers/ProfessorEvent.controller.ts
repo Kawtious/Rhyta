@@ -53,6 +53,18 @@ export class ProfessorEventController {
         private readonly professorEventService: ProfessorEventService
     ) {}
 
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Get all events',
+        description: 'Retrieve a list of all events'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'List of events' })
+    async getAll() {
+        return await this.professorEventService.getAll();
+    }
+
     @Get(':professorId')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)

@@ -41,6 +41,10 @@ export class ProfessorEventService {
         private readonly professorRepository: Repository<Professor>
     ) {}
 
+    async getAll(): Promise<ProfessorEvent[]> {
+        return await this.professorEventRepository.find();
+    }
+
     async getAllByProfessorId(professorId: number): Promise<ProfessorEvent[]> {
         return await this.professorEventRepository.findBy({
             professor: { id: professorId }
