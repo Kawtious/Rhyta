@@ -36,7 +36,7 @@ export class IsDateAfterConstraint implements ValidatorConstraintInterface {
             args.constraints[0]
         ] as Date;
 
-        return value.valueOf() > otherDate.valueOf();
+        return value && value.valueOf() > otherDate.valueOf();
     }
 
     defaultMessage(args: ValidationArguments) {
