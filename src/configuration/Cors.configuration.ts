@@ -25,6 +25,7 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 const allowedOrigins: string[] = [
     'http://localhost:3001',
+    'http://localhost:4000',
     'http://localhost:63342'
 ];
 
