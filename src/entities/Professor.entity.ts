@@ -50,10 +50,7 @@ export class Professor {
     @Column({
         nullable: false
     })
-    firstName!: string;
-
-    @Column()
-    lastName!: string;
+    name!: string;
 
     @OneToMany(() => ProfessorEvent, (event) => event.professor, {
         cascade: true

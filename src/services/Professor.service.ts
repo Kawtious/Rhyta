@@ -55,11 +55,7 @@ export class ProfessorService {
     async insert(professorDto: ProfessorDto): Promise<Professor> {
         const professor = new Professor();
 
-        professor.firstName = professorDto.firstName;
-
-        if (professorDto.lastName != null) {
-            professor.lastName = professorDto.lastName;
-        }
+        professor.name = professorDto.name;
 
         return await this.professorRepository.save(professor);
     }
@@ -89,11 +85,7 @@ export class ProfessorService {
             );
         }
 
-        existingProfessor.firstName = professorDto.firstName;
-
-        if (professorDto.lastName != null) {
-            existingProfessor.lastName = professorDto.lastName;
-        }
+        existingProfessor.name = professorDto.name;
 
         return await this.professorRepository.save(existingProfessor);
     }

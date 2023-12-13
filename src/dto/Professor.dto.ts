@@ -38,19 +38,10 @@ export class ProfessorDto {
 
     @IsNotEmpty()
     @ApiProperty({
-        name: 'firstName',
+        name: 'name',
         description: 'The name of the Professor',
         nullable: false,
         type: String
     })
-    firstName!: string;
-
-    @IsOptional()
-    @ApiPropertyOptional({
-        name: 'lastName',
-        description: 'The last name of the Professor',
-        nullable: true,
-        type: String
-    })
-    lastName?: string;
+    name!: string;
 }
