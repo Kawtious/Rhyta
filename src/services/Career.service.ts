@@ -42,6 +42,10 @@ export class CareerService {
         return await this.careerRepository.find();
     }
 
+    async count(): Promise<number> {
+        return await this.careerRepository.count();
+    }
+
     async getById(id: number): Promise<Career> {
         const career = await this.careerRepository.findOneBy({ id: id });
 

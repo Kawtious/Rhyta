@@ -63,6 +63,18 @@ export class ProfessorController {
         return await this.professorService.getAll();
     }
 
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all professors',
+        description: 'Retrieve the count of all professors.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Professors count' })
+    async count() {
+        return await this.professorService.count();
+    }
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)

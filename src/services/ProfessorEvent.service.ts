@@ -45,8 +45,18 @@ export class ProfessorEventService {
         return await this.professorEventRepository.find();
     }
 
+    async count(): Promise<number> {
+        return await this.professorEventRepository.count();
+    }
+
     async getAllByProfessorId(professorId: number): Promise<ProfessorEvent[]> {
         return await this.professorEventRepository.findBy({
+            professor: { id: professorId }
+        });
+    }
+
+    async countByProfessorId(professorId: number): Promise<number> {
+        return await this.professorEventRepository.countBy({
             professor: { id: professorId }
         });
     }

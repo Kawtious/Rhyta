@@ -63,6 +63,18 @@ export class CourseController {
         return await this.courseService.getAll();
     }
 
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all courses',
+        description: 'Retrieve the count of all courses.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Courses count' })
+    async count() {
+        return await this.courseService.count();
+    }
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)

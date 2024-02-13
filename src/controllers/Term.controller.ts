@@ -63,6 +63,18 @@ export class TermController {
         return await this.termService.getAll();
     }
 
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all terms',
+        description: 'Retrieve the count of all terms.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Terms count' })
+    async count() {
+        return await this.termService.count();
+    }
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)

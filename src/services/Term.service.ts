@@ -42,6 +42,10 @@ export class TermService {
         return await this.termRepository.find();
     }
 
+    async count(): Promise<number> {
+        return await this.termRepository.count();
+    }
+
     async getById(id: number): Promise<Term> {
         const term = await this.termRepository.findOneBy({ id: id });
 

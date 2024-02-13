@@ -65,6 +65,18 @@ export class ProfessorEventController {
         return await this.professorEventService.getAll();
     }
 
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all events',
+        description: 'Retrieve the count of all events.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Events count' })
+    async count() {
+        return await this.professorEventService.count();
+    }
+
     @Get(':professorId')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
@@ -90,6 +102,35 @@ export class ProfessorEventController {
         }
 
         return await this.professorEventService.getAllByProfessorId(
+            Number(professorId)
+        );
+    }
+
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all events from a professor',
+        description: 'Retrieve the count of all events from a professor.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Events count' })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Professor not found'
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Invalid ID'
+    })
+    async countByProfessorId(
+        @Param('professorId')
+        professorId: string
+    ) {
+        if (isNaN(Number(professorId))) {
+            throw new MethodArgumentNotValidError('Invalid ID');
+        }
+
+        return await this.professorEventService.countByProfessorId(
             Number(professorId)
         );
     }

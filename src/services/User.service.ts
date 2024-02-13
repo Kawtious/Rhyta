@@ -26,7 +26,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Request, request } from 'express';
+import { Request } from 'express';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { User } from '../entities/User.entity';
@@ -44,6 +44,10 @@ export class UserService {
 
     async getAll(): Promise<User[]> {
         return await this.userRepository.find();
+    }
+
+    async count(): Promise<number> {
+        return await this.userRepository.count();
     }
 
     async getById(id: number): Promise<User> {

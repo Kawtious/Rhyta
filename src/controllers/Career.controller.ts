@@ -63,6 +63,18 @@ export class CareerController {
         return await this.careerService.getAll();
     }
 
+    @Get('count')
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    @ApiOperation({
+        summary: 'Count all careers',
+        description: 'Retrieve the count of all careers.'
+    })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Careers count' })
+    async count() {
+        return await this.careerService.count();
+    }
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)

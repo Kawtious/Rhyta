@@ -42,6 +42,10 @@ export class ProfessorService {
         return await this.professorRepository.find();
     }
 
+    async count(): Promise<number> {
+        return await this.professorRepository.count();
+    }
+
     async getById(id: number): Promise<Professor> {
         const professor = await this.professorRepository.findOneBy({ id: id });
 

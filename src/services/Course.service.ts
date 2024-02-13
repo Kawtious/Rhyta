@@ -47,6 +47,10 @@ export class CourseService {
         });
     }
 
+    async count(): Promise<number> {
+        return await this.courseRepository.count();
+    }
+
     async getById(id: number): Promise<Course> {
         const course = await this.courseRepository.findOneBy({ id: id });
 
