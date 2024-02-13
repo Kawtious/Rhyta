@@ -132,6 +132,4 @@ This application is open-source and available under the [MIT License](LICENSE).
 
 -   [Kawtious](https://github.com/Kawtious)
 
--   [Zeferito](https://github.com/Zeferito)
-
 Feel free to reach out if you have any questions or need assistance with this application.
