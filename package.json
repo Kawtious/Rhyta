@@ -2,7 +2,7 @@
     "name": "rhyta-server-js",
     "version": "2.5.0",
     "description": "",
-    "author": "Kawtious, Zeferito",
+    "author": "Kawtious",
     "private": true,
     "license": "MIT",
     "scripts": {
