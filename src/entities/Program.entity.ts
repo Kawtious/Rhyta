@@ -2,16 +2,17 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    OneToMany,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
-import { Schedule } from './Schedule.entity';
+import { ProgramType } from './ProgramType.entity';
 
 @Entity()
-export class Professor {
+export class Program {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -27,20 +28,16 @@ export class Professor {
     @Column({
         nullable: false
     })
-    typeKey!: string;
+    typeKey!: number;
 
     @Column({
         nullable: false
     })
-    controlNumberKey!: number;
+    offsetKey!: number;
 
-    @Column({
+    @ManyToOne(() => ProgramType, (programType) => programType.programs, {
         nullable: false
     })
-    name!: string;
-
-    @OneToMany(() => Schedule, (schedule) => schedule.professor, {
-        cascade: true
-    })
-    schedules!: Schedule[];
+    @JoinColumn()
+    programType!: ProgramType;
 }

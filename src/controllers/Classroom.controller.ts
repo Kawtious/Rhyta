@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    Header,
     HttpCode,
     HttpStatus,
     Param,
@@ -12,21 +11,21 @@ import {
 } from '@nestjs/common';
 
 import { Roles } from '../decorators/Roles.decorator';
-import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
-import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
+import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
+import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
-import { ProfessorService } from '../services/Professor.service';
+import { ClassroomService } from '../services/Classroom.service';
 
-@Controller({ path: 'professors', version: '1' })
-export class ProfessorController {
-    constructor(private readonly professorService: ProfessorService) {}
+@Controller({ path: 'classrooms', version: '1' })
+export class ClassroomController {
+    constructor(private readonly classroomService: ClassroomService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
     async getAll() {
-        return await this.professorService.getAll();
+        return await this.classroomService.getAll();
     }
 
     @Get(':id')
@@ -40,14 +39,14 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.getById(Number(id));
+        return await this.classroomService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    async insert(@Body() professorInsertDto: ProfessorInsertDto) {
-        return await this.professorService.insert(professorInsertDto);
+    async insert(@Body() classroomInsertDto: ClassroomInsertDto) {
+        return await this.classroomService.insert(classroomInsertDto);
     }
 
     @Put(':id')
@@ -56,15 +55,15 @@ export class ProfessorController {
     async update(
         @Param('id')
         id: string,
-        @Body() professorUpdateDto: ProfessorUpdateDto
+        @Body() classroomUpdateDto: ClassroomUpdateDto
     ) {
         if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.update(
+        return await this.classroomService.update(
             Number(id),
-            professorUpdateDto
+            classroomUpdateDto
         );
     }
 
@@ -79,7 +78,7 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.professorService.delete(Number(id));
+        await this.classroomService.delete(Number(id));
 
         return;
     }

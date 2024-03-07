@@ -12,21 +12,21 @@ import {
 } from '@nestjs/common';
 
 import { Roles } from '../decorators/Roles.decorator';
-import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
-import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
+import { ProgramTypeInsertDto } from '../dto/ProgramTypeInsert.dto';
+import { ProgramTypeUpdateDto } from '../dto/ProgramTypeUpdate.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
-import { ProfessorService } from '../services/Professor.service';
+import { ProgramTypeService } from '../services/ProgramType.service';
 
-@Controller({ path: 'professors', version: '1' })
-export class ProfessorController {
-    constructor(private readonly professorService: ProfessorService) {}
+@Controller({ path: 'programtypes', version: '1' })
+export class ProgramTypeController {
+    constructor(private readonly programTypeService: ProgramTypeService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
     async getAll() {
-        return await this.professorService.getAll();
+        return await this.programTypeService.getAll();
     }
 
     @Get(':id')
@@ -40,14 +40,14 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.getById(Number(id));
+        return await this.programTypeService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    async insert(@Body() professorInsertDto: ProfessorInsertDto) {
-        return await this.professorService.insert(professorInsertDto);
+    async insert(@Body() programTypeInsertDto: ProgramTypeInsertDto) {
+        return await this.programTypeService.insert(programTypeInsertDto);
     }
 
     @Put(':id')
@@ -56,15 +56,15 @@ export class ProfessorController {
     async update(
         @Param('id')
         id: string,
-        @Body() professorUpdateDto: ProfessorUpdateDto
+        @Body() programTypeUpdateDto: ProgramTypeUpdateDto
     ) {
         if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.update(
+        return await this.programTypeService.update(
             Number(id),
-            professorUpdateDto
+            programTypeUpdateDto
         );
     }
 
@@ -79,7 +79,7 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.professorService.delete(Number(id));
+        await this.programTypeService.delete(Number(id));
 
         return;
     }

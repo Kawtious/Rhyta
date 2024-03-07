@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { DeleteResult, Repository } from 'typeorm';
 
-import { CareerDto } from '../dto/Career.dto';
+import { CareerInsertDto } from '../dto/CareerInsert.dto';
+import { CareerUpdateDto } from '../dto/CareerUpdate.dto';
 import { Career } from '../entities/Career.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
@@ -19,10 +20,6 @@ export class CareerService {
         return await this.careerRepository.find();
     }
 
-    async count(): Promise<number> {
-        return await this.careerRepository.count();
-    }
-
     async getById(id: number): Promise<Career> {
         const career = await this.careerRepository.findOneBy({ id: id });
 
@@ -33,19 +30,20 @@ export class CareerService {
         return career;
     }
 
-    async insert(careerDto: CareerDto): Promise<Career> {
+    async insert(careerInsertDto: CareerInsertDto): Promise<Career> {
         const career = new Career();
 
-        career.name = careerDto.name;
-
-        if (careerDto.description != null) {
-            career.description = careerDto.description;
-        }
+        career.careerKey = careerInsertDto.careerKey;
+        career.pathStartKey = careerInsertDto.pathStartKey;
+        career.pathEndKey = careerInsertDto.pathEndKey;
 
         return await this.careerRepository.save(career);
     }
 
-    async update(id: number, careerDto: CareerDto): Promise<Career> {
+    async update(
+        id: number,
+        careerUpdateDto: CareerUpdateDto
+    ): Promise<Career> {
         const existingCareer = await this.careerRepository.findOneBy({
             id: id
         });
@@ -54,7 +52,7 @@ export class CareerService {
             throw new EntityNotFoundError('Career not found');
         }
 
-        if (careerDto.version == null) {
+        if (careerUpdateDto.version == null) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingCareer.version,
@@ -62,18 +60,24 @@ export class CareerService {
             );
         }
 
-        if (careerDto.version !== existingCareer.version) {
+        if (careerUpdateDto.version !== existingCareer.version) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingCareer.version,
-                careerDto.version
+                careerUpdateDto.version
             );
         }
 
-        existingCareer.name = careerDto.name;
+        if (careerUpdateDto.careerKey != null) {
+            existingCareer.careerKey = careerUpdateDto.careerKey;
+        }
 
-        if (careerDto.description != null) {
-            existingCareer.description = careerDto.description;
+        if (careerUpdateDto.pathStartKey != null) {
+            existingCareer.pathStartKey = careerUpdateDto.pathStartKey;
+        }
+
+        if (careerUpdateDto.pathEndKey != null) {
+            existingCareer.pathEndKey = careerUpdateDto.pathEndKey;
         }
 
         return await this.careerRepository.save(existingCareer);

@@ -2,20 +2,17 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
-    Relation,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
-import { Career } from './Career.entity';
-import { Group } from './Group.entity';
+import { Course } from './Course.entity';
+import { Program } from './Program.entity';
 
 @Entity()
-export class Course {
+export class ProgramType {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -31,31 +28,24 @@ export class Course {
     @Column({
         nullable: false
     })
-    courseKey!: string;
-
-    @Column({
-        nullable: false
-    })
-    classKey!: string;
-
-    @Column({
-        nullable: false
-    })
-    scheduleKey!: string;
-
-    @Column({
-        nullable: false
-    })
     descriptionKey!: string;
 
-    @ManyToOne(() => Career, (career) => career.courses, {
+    @Column({
         nullable: false
     })
-    @JoinColumn()
-    career!: Relation<Career>;
+    availableHoursKey!: string;
 
-    @OneToMany(() => Group, (group) => group.course, {
+    @Column({
+        nullable: false
+    })
+    sessionMaskKey!: string;
+
+    @OneToMany(() => Program, (program) => program.programType, {
         cascade: true
     })
-    groups!: Group[];
+    programs!: Program[];
+
+    public get toCsv(): string {
+        return `${this.descriptionKey},${this.availableHoursKey},${this.sessionMaskKey}`;
+    }
 }

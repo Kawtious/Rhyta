@@ -10,10 +10,10 @@ import {
     VersionColumn
 } from 'typeorm';
 
-import { Professor } from './Professor.entity';
+import { Schedule } from './Schedule.entity';
 
 @Entity()
-export class ProfessorEvent {
+export class ScheduleEntry {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -29,24 +29,21 @@ export class ProfessorEvent {
     @Column({
         nullable: false
     })
-    title!: string;
-
-    @Column()
-    description!: string;
+    day!: number;
 
     @Column({
         nullable: false
     })
-    startDate!: Date;
+    hour!: number;
 
     @Column({
         nullable: false
     })
-    endDate!: Date;
+    active!: boolean;
 
-    @ManyToOne(() => Professor, (professor) => professor.events, {
+    @ManyToOne(() => Schedule, (schedule) => schedule.entries, {
         nullable: false
     })
     @JoinColumn()
-    professor!: Relation<Professor>;
+    schedule!: Relation<Schedule>;
 }

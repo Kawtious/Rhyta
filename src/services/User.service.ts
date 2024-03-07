@@ -23,10 +23,6 @@ export class UserService {
         return await this.userRepository.find();
     }
 
-    async count(): Promise<number> {
-        return await this.userRepository.count();
-    }
-
     async getById(id: number): Promise<User> {
         const user = await this.userRepository.findOne({
             where: { id: id },

@@ -3,8 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import bcrypt from 'bcrypt';
 
-import { LoginRequestDto } from '../dto/LoginRequest.dto';
-import { RegisterUserDto } from '../dto/RegisterUser.dto';
+import { UserLoginDto } from '../dto/UserLogin.dto';
+import { UserSignInDto } from '../dto/UserSignIn.dto';
 import { User } from '../entities/User.entity';
 import { Role } from '../enums/Role.enum';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -19,7 +19,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async register(registerUserDto: RegisterUserDto) {
+    async register(registerUserDto: UserSignInDto) {
         const existingUser = await this.userService.getByUsernameOrEmail(
             registerUserDto.username,
             registerUserDto.email
@@ -43,7 +43,7 @@ export class AuthService {
         return await this.userService.save(user);
     }
 
-    async login(loginRequest: LoginRequestDto): Promise<string> {
+    async login(loginRequest: UserLoginDto): Promise<string> {
         const user = await this.userService.getByUsernameOrEmail(
             loginRequest.identifier,
             loginRequest.identifier
