@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { DeleteResult, Repository } from 'typeorm';
 
-import { ProfessorDto } from '../dto/Professor.dto';
+import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
+import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
 import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
@@ -33,15 +34,20 @@ export class ProfessorService {
         return professor;
     }
 
-    async insert(professorDto: ProfessorDto): Promise<Professor> {
+    async insert(professorInsertDto: ProfessorInsertDto): Promise<Professor> {
         const professor = new Professor();
 
-        professor.name = professorDto.name;
+        professor.typeKey = professorInsertDto.typeKey;
+        professor.controlNumberKey = professorInsertDto.controlNumberKey;
+        professor.name = professorInsertDto.name;
 
         return await this.professorRepository.save(professor);
     }
 
-    async update(id: number, professorDto: ProfessorDto): Promise<Professor> {
+    async update(
+        id: number,
+        professorUpdateDto: ProfessorUpdateDto
+    ): Promise<Professor> {
         const existingProfessor = await this.professorRepository.findOneBy({
             id: id
         });
@@ -50,7 +56,7 @@ export class ProfessorService {
             throw new EntityNotFoundError('Professor not found');
         }
 
-        if (professorDto.version == null) {
+        if (professorUpdateDto.version == null) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingProfessor.version,
@@ -58,15 +64,26 @@ export class ProfessorService {
             );
         }
 
-        if (professorDto.version !== existingProfessor.version) {
+        if (professorUpdateDto.version !== existingProfessor.version) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingProfessor.version,
-                professorDto.version
+                professorUpdateDto.version
             );
         }
 
-        existingProfessor.name = professorDto.name;
+        if (professorUpdateDto.typeKey != null) {
+            existingProfessor.typeKey = professorUpdateDto.typeKey;
+        }
+
+        if (professorUpdateDto.controlNumberKey != null) {
+            existingProfessor.controlNumberKey =
+                professorUpdateDto.controlNumberKey;
+        }
+
+        if (professorUpdateDto.name != null) {
+            existingProfessor.name = professorUpdateDto.name;
+        }
 
         return await this.professorRepository.save(existingProfessor);
     }

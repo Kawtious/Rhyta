@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { DeleteResult, Repository } from 'typeorm';
 
-import { CourseDto } from '../dto/Course.dto';
+import { CourseInsertDto } from '../dto/CourseInsert.dto';
+import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
 import { Career } from '../entities/Career.entity';
 import { Course } from '../entities/Course.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -19,13 +20,7 @@ export class CourseService {
     ) {}
 
     async getAll(): Promise<Course[]> {
-        return await this.courseRepository.find({
-            relations: { career: true }
-        });
-    }
-
-    async count(): Promise<number> {
-        return await this.courseRepository.count();
+        return await this.courseRepository.find();
     }
 
     async getById(id: number): Promise<Course> {
@@ -38,29 +33,31 @@ export class CourseService {
         return course;
     }
 
-    async insert(courseDto: CourseDto): Promise<Course> {
-        const existingCareer = await this.careerRepository.findOneBy({
-            id: courseDto.careerId
-        });
-
-        if (!existingCareer) {
-            throw new EntityNotFoundError('Career not found');
-        }
-
+    async insert(courseInsertDto: CourseInsertDto): Promise<Course> {
         const course = new Course();
 
-        course.name = courseDto.name;
+        course.courseKey = courseInsertDto.courseKey;
+        course.classKey = courseInsertDto.classKey;
+        course.scheduleKey = courseInsertDto.scheduleKey;
+        course.descriptionKey = courseInsertDto.descriptionKey;
 
-        if (courseDto.description != null) {
-            course.description = courseDto.description;
+        const career = await this.careerRepository.findOneBy({
+            id: courseInsertDto.careerId
+        });
+
+        if (!career) {
+            throw new EntityNotFoundError('ProgramType not found');
         }
 
-        course.career = existingCareer;
+        course.career = career;
 
         return await this.courseRepository.save(course);
     }
 
-    async update(id: number, courseDto: CourseDto): Promise<Course> {
+    async update(
+        id: number,
+        courseUpdateDto: CourseUpdateDto
+    ): Promise<Course> {
         const existingCourse = await this.courseRepository.findOneBy({
             id: id
         });
@@ -69,7 +66,7 @@ export class CourseService {
             throw new EntityNotFoundError('Course not found');
         }
 
-        if (courseDto.version == null) {
+        if (courseUpdateDto.version == null) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingCourse.version,
@@ -77,29 +74,41 @@ export class CourseService {
             );
         }
 
-        if (courseDto.version !== existingCourse.version) {
+        if (courseUpdateDto.version !== existingCourse.version) {
             throw new OptimisticLockingFailureError(
                 'Resource versions do not match',
                 existingCourse.version,
-                courseDto.version
+                courseUpdateDto.version
             );
         }
 
-        const existingCareer = await this.careerRepository.findOneBy({
-            id: courseDto.careerId
-        });
-
-        if (!existingCareer) {
-            throw new EntityNotFoundError('Career not found');
+        if (courseUpdateDto.courseKey != null) {
+            existingCourse.courseKey = courseUpdateDto.courseKey;
         }
 
-        existingCourse.name = courseDto.name;
-
-        if (courseDto.description != null) {
-            existingCourse.description = courseDto.description;
+        if (courseUpdateDto.classKey != null) {
+            existingCourse.classKey = courseUpdateDto.classKey;
         }
 
-        existingCourse.career = existingCareer;
+        if (courseUpdateDto.scheduleKey != null) {
+            existingCourse.scheduleKey = courseUpdateDto.scheduleKey;
+        }
+
+        if (courseUpdateDto.descriptionKey != null) {
+            existingCourse.descriptionKey = courseUpdateDto.descriptionKey;
+        }
+
+        if (courseUpdateDto.careerId != null) {
+            const career = await this.careerRepository.findOneBy({
+                id: courseUpdateDto.careerId
+            });
+
+            if (!career) {
+                throw new EntityNotFoundError('ProgramType not found');
+            }
+
+            existingCourse.career = career;
+        }
 
         return await this.courseRepository.save(existingCourse);
     }

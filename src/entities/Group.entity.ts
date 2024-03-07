@@ -2,13 +2,18 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
+    Relation,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
+import { Course } from './Course.entity';
+
 @Entity()
-export class Term {
+export class Group {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -24,18 +29,16 @@ export class Term {
     @Column({
         nullable: false
     })
-    title!: string;
-
-    @Column()
-    description!: string;
+    firstNumberKey!: number;
 
     @Column({
         nullable: false
     })
-    startDate!: Date;
+    secondNumberKey!: number;
 
-    @Column({
+    @ManyToOne(() => Course, (course) => course.groups, {
         nullable: false
     })
-    endDate!: Date;
+    @JoinColumn()
+    course!: Relation<Course>;
 }

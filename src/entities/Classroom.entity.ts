@@ -11,7 +11,7 @@ import {
 import { Schedule } from './Schedule.entity';
 
 @Entity()
-export class Professor {
+export class Classroom {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -29,17 +29,7 @@ export class Professor {
     })
     typeKey!: string;
 
-    @Column({
-        nullable: false
-    })
-    controlNumberKey!: number;
-
-    @Column({
-        nullable: false
-    })
-    name!: string;
-
-    @OneToMany(() => Schedule, (schedule) => schedule.professor, {
+    @OneToMany(() => Schedule, (schedule) => schedule.classroom, {
         cascade: true
     })
     schedules!: Schedule[];

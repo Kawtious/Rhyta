@@ -12,21 +12,21 @@ import {
 } from '@nestjs/common';
 
 import { Roles } from '../decorators/Roles.decorator';
-import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
-import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
+import { GroupInsertDto } from '../dto/GroupInsert.dto';
+import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
-import { ProfessorService } from '../services/Professor.service';
+import { GroupService } from '../services/Group.service';
 
-@Controller({ path: 'professors', version: '1' })
-export class ProfessorController {
-    constructor(private readonly professorService: ProfessorService) {}
+@Controller({ path: 'groups', version: '1' })
+export class GroupController {
+    constructor(private readonly groupService: GroupService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
     async getAll() {
-        return await this.professorService.getAll();
+        return await this.groupService.getAll();
     }
 
     @Get(':id')
@@ -40,14 +40,14 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.getById(Number(id));
+        return await this.groupService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    async insert(@Body() professorInsertDto: ProfessorInsertDto) {
-        return await this.professorService.insert(professorInsertDto);
+    async insert(@Body() groupInsertDto: GroupInsertDto) {
+        return await this.groupService.insert(groupInsertDto);
     }
 
     @Put(':id')
@@ -56,16 +56,13 @@ export class ProfessorController {
     async update(
         @Param('id')
         id: string,
-        @Body() professorUpdateDto: ProfessorUpdateDto
+        @Body() groupUpdateDto: GroupUpdateDto
     ) {
         if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.professorService.update(
-            Number(id),
-            professorUpdateDto
-        );
+        return await this.groupService.update(Number(id), groupUpdateDto);
     }
 
     @Delete(':id')
@@ -79,7 +76,7 @@ export class ProfessorController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.professorService.delete(Number(id));
+        await this.groupService.delete(Number(id));
 
         return;
     }

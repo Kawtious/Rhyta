@@ -9,10 +9,13 @@ import { AuthGuard } from '../guards/Auth.guard';
 import { MySqlConfigService } from '../services/MySqlConfig.service';
 import { AuthModule } from './Auth.module';
 import { CareerModule } from './Career.module';
+import { ClassroomModule } from './Classroom.module';
 import { CourseModule } from './Course.module';
+import { ExportModule } from './Export.module';
+import { GroupModule } from './Group.module';
 import { ProfessorModule } from './Professor.module';
-import { ProfessorEventModule } from './ProfessorEvent.module';
-import { TermModule } from './Term.module';
+import { ProgramModule } from './Program.module';
+import { ProgramTypeModule } from './ProgramType.module';
 
 @Module({
     imports: [
@@ -44,10 +47,13 @@ import { TermModule } from './Term.module';
         }),
         AuthModule,
         CareerModule,
+        ClassroomModule,
         CourseModule,
+        ExportModule,
+        GroupModule,
         ProfessorModule,
-        ProfessorEventModule,
-        TermModule
+        ProgramModule,
+        ProgramTypeModule
     ],
     providers: [
         {

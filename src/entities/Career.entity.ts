@@ -1,4 +1,3 @@
-import { string } from 'joi';
 import {
     Column,
     CreateDateColumn,
@@ -28,10 +27,17 @@ export class Career {
     @Column({
         nullable: false
     })
-    name!: string;
+    careerKey!: string;
 
-    @Column()
-    description!: string;
+    @Column({
+        nullable: false
+    })
+    pathStartKey!: number;
+
+    @Column({
+        nullable: false
+    })
+    pathEndKey!: number;
 
     @OneToMany(() => Course, (course) => course.career, {
         cascade: true
