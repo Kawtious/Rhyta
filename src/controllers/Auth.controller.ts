@@ -11,14 +11,14 @@ export class AuthController {
 
     @Post('register')
     @HttpCode(HttpStatus.CREATED)
-    async register(@Body() registerUserDto: UserSignInDto) {
-        return await this.authService.register(registerUserDto);
+    async register(@Body() userSignInDto: UserSignInDto) {
+        return await this.authService.register(userSignInDto);
     }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(@Body() loginRequest: UserLoginDto) {
-        const token = await this.authService.login(loginRequest);
+    async login(@Body() userLoginDto: UserLoginDto) {
+        const token = await this.authService.login(userLoginDto);
 
         return {
             accessToken: token,

@@ -9,7 +9,9 @@ import { Group } from '../entities/Group.entity';
 import { Professor } from '../entities/Professor.entity';
 import { Program } from '../entities/Program.entity';
 import { ProgramType } from '../entities/ProgramType.entity';
+import { Schedule } from '../entities/Schedule.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
+import { HexConverter } from '../utils/HexConverter';
 
 @Injectable()
 export class ExportService {
@@ -25,7 +27,9 @@ export class ExportService {
         @InjectRepository(Program, 'mySqlConnection')
         private readonly programRepository: Repository<Program>,
         @InjectRepository(ProgramType, 'mySqlConnection')
-        private readonly programTypeRepository: Repository<ProgramType>
+        private readonly programTypeRepository: Repository<ProgramType>,
+        @InjectRepository(Schedule, 'mySqlConnection')
+        private readonly scheduleRepository: Repository<Schedule>
     ) {}
 
     async exportCSVCareers(): Promise<string> {
@@ -185,5 +189,50 @@ export class ExportService {
         }
 
         return `${programType.descriptionKey},${programType.availableHoursKey},${programType.sessionMaskKey}`;
+    }
+
+    async exportHexProfessors(cycleId: number): Promise<number[]> {
+        const professors = await this.professorRepository.find();
+
+        let sb: string = '';
+
+        for (const professor of professors) {
+            sb += HexConverter.stringToPaddedHex(professor.typeKey, 4);
+            sb += HexConverter.numberToPaddedHex(
+                professor.controlNumberKey,
+                8,
+                true
+            );
+            sb += HexConverter.stringToHexWithNullTerminator(professor.name);
+
+            const schedule = await this.scheduleRepository.findOne({
+                where: { cycle: { id: cycleId } }
+            });
+
+            if (schedule == null) {
+                continue;
+            }
+
+            const scheduleBytes: string[][] = [[]];
+
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 29; j++) {
+                    scheduleBytes[i].push(HexConverter.getEmptyBytes(4));
+                }
+            }
+
+            for (const scheduleEntry of schedule.entries) {
+                scheduleBytes[scheduleEntry.day][scheduleEntry.hour] =
+                    HexConverter.booleanToHex(scheduleEntry.active, 4, false);
+            }
+
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 29; j++) {
+                    sb += scheduleBytes[i][j];
+                }
+            }
+        }
+
+        return HexConverter.hexToBytes(sb);
     }
 }

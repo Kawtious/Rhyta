@@ -2,18 +2,16 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
-    Relation,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
-import { ProgramType } from './ProgramType.entity';
+import { Schedule } from './Schedule.entity';
 
 @Entity()
-export class Program {
+export class Cycle {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -29,16 +27,13 @@ export class Program {
     @Column({
         nullable: false
     })
-    typeKey!: number;
+    title!: string;
 
-    @Column({
-        nullable: false
-    })
-    offsetKey!: number;
+    @Column()
+    description!: string;
 
-    @ManyToOne(() => ProgramType, (programType) => programType.programs, {
-        nullable: false
+    @OneToMany(() => Schedule, (schedules) => schedules.cycle, {
+        cascade: true
     })
-    @JoinColumn()
-    programType!: Relation<ProgramType>;
+    schedules!: Schedule[];
 }

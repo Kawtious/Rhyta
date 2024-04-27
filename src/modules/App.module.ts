@@ -11,6 +11,7 @@ import { AuthModule } from './Auth.module';
 import { CareerModule } from './Career.module';
 import { ClassroomModule } from './Classroom.module';
 import { CourseModule } from './Course.module';
+import { CycleModule } from './Cycle.module';
 import { ExportModule } from './Export.module';
 import { GroupModule } from './Group.module';
 import { ProfessorModule } from './Professor.module';
@@ -49,6 +50,7 @@ import { ProgramTypeModule } from './ProgramType.module';
         CareerModule,
         ClassroomModule,
         CourseModule,
+        CycleModule,
         ExportModule,
         GroupModule,
         ProfessorModule,

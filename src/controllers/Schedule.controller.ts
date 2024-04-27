@@ -11,22 +11,21 @@ import {
 } from '@nestjs/common';
 
 import { Roles } from '../decorators/Roles.decorator';
-import { CourseInsertDto } from '../dto/CourseInsert.dto';
-import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
-import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
+import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
+import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
-import { CourseService } from '../services/Course.service';
+import { ScheduleService } from '../services/Schedule.service';
 
-@Controller({ path: 'courses', version: '1' })
-export class CourseController {
-    constructor(private readonly courseService: CourseService) {}
+@Controller({ path: 'schedules', version: '1' })
+export class ScheduleController {
+    constructor(private readonly scheduleService: ScheduleService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
     async getAll() {
-        return await this.courseService.getAll();
+        return await this.scheduleService.getAll();
     }
 
     @Get(':id')
@@ -40,21 +39,14 @@ export class CourseController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.courseService.getById(Number(id));
+        return await this.scheduleService.getById(Number(id));
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    async insert(@Body() courseInsertDto: CourseInsertDto) {
-        return await this.courseService.insert(courseInsertDto);
-    }
-
-    @Post('bulk')
-    @HttpCode(HttpStatus.CREATED)
-    @Roles(Role.Admin)
-    async insertBulk(@Body() courseInsertDtos: CourseInsertDto[]) {
-        return await this.courseService.insertBulk(courseInsertDtos);
+    async insert(@Body() scheduleInsertDto: ScheduleInsertDto) {
+        return await this.scheduleService.insert(scheduleInsertDto);
     }
 
     @Put(':id')
@@ -63,20 +55,13 @@ export class CourseController {
     async update(
         @Param('id')
         id: string,
-        @Body() courseUpdateDto: CourseUpdateDto
+        @Body() scheduleUpdateDto: ScheduleUpdateDto
     ) {
         if (isNaN(Number(id))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.courseService.update(Number(id), courseUpdateDto);
-    }
-
-    @Put()
-    @HttpCode(HttpStatus.OK)
-    @Roles(Role.Admin)
-    async updateBulk(@Body() courseUpdateBulkDtos: CourseUpdateBulkDto[]) {
-        return await this.courseService.updateBulk(courseUpdateBulkDtos);
+        return await this.scheduleService.update(Number(id), scheduleUpdateDto);
     }
 
     @Delete(':id')
@@ -90,7 +75,7 @@ export class CourseController {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        await this.courseService.delete(Number(id));
+        await this.scheduleService.delete(Number(id));
 
         return;
     }

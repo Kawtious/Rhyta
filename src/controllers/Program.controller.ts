@@ -14,6 +14,7 @@ import {
 import { Roles } from '../decorators/Roles.decorator';
 import { ProgramInsertDto } from '../dto/ProgramInsert.dto';
 import { ProgramUpdateDto } from '../dto/ProgramUpdate.dto';
+import { ProgramUpdateBulkDto } from '../dto/ProgramUpdateBulk.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
 import { ProgramService } from '../services/Program.service';
@@ -50,6 +51,13 @@ export class ProgramController {
         return await this.programService.insert(programInsertDto);
     }
 
+    @Post('bulk')
+    @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
+    async insertBulk(@Body() programInsertDtos: ProgramInsertDto[]) {
+        return await this.programService.insertBulk(programInsertDtos);
+    }
+
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
@@ -63,6 +71,13 @@ export class ProgramController {
         }
 
         return await this.programService.update(Number(id), programUpdateDto);
+    }
+
+    @Put()
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    async updateBulk(@Body() programUpdateBulkDtos: ProgramUpdateBulkDto[]) {
+        return await this.programService.updateBulk(programUpdateBulkDtos);
     }
 
     @Delete(':id')

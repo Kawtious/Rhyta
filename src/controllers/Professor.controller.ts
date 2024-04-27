@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    Header,
     HttpCode,
     HttpStatus,
     Param,
@@ -14,6 +13,7 @@ import {
 import { Roles } from '../decorators/Roles.decorator';
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
+import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
 import { ProfessorService } from '../services/Professor.service';
@@ -50,6 +50,13 @@ export class ProfessorController {
         return await this.professorService.insert(professorInsertDto);
     }
 
+    @Post('bulk')
+    @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
+    async insertBulk(@Body() professorInsertDtos: ProfessorInsertDto[]) {
+        return await this.professorService.insertBulk(professorInsertDtos);
+    }
+
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
@@ -66,6 +73,15 @@ export class ProfessorController {
             Number(id),
             professorUpdateDto
         );
+    }
+
+    @Put()
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    async updateBulk(
+        @Body() professorUpdateBulkDtos: ProfessorUpdateBulkDto[]
+    ) {
+        return await this.professorService.updateBulk(professorUpdateBulkDtos);
     }
 
     @Delete(':id')

@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    Header,
     HttpCode,
     HttpStatus,
     Param,
@@ -14,11 +13,12 @@ import {
 import { Roles } from '../decorators/Roles.decorator';
 import { ProgramTypeInsertDto } from '../dto/ProgramTypeInsert.dto';
 import { ProgramTypeUpdateDto } from '../dto/ProgramTypeUpdate.dto';
+import { ProgramTypeUpdateBulkDto } from '../dto/ProgramTypeUpdateBulk.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
 import { ProgramTypeService } from '../services/ProgramType.service';
 
-@Controller({ path: 'programtypes', version: '1' })
+@Controller({ path: 'programTypes', version: '1' })
 export class ProgramTypeController {
     constructor(private readonly programTypeService: ProgramTypeService) {}
 
@@ -50,6 +50,13 @@ export class ProgramTypeController {
         return await this.programTypeService.insert(programTypeInsertDto);
     }
 
+    @Post('bulk')
+    @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
+    async insertBulk(@Body() programTypeInsertDtos: ProgramTypeInsertDto[]) {
+        return await this.programTypeService.insertBulk(programTypeInsertDtos);
+    }
+
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
@@ -65,6 +72,17 @@ export class ProgramTypeController {
         return await this.programTypeService.update(
             Number(id),
             programTypeUpdateDto
+        );
+    }
+
+    @Put()
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    async updateBulk(
+        @Body() programTypeUpdateBulkDtos: ProgramTypeUpdateBulkDto[]
+    ) {
+        return await this.programTypeService.updateBulk(
+            programTypeUpdateBulkDtos
         );
     }
 

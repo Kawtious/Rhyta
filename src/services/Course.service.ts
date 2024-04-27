@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
+import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { Career } from '../entities/Career.entity';
 import { Course } from '../entities/Course.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -46,12 +47,39 @@ export class CourseService {
         });
 
         if (!career) {
-            throw new EntityNotFoundError('ProgramType not found');
+            throw new EntityNotFoundError('Career not found');
         }
 
         course.career = career;
 
         return await this.courseRepository.save(course);
+    }
+
+    async insertBulk(courseInsertDtos: CourseInsertDto[]): Promise<Course[]> {
+        const courses: Course[] = [];
+
+        for (const courseInsertDto of courseInsertDtos) {
+            const course = new Course();
+
+            course.courseKey = courseInsertDto.courseKey;
+            course.classKey = courseInsertDto.classKey;
+            course.scheduleKey = courseInsertDto.scheduleKey;
+            course.descriptionKey = courseInsertDto.descriptionKey;
+
+            const career = await this.careerRepository.findOneBy({
+                id: courseInsertDto.careerId
+            });
+
+            if (!career) {
+                throw new EntityNotFoundError('Career not found');
+            }
+
+            course.career = career;
+
+            courses.push(course);
+        }
+
+        return await this.courseRepository.save(courses);
     }
 
     async update(
@@ -104,13 +132,78 @@ export class CourseService {
             });
 
             if (!career) {
-                throw new EntityNotFoundError('ProgramType not found');
+                throw new EntityNotFoundError('Career not found');
             }
 
             existingCourse.career = career;
         }
 
         return await this.courseRepository.save(existingCourse);
+    }
+
+    async updateBulk(
+        courseUpdateBulkDtos: CourseUpdateBulkDto[]
+    ): Promise<Course[]> {
+        const courses: Course[] = [];
+
+        for (const courseUpdateBulkDto of courseUpdateBulkDtos) {
+            const existingCourse = await this.courseRepository.findOneBy({
+                id: courseUpdateBulkDto.id
+            });
+
+            if (!existingCourse) {
+                throw new EntityNotFoundError('Course not found');
+            }
+
+            if (courseUpdateBulkDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingCourse.version,
+                    -1
+                );
+            }
+
+            if (courseUpdateBulkDto.version !== existingCourse.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingCourse.version,
+                    courseUpdateBulkDto.version
+                );
+            }
+
+            if (courseUpdateBulkDto.courseKey != null) {
+                existingCourse.courseKey = courseUpdateBulkDto.courseKey;
+            }
+
+            if (courseUpdateBulkDto.classKey != null) {
+                existingCourse.classKey = courseUpdateBulkDto.classKey;
+            }
+
+            if (courseUpdateBulkDto.scheduleKey != null) {
+                existingCourse.scheduleKey = courseUpdateBulkDto.scheduleKey;
+            }
+
+            if (courseUpdateBulkDto.descriptionKey != null) {
+                existingCourse.descriptionKey =
+                    courseUpdateBulkDto.descriptionKey;
+            }
+
+            if (courseUpdateBulkDto.careerId != null) {
+                const career = await this.careerRepository.findOneBy({
+                    id: courseUpdateBulkDto.careerId
+                });
+
+                if (!career) {
+                    throw new EntityNotFoundError('Career not found');
+                }
+
+                existingCourse.career = career;
+            }
+
+            courses.push(existingCourse);
+        }
+
+        return await this.courseRepository.save(courses);
     }
 
     async delete(id: number): Promise<DeleteResult> {

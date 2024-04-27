@@ -1,18 +1,21 @@
 import { IsNumber, IsOptional } from 'class-validator';
 
-export class ProgramUpdateDto {
+export class GroupUpdateBulkDto {
+    @IsNumber()
+    id!: number;
+
     @IsNumber()
     version!: number;
 
     @IsOptional()
     @IsNumber()
-    typeKey?: number;
+    firstNumberKey?: number;
 
     @IsOptional()
     @IsNumber()
-    offsetKey?: number;
+    secondNumberKey?: number;
 
     @IsOptional()
     @IsNumber()
-    programTypeId?: number;
+    courseId?: number;
 }

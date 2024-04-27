@@ -13,6 +13,7 @@ import {
 import { Roles } from '../decorators/Roles.decorator';
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
+import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { Role } from '../enums/Role.enum';
 import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValidError';
 import { ClassroomService } from '../services/Classroom.service';
@@ -49,6 +50,13 @@ export class ClassroomController {
         return await this.classroomService.insert(classroomInsertDto);
     }
 
+    @Post('bulk')
+    @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
+    async insertBulk(@Body() classroomInsertDtos: ClassroomInsertDto[]) {
+        return await this.classroomService.insertBulk(classroomInsertDtos);
+    }
+
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     @Roles(Role.Admin)
@@ -65,6 +73,15 @@ export class ClassroomController {
             Number(id),
             classroomUpdateDto
         );
+    }
+
+    @Put()
+    @HttpCode(HttpStatus.OK)
+    @Roles(Role.Admin)
+    async updateBulk(
+        @Body() classroomUpdateBulkDtos: ClassroomUpdateBulkDto[]
+    ) {
+        return await this.classroomService.updateBulk(classroomUpdateBulkDtos);
     }
 
     @Delete(':id')

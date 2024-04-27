@@ -20,148 +20,69 @@ export class ExportController {
     @Get('csv/careers')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=careers.csv')
     @Roles(Role.Admin)
     async exportCSVCareers() {
         return await this.exportService.exportCSVCareers();
     }
 
-    @Get('csv/careers/:id')
-    @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
-    @Roles(Role.Admin)
-    async exportCSVCareer(
-        @Param('id')
-        id: string,
-        @Query('course') course?: string
-    ) {
-        if (isNaN(Number(id))) {
-            throw new MethodArgumentNotValidError('Invalid ID');
-        }
-
-        if (course) {
-            if (isNaN(Number(course))) {
-                throw new MethodArgumentNotValidError('Invalid Course ID');
-            }
-        }
-
-        return await this.exportService.exportCSVCareer(
-            Number(id),
-            Number(course)
-        );
-    }
-
     @Get('csv/courses')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=courses.csv')
     @Roles(Role.Admin)
     async exportCSVCourses() {
         return await this.exportService.exportCSVCourses();
     }
 
-    @Get('csv/courses/:id')
-    @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
-    @Roles(Role.Admin)
-    async exportCSVCourse(
-        @Param('id')
-        id: string
-    ) {
-        if (isNaN(Number(id))) {
-            throw new MethodArgumentNotValidError('Invalid ID');
-        }
-
-        return await this.exportService.exportCSVCourse(Number(id));
-    }
-
     @Get('csv/groups')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=groups.csv')
     @Roles(Role.Admin)
     async exportCSVGroups() {
         return await this.exportService.exportCSVGroups();
     }
 
-    @Get('csv/groups/:id')
-    @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
-    @Roles(Role.Admin)
-    async exportCSVGroup(
-        @Param('id')
-        id: string
-    ) {
-        if (isNaN(Number(id))) {
-            throw new MethodArgumentNotValidError('Invalid ID');
-        }
-
-        return await this.exportService.exportCSVGroup(Number(id));
-    }
-
     @Get('csv/professors')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=professors.csv')
     @Roles(Role.Admin)
     async exportCSVProfessors() {
         return await this.exportService.exportCSVProfessors();
     }
 
-    @Get('csv/professors/:id')
-    @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
-    @Roles(Role.Admin)
-    async exportCSVProfessor(
-        @Param('id')
-        id: string
-    ) {
-        if (isNaN(Number(id))) {
-            throw new MethodArgumentNotValidError('Invalid ID');
-        }
-
-        return await this.exportService.exportCSVProfessor(Number(id));
-    }
-
     @Get('csv/programs')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=programs.csv')
     @Roles(Role.Admin)
     async exportCSVPrograms() {
         return await this.exportService.exportCSVPrograms();
     }
 
-    @Get('csv/programs/:id')
-    @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
-    @Roles(Role.Admin)
-    async exportCSVProgram(
-        @Param('id')
-        id: string
-    ) {
-        if (isNaN(Number(id))) {
-            throw new MethodArgumentNotValidError('Invalid ID');
-        }
-
-        return await this.exportService.exportCSVProgram(Number(id));
-    }
-
     @Get('csv/programtypes')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
+    @Header('Content-Disposition', 'attachment;filename=programTypes.csv')
     @Roles(Role.Admin)
     async exportCSVProgramTypes() {
         return await this.exportService.exportCSVProgramTypes();
     }
 
-    @Get('csv/programtypes/:id')
+    @Get('hex/professors')
     @HttpCode(HttpStatus.OK)
-    @Header('Content-Type', 'text/csv')
+    @Header('Content-Type', 'application/octet-stream')
     @Roles(Role.Admin)
-    async exportCSVProgramType(
-        @Param('id')
-        id: string
+    async exportHexProfessors(
+        @Param('cycleId')
+        cycleId: string
     ) {
-        if (isNaN(Number(id))) {
+        if (isNaN(Number(cycleId))) {
             throw new MethodArgumentNotValidError('Invalid ID');
         }
 
-        return await this.exportService.exportCSVProgramType(Number(id));
+        return await this.exportService.exportHexProfessors(Number(cycleId));
     }
 }

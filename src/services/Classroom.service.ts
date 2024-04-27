@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
+import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { Classroom } from '../entities/Classroom.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
@@ -36,6 +37,22 @@ export class ClassroomService {
         classroom.typeKey = classroomInsertDto.typeKey;
 
         return await this.classroomRepository.save(classroom);
+    }
+
+    async insertBulk(
+        classroomInsertDtos: ClassroomInsertDto[]
+    ): Promise<Classroom[]> {
+        const classrooms: Classroom[] = [];
+
+        for (const classroomInsertDto of classroomInsertDtos) {
+            const classroom = new Classroom();
+
+            classroom.typeKey = classroomInsertDto.typeKey;
+
+            classrooms.push(classroom);
+        }
+
+        return await this.classroomRepository.save(classrooms);
     }
 
     async update(
@@ -71,6 +88,46 @@ export class ClassroomService {
         }
 
         return await this.classroomRepository.save(existingClassroom);
+    }
+
+    async updateBulk(
+        classroomUpdateBulkDtos: ClassroomUpdateBulkDto[]
+    ): Promise<Classroom[]> {
+        const classrooms: Classroom[] = [];
+
+        for (const classroomUpdateBulkDto of classroomUpdateBulkDtos) {
+            const existingClassroom = await this.classroomRepository.findOneBy({
+                id: classroomUpdateBulkDto.id
+            });
+
+            if (!existingClassroom) {
+                throw new EntityNotFoundError('Classroom not found');
+            }
+
+            if (classroomUpdateBulkDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingClassroom.version,
+                    -1
+                );
+            }
+
+            if (classroomUpdateBulkDto.version !== existingClassroom.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingClassroom.version,
+                    classroomUpdateBulkDto.version
+                );
+            }
+
+            if (classroomUpdateBulkDto.typeKey != null) {
+                existingClassroom.typeKey = classroomUpdateBulkDto.typeKey;
+            }
+
+            classrooms.push(existingClassroom);
+        }
+
+        return await this.classroomRepository.save(classrooms);
     }
 
     async delete(id: number): Promise<DeleteResult> {

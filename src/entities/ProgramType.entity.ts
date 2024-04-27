@@ -8,7 +8,6 @@ import {
     VersionColumn
 } from 'typeorm';
 
-import { Course } from './Course.entity';
 import { Program } from './Program.entity';
 
 @Entity()
@@ -44,8 +43,4 @@ export class ProgramType {
         cascade: true
     })
     programs!: Program[];
-
-    public get toCsv(): string {
-        return `${this.descriptionKey},${this.availableHoursKey},${this.sessionMaskKey}`;
-    }
 }

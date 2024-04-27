@@ -87,10 +87,6 @@ export class UserService {
         return this.getByJwtToken(token);
     }
 
-    async save(user: User): Promise<User> {
-        return await this.userRepository.save(user);
-    }
-
     async delete(id: number): Promise<DeleteResult> {
         return await this.userRepository.delete(id);
     }

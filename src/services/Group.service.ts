@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
+import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { Course } from '../entities/Course.entity';
 import { Group } from '../entities/Group.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -50,6 +51,31 @@ export class GroupService {
         group.course = course;
 
         return await this.groupRepository.save(group);
+    }
+
+    async insertBulk(groupInsertDtos: GroupInsertDto[]): Promise<Group[]> {
+        const groups: Group[] = [];
+
+        for (const groupInsertDto of groupInsertDtos) {
+            const group = new Group();
+
+            group.firstNumberKey = groupInsertDto.firstNumberKey;
+            group.secondNumberKey = groupInsertDto.secondNumberKey;
+
+            const course = await this.courseRepository.findOneBy({
+                id: groupInsertDto.courseId
+            });
+
+            if (!course) {
+                throw new EntityNotFoundError('Course not found');
+            }
+
+            group.course = course;
+
+            groups.push(group);
+        }
+
+        return await this.groupRepository.save(groups);
     }
 
     async update(id: number, groupUpdateDto: GroupUpdateDto): Promise<Group> {
@@ -98,6 +124,64 @@ export class GroupService {
         }
 
         return await this.groupRepository.save(existingGroup);
+    }
+
+    async updateBulk(
+        groupUpdateBulkDtos: GroupUpdateBulkDto[]
+    ): Promise<Group[]> {
+        const groups: Group[] = [];
+
+        for (const groupUpdateBulkDto of groupUpdateBulkDtos) {
+            const existingGroup = await this.groupRepository.findOneBy({
+                id: groupUpdateBulkDto.id
+            });
+
+            if (!existingGroup) {
+                throw new EntityNotFoundError('Group not found');
+            }
+
+            if (groupUpdateBulkDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingGroup.version,
+                    -1
+                );
+            }
+
+            if (groupUpdateBulkDto.version !== existingGroup.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingGroup.version,
+                    groupUpdateBulkDto.version
+                );
+            }
+
+            if (groupUpdateBulkDto.firstNumberKey != null) {
+                existingGroup.firstNumberKey =
+                    groupUpdateBulkDto.firstNumberKey;
+            }
+
+            if (groupUpdateBulkDto.secondNumberKey != null) {
+                existingGroup.secondNumberKey =
+                    groupUpdateBulkDto.secondNumberKey;
+            }
+
+            if (groupUpdateBulkDto.courseId != null) {
+                const course = await this.courseRepository.findOneBy({
+                    id: groupUpdateBulkDto.courseId
+                });
+
+                if (!course) {
+                    throw new EntityNotFoundError('Course not found');
+                }
+
+                existingGroup.course = course;
+            }
+
+            groups.push(existingGroup);
+        }
+
+        return await this.groupRepository.save(groups);
     }
 
     async delete(id: number): Promise<DeleteResult> {

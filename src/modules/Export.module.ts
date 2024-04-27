@@ -8,12 +8,13 @@ import { Group } from '../entities/Group.entity';
 import { Professor } from '../entities/Professor.entity';
 import { Program } from '../entities/Program.entity';
 import { ProgramType } from '../entities/ProgramType.entity';
+import { Schedule } from '../entities/Schedule.entity';
 import { ExportService } from '../services/Export.service';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature(
-            [Career, Course, Group, Professor, Program, ProgramType],
+            [Career, Course, Group, Professor, Program, ProgramType, Schedule],
             'mySqlConnection'
         )
     ],

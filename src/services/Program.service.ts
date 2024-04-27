@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ProgramInsertDto } from '../dto/ProgramInsert.dto';
 import { ProgramUpdateDto } from '../dto/ProgramUpdate.dto';
+import { ProgramUpdateBulkDto } from '../dto/ProgramUpdateBulk.dto';
 import { Program } from '../entities/Program.entity';
 import { ProgramType } from '../entities/ProgramType.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
@@ -50,6 +51,33 @@ export class ProgramService {
         program.programType = programType;
 
         return await this.programRepository.save(program);
+    }
+
+    async insertBulk(
+        programInsertDtos: ProgramInsertDto[]
+    ): Promise<Program[]> {
+        const programs: Program[] = [];
+
+        for (const programInsertDto of programInsertDtos) {
+            const program = new Program();
+
+            program.typeKey = programInsertDto.typeKey;
+            program.offsetKey = programInsertDto.offsetKey;
+
+            const programType = await this.programTypeRepository.findOneBy({
+                id: programInsertDto.programTypeId
+            });
+
+            if (!programType) {
+                throw new EntityNotFoundError('ProgramType not found');
+            }
+
+            program.programType = programType;
+
+            programs.push(program);
+        }
+
+        return await this.programRepository.save(programs);
     }
 
     async update(
@@ -101,6 +129,62 @@ export class ProgramService {
         }
 
         return await this.programRepository.save(existingProgram);
+    }
+
+    async updateBulk(
+        programUpdateBulkDtos: ProgramUpdateBulkDto[]
+    ): Promise<Program[]> {
+        const programs: Program[] = [];
+
+        for (const programUpdateBulkDto of programUpdateBulkDtos) {
+            const existingProgram = await this.programRepository.findOneBy({
+                id: programUpdateBulkDto.id
+            });
+
+            if (!existingProgram) {
+                throw new EntityNotFoundError('Program not found');
+            }
+
+            if (programUpdateBulkDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingProgram.version,
+                    -1
+                );
+            }
+
+            if (programUpdateBulkDto.version !== existingProgram.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingProgram.version,
+                    programUpdateBulkDto.version
+                );
+            }
+
+            if (programUpdateBulkDto.typeKey != null) {
+                existingProgram.typeKey = programUpdateBulkDto.typeKey;
+            }
+
+            if (programUpdateBulkDto.offsetKey != null) {
+                existingProgram.offsetKey = programUpdateBulkDto.offsetKey;
+            }
+
+            if (programUpdateBulkDto.programTypeId != null) {
+                const programType = await this.programTypeRepository.findOneBy({
+                    id: programUpdateBulkDto.programTypeId
+                });
+
+                if (!programType) {
+                    throw new EntityNotFoundError('ProgramType not found');
+                }
+
+                existingProgram.programType = programType;
+            }
+
+            programs.push(existingProgram);
+        }
+
+        return await this.programRepository.save(programs);
     }
 
     async delete(id: number): Promise<DeleteResult> {
