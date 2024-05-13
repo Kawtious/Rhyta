@@ -1,0 +1,23 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Node.js dependencies
+node_modules/
+
+# Build files
+dist/
+out/
+
+# Environment variables
+.env
+
+# npm package manager lock file
+package-lock.json
+
+# Yarn package manager lock file
+yarn.lock
+
+# Test coverage files
+/coverage/
