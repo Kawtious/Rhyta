@@ -9,7 +9,8 @@ import {
     VersionColumn
 } from 'typeorm';
 
-import { Permission, Role } from './Role.entity';
+import { Permission } from '../enums/Permission.enum';
+import { Role } from './Role.entity';
 
 @Entity()
 export class User {

@@ -16,7 +16,7 @@ import { ProgramInsertDto } from '../dto/ProgramInsert.dto';
 import { ProgramUpdateDto } from '../dto/ProgramUpdate.dto';
 import { ProgramUpdateBulkDto } from '../dto/ProgramUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { ProgramService } from '../services/Program.service';
 
 @Controller({ path: 'programs', version: '1' })

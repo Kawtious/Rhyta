@@ -13,7 +13,7 @@ import {
 import { Permissions } from '../decorators/Permissions.decorator';
 import { PathInsertDto } from '../dto/PathInsert.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { PathService } from '../services/Path.service';
 
 @Controller({ path: 'paths', version: '1' })

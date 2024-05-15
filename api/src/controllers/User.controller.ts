@@ -3,8 +3,8 @@ import { Controller, Get, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { Request } from 'express';
 
 import { Permissions } from '../decorators/Permissions.decorator';
-import { Permission } from '../entities/Role.entity';
 import { User } from '../entities/User.entity';
+import { Permission } from '../enums/Permission.enum';
 import { UserService } from '../services/User.service';
 
 @Controller({ path: 'users', version: '1' })

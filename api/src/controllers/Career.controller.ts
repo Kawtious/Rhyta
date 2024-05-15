@@ -16,7 +16,7 @@ import { CareerInsertDto } from '../dto/CareerInsert.dto';
 import { CareerUpdateDto } from '../dto/CareerUpdate.dto';
 import { CareerUpdateBulkDto } from '../dto/CareerUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { CareerService } from '../services/Career.service';
 
 @Controller({ path: 'careers', version: '1' })

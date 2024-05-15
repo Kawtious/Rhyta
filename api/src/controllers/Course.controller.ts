@@ -16,7 +16,7 @@ import { CourseInsertDto } from '../dto/CourseInsert.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
 import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { CourseService } from '../services/Course.service';
 
 @Controller({ path: 'courses', version: '1' })

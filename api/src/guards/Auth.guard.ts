@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
 import { PERMISSIONS_KEY } from '../decorators/Permissions.decorator';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { UserService } from '../services/User.service';
 
 @Injectable()

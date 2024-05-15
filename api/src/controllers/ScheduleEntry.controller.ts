@@ -14,7 +14,7 @@ import { Permissions } from '../decorators/Permissions.decorator';
 import { ScheduleEntryInsertDto } from '../dto/ScheduleEntryInsert.dto';
 import { ScheduleEntryUpdateDto } from '../dto/ScheduleEntryUpdate.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { ScheduleEntryService } from '../services/ScheduleEntry.service';
 
 @Controller({ path: 'scheduleEntries', version: '1' })

@@ -16,7 +16,7 @@ import { GroupInsertDto } from '../dto/GroupInsert.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { GroupService } from '../services/Group.service';
 
 @Controller({ path: 'groups', version: '1' })

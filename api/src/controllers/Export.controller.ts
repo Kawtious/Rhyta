@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { Permissions } from '../decorators/Permissions.decorator';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { ExportService } from '../services/Export.service';
 
 @Controller({ path: 'export', version: '1' })

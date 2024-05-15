@@ -3,7 +3,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Permissions } from '../decorators/Permissions.decorator';
 import { UserLoginDto } from '../dto/UserLogin.dto';
 import { UserSignInDto } from '../dto/UserSignIn.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { AuthService } from '../services/Auth.service';
 
 @Controller({ path: 'auth', version: '1' })

@@ -16,7 +16,7 @@ import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
 import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { ClassroomService } from '../services/Classroom.service';
 
 @Controller({ path: 'classrooms', version: '1' })

@@ -8,6 +8,7 @@ import {
     VersionColumn
 } from 'typeorm';
 
+import { Permission } from '../enums/Permission.enum';
 import { User } from './User.entity';
 
 @Entity()
@@ -36,8 +37,4 @@ export class Role {
         type: 'simple-array'
     })
     permissions!: Permission[];
-}
-
-export enum Permission {
-    Admin = 'admin'
 }

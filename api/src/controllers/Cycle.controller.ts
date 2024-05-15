@@ -15,7 +15,7 @@ import { Permissions } from '../decorators/Permissions.decorator';
 import { CycleInsertDto } from '../dto/CycleInsert.dto';
 import { CycleUpdateDto } from '../dto/CycleUpdate.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { CycleService } from '../services/Cycle.service';
 
 @Controller({ path: 'cycles', version: '1' })

@@ -16,7 +16,7 @@ import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
 import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../entities/Role.entity';
+import { Permission } from '../enums/Permission.enum';
 import { ProfessorService } from '../services/Professor.service';
 
 @Controller({ path: 'professors', version: '1' })
