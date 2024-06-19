@@ -12,6 +12,7 @@ import {
 
 import { ScheduleEntryInsertDto } from '../dto/ScheduleEntryInsert.dto';
 import { ScheduleEntryUpdateDto } from '../dto/ScheduleEntryUpdate.dto';
+import { ScheduleEntryUpdateBulkDto } from '../dto/ScheduleEntryUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleEntryService } from '../services/ScheduleEntry.service';
 
@@ -68,29 +69,67 @@ export class ScheduleEntryController {
         return await this.scheduleEntryService.getById(id);
     }
 
-    @Post('insert/professor/:professorId')
+    @Post('insert/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.CREATED)
-    async insertByProfessorId(
+    async insertByCycleIdAndProfessorId(
+        @Param('cycleId')
+        cycleId: number,
         @Param('professorId')
         professorId: number,
         @Body() scheduleEntryInsertDto: ScheduleEntryInsertDto
     ) {
-        return await this.scheduleEntryService.insertByProfessorId(
+        return await this.scheduleEntryService.insertByCycleIdAndProfessorId(
+            cycleId,
             professorId,
             scheduleEntryInsertDto
         );
     }
 
-    @Post('insert/classroom/:classroomId')
+    @Post('insert/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.CREATED)
-    async insertByClassroomId(
+    async insertByCycleIdAndClassroomId(
+        @Param('cycleId')
+        cycleId: number,
         @Param('classroomId')
         classroomId: number,
         @Body() scheduleEntryInsertDto: ScheduleEntryInsertDto
     ) {
-        return await this.scheduleEntryService.insertByClassroomId(
+        return await this.scheduleEntryService.insertByCycleIdAndClassroomId(
+            cycleId,
             classroomId,
             scheduleEntryInsertDto
+        );
+    }
+
+    @Post('insert/many/cycle/professor/:cycleId/:professorId')
+    @HttpCode(HttpStatus.CREATED)
+    async insertManyByCycleIdAndProfessorId(
+        @Param('cycleId')
+        cycleId: number,
+        @Param('professorId')
+        professorId: number,
+        @Body() scheduleEntryInsertDtos: ScheduleEntryInsertDto[]
+    ) {
+        return await this.scheduleEntryService.insertManyByCycleIdAndProfessorId(
+            cycleId,
+            professorId,
+            scheduleEntryInsertDtos
+        );
+    }
+
+    @Post('insert/many/cycle/classroom/:cycleId/:classroomId')
+    @HttpCode(HttpStatus.CREATED)
+    async insertManyByCycleIdAndClassroomId(
+        @Param('cycleId')
+        cycleId: number,
+        @Param('classroomId')
+        classroomId: number,
+        @Body() scheduleEntryInsertDtos: ScheduleEntryInsertDto[]
+    ) {
+        return await this.scheduleEntryService.insertManyByCycleIdAndClassroomId(
+            cycleId,
+            classroomId,
+            scheduleEntryInsertDtos
         );
     }
 
@@ -135,6 +174,38 @@ export class ScheduleEntryController {
             day,
             hour,
             scheduleEntryUpdateDto
+        );
+    }
+
+    @Put('update/many/cycle/professor/:cycleId/:professorId')
+    @HttpCode(HttpStatus.OK)
+    async updateManyByCycleIdAndProfessorId(
+        @Param('cycleId')
+        cycleId: number,
+        @Param('professorId')
+        professorId: number,
+        @Body() scheduleEntryUpdateBulkDtos: ScheduleEntryUpdateBulkDto[]
+    ) {
+        return await this.scheduleEntryService.updateManyByCycleIdAndProfessorId(
+            cycleId,
+            professorId,
+            scheduleEntryUpdateBulkDtos
+        );
+    }
+
+    @Put('update/many/cycle/classroom/:cycleId/:classroomId')
+    @HttpCode(HttpStatus.OK)
+    async updateManyByCycleIdAndClassroomId(
+        @Param('cycleId')
+        cycleId: number,
+        @Param('classroomId')
+        classroomId: number,
+        @Body() scheduleEntryUpdateBulkDtos: ScheduleEntryUpdateBulkDto[]
+    ) {
+        return await this.scheduleEntryService.updateManyByCycleIdAndClassroomId(
+            cycleId,
+            classroomId,
+            scheduleEntryUpdateBulkDtos
         );
     }
 }
