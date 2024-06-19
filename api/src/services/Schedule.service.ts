@@ -132,8 +132,6 @@ export class ScheduleService {
         professorId: number,
         scheduleInsertDto: ScheduleInsertDto
     ): Promise<Schedule> {
-        const schedule = new Schedule();
-
         const professor = await this.professorRepository.findOneBy({
             id: professorId
         });
@@ -150,6 +148,8 @@ export class ScheduleService {
             throw new EntityNotFoundError('Cycle not found');
         }
 
+        const schedule = new Schedule();
+
         schedule.cycle = cycle;
         schedule.professor = professor;
         schedule.title = scheduleInsertDto.title;
@@ -165,8 +165,6 @@ export class ScheduleService {
         classroomId: number,
         scheduleInsertDto: ScheduleInsertDto
     ): Promise<Schedule> {
-        const schedule = new Schedule();
-
         const classroom = await this.classroomRepository.findOneBy({
             id: classroomId
         });
@@ -182,6 +180,8 @@ export class ScheduleService {
         if (!cycle) {
             throw new EntityNotFoundError('Cycle not found');
         }
+
+        const schedule = new Schedule();
 
         schedule.cycle = cycle;
         schedule.classroom = classroom;

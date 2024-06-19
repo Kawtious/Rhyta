@@ -111,8 +111,6 @@ export class ScheduleEntryService {
         professorId: number,
         scheduleEntryInsertDto: ScheduleEntryInsertDto
     ): Promise<ScheduleEntry> {
-        const scheduleEntry = new ScheduleEntry();
-
         let schedule = await this.scheduleRepository.findOne({
             where: {
                 professor: { id: professorId },
@@ -139,6 +137,8 @@ export class ScheduleEntryService {
             throw new IdenticalEntityError('ScheduleEntry already exists');
         }
 
+        const scheduleEntry = new ScheduleEntry();
+
         scheduleEntry.day = scheduleEntryInsertDto.day;
         scheduleEntry.hour = scheduleEntryInsertDto.hour;
         scheduleEntry.active = scheduleEntryInsertDto.active;
@@ -153,8 +153,6 @@ export class ScheduleEntryService {
         classroomId: number,
         scheduleEntryInsertDto: ScheduleEntryInsertDto
     ): Promise<ScheduleEntry> {
-        const scheduleEntry = new ScheduleEntry();
-
         const schedule = await this.scheduleRepository.findOne({
             where: {
                 classroom: { id: classroomId },
@@ -181,6 +179,8 @@ export class ScheduleEntryService {
         if (existingScheduleEntry) {
             throw new IdenticalEntityError('ScheduleEntry already exists');
         }
+
+        const scheduleEntry = new ScheduleEntry();
 
         scheduleEntry.day = scheduleEntryInsertDto.day;
         scheduleEntry.hour = scheduleEntryInsertDto.hour;

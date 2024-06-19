@@ -49,8 +49,6 @@ export class PathService {
     }
 
     async insert(pathInsertDto: PathInsertDto): Promise<Path> {
-        const path = new Path();
-
         const career = await this.careerRepository.findOneBy({
             id: pathInsertDto.careerId
         });
@@ -67,6 +65,8 @@ export class PathService {
             throw new EntityNotFoundError('Course not found');
         }
 
+        const path = new Path();
+
         path.career = career;
         path.course = course;
         path.pathStartKey = pathInsertDto.pathStartKey;
@@ -79,8 +79,6 @@ export class PathService {
         const paths: Path[] = [];
 
         for (const pathInsertDto of pathInsertDtos) {
-            const path = new Path();
-
             const career = await this.careerRepository.findOneBy({
                 id: pathInsertDto.careerId
             });
@@ -96,6 +94,8 @@ export class PathService {
             if (!course) {
                 throw new EntityNotFoundError('Course not found');
             }
+
+            const path = new Path();
 
             path.career = career;
             path.course = course;

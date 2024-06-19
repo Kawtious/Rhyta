@@ -49,11 +49,6 @@ export class GroupService {
     }
 
     async insert(groupInsertDto: GroupInsertDto): Promise<Group> {
-        const group = new Group();
-
-        group.firstNumberKey = groupInsertDto.firstNumberKey;
-        group.secondNumberKey = groupInsertDto.secondNumberKey;
-
         const course = await this.courseRepository.findOneBy({
             id: groupInsertDto.courseId
         });
@@ -62,6 +57,10 @@ export class GroupService {
             throw new EntityNotFoundError('Course not found');
         }
 
+        const group = new Group();
+
+        group.firstNumberKey = groupInsertDto.firstNumberKey;
+        group.secondNumberKey = groupInsertDto.secondNumberKey;
         group.course = course;
 
         return await this.groupRepository.save(group);
@@ -71,11 +70,6 @@ export class GroupService {
         const groups: Group[] = [];
 
         for (const groupInsertDto of groupInsertDtos) {
-            const group = new Group();
-
-            group.firstNumberKey = groupInsertDto.firstNumberKey;
-            group.secondNumberKey = groupInsertDto.secondNumberKey;
-
             const course = await this.courseRepository.findOneBy({
                 id: groupInsertDto.courseId
             });
@@ -84,6 +78,10 @@ export class GroupService {
                 throw new EntityNotFoundError('Course not found');
             }
 
+            const group = new Group();
+
+            group.firstNumberKey = groupInsertDto.firstNumberKey;
+            group.secondNumberKey = groupInsertDto.secondNumberKey;
             group.course = course;
 
             groups.push(group);

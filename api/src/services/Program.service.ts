@@ -49,11 +49,6 @@ export class ProgramService {
     }
 
     async insert(programInsertDto: ProgramInsertDto): Promise<Program> {
-        const program = new Program();
-
-        program.typeKey = programInsertDto.typeKey;
-        program.offsetKey = programInsertDto.offsetKey;
-
         const programType = await this.programTypeRepository.findOneBy({
             id: programInsertDto.programTypeId
         });
@@ -62,6 +57,10 @@ export class ProgramService {
             throw new EntityNotFoundError('ProgramType not found');
         }
 
+        const program = new Program();
+
+        program.typeKey = programInsertDto.typeKey;
+        program.offsetKey = programInsertDto.offsetKey;
         program.programType = programType;
 
         return await this.programRepository.save(program);
@@ -73,11 +72,6 @@ export class ProgramService {
         const programs: Program[] = [];
 
         for (const programInsertDto of programInsertDtos) {
-            const program = new Program();
-
-            program.typeKey = programInsertDto.typeKey;
-            program.offsetKey = programInsertDto.offsetKey;
-
             const programType = await this.programTypeRepository.findOneBy({
                 id: programInsertDto.programTypeId
             });
@@ -86,6 +80,10 @@ export class ProgramService {
                 throw new EntityNotFoundError('ProgramType not found');
             }
 
+            const program = new Program();
+
+            program.typeKey = programInsertDto.typeKey;
+            program.offsetKey = programInsertDto.offsetKey;
             program.programType = programType;
 
             programs.push(program);

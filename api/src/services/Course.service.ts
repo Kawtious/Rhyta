@@ -49,8 +49,6 @@ export class CourseService {
     }
 
     async insert(courseInsertDto: CourseInsertDto): Promise<Course> {
-        const course = new Course();
-
         const classroom = await this.classroomRepository.findOneBy({
             id: courseInsertDto.classroomId
         });
@@ -59,11 +57,12 @@ export class CourseService {
             throw new EntityNotFoundError('Classroom not found');
         }
 
-        course.classroom = classroom;
+        const course = new Course();
 
         course.courseKey = courseInsertDto.courseKey;
         course.scheduleKey = courseInsertDto.scheduleKey;
         course.descriptionKey = courseInsertDto.descriptionKey;
+        course.classroom = classroom;
 
         return await this.courseRepository.save(course);
     }
@@ -72,8 +71,6 @@ export class CourseService {
         const courses: Course[] = [];
 
         for (const courseInsertDto of courseInsertDtos) {
-            const course = new Course();
-
             const classroom = await this.classroomRepository.findOneBy({
                 id: courseInsertDto.classroomId
             });
@@ -82,11 +79,12 @@ export class CourseService {
                 throw new EntityNotFoundError('Classroom not found');
             }
 
-            course.classroom = classroom;
+            const course = new Course();
 
             course.courseKey = courseInsertDto.courseKey;
             course.scheduleKey = courseInsertDto.scheduleKey;
             course.descriptionKey = courseInsertDto.descriptionKey;
+            course.classroom = classroom;
 
             courses.push(course);
         }
