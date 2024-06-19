@@ -11,12 +11,10 @@ import {
     Query
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
 import { ProgramTypeInsertDto } from '../dto/ProgramTypeInsert.dto';
 import { ProgramTypeUpdateDto } from '../dto/ProgramTypeUpdate.dto';
 import { ProgramTypeUpdateBulkDto } from '../dto/ProgramTypeUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../enums/Permission.enum';
 import { ProgramTypeService } from '../services/ProgramType.service';
 
 @Controller({ path: 'programTypes', version: '1' })
@@ -25,14 +23,12 @@ export class ProgramTypeController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
         return await this.programTypeService.getAll(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getById(
         @Param('id')
         id: number
@@ -40,23 +36,20 @@ export class ProgramTypeController {
         return await this.programTypeService.getById(id);
     }
 
-    // @Post()
+    @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insert(@Body() programTypeInsertDto: ProgramTypeInsertDto) {
         return await this.programTypeService.insert(programTypeInsertDto);
     }
 
-    @Post('insert')
+    @Post('insert/many')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertMany(@Body() programTypeInsertDtos: ProgramTypeInsertDto[]) {
         return await this.programTypeService.insertMany(programTypeInsertDtos);
     }
 
     @Put('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async update(
         @Param('id')
         id: number,
@@ -67,7 +60,6 @@ export class ProgramTypeController {
 
     @Put('update/many')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateMany(
         @Body() programTypeUpdateBulkDtos: ProgramTypeUpdateBulkDto[]
     ) {
@@ -78,7 +70,6 @@ export class ProgramTypeController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @Permissions(Permission.Admin)
     async delete(
         @Param('id')
         id: number

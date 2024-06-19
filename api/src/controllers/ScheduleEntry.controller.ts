@@ -10,11 +10,9 @@ import {
     Query
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
 import { ScheduleEntryInsertDto } from '../dto/ScheduleEntryInsert.dto';
 import { ScheduleEntryUpdateDto } from '../dto/ScheduleEntryUpdate.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../enums/Permission.enum';
 import { ScheduleEntryService } from '../services/ScheduleEntry.service';
 
 @Controller({ path: 'scheduleEntries', version: '1' })
@@ -23,14 +21,12 @@ export class ScheduleEntryController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
         return await this.scheduleEntryService.getAll(pageOptionsDto);
     }
 
     @Get('search/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAllByCycleIdAndProfessorId(
         @Param('cycleId')
         cycleId: number,
@@ -48,7 +44,6 @@ export class ScheduleEntryController {
 
     @Get('search/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAllByCycleIdAndClassroomId(
         @Param('cycleId')
         cycleId: number,
@@ -66,7 +61,6 @@ export class ScheduleEntryController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getById(
         @Param('id')
         id: number
@@ -76,7 +70,6 @@ export class ScheduleEntryController {
 
     @Post('insert/professor/:professorId')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertByProfessorId(
         @Param('professorId')
         professorId: number,
@@ -90,7 +83,6 @@ export class ScheduleEntryController {
 
     @Post('insert/classroom/:classroomId')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertByClassroomId(
         @Param('classroomId')
         classroomId: number,
@@ -104,7 +96,6 @@ export class ScheduleEntryController {
 
     @Put('update/cycle/professor/:cycleId/:professorId/:day/:hour')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateByCycleIdAndProfessorIdAndDayAndHour(
         @Param('cycleId')
         cycleId: number,
@@ -127,7 +118,6 @@ export class ScheduleEntryController {
 
     @Put('update/cycle/classroom/:cycleId/:classroomId/:day/:hour')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateByCycleIdAndClassroomIdAndDayAndHour(
         @Param('cycleId')
         cycleId: number,

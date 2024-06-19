@@ -11,12 +11,10 @@ import {
     Query
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
 import { ProgramInsertDto } from '../dto/ProgramInsert.dto';
 import { ProgramUpdateDto } from '../dto/ProgramUpdate.dto';
 import { ProgramUpdateBulkDto } from '../dto/ProgramUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../enums/Permission.enum';
 import { ProgramService } from '../services/Program.service';
 
 @Controller({ path: 'programs', version: '1' })
@@ -25,14 +23,12 @@ export class ProgramController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
         return await this.programService.getAll(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getById(
         @Param('id')
         id: number
@@ -40,23 +36,20 @@ export class ProgramController {
         return await this.programService.getById(id);
     }
 
-    // @Post()
+    @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insert(@Body() programInsertDto: ProgramInsertDto) {
         return await this.programService.insert(programInsertDto);
     }
 
-    @Post('insert')
+    @Post('insert/many')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertMany(@Body() programInsertDtos: ProgramInsertDto[]) {
         return await this.programService.insertMany(programInsertDtos);
     }
 
     @Put('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async update(
         @Param('id')
         id: number,
@@ -67,14 +60,12 @@ export class ProgramController {
 
     @Put('update/many')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateMany(@Body() programUpdateBulkDtos: ProgramUpdateBulkDto[]) {
         return await this.programService.updateMany(programUpdateBulkDtos);
     }
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @Permissions(Permission.Admin)
     async delete(
         @Param('id')
         id: number

@@ -11,12 +11,10 @@ import {
     Query
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
 import { CareerInsertDto } from '../dto/CareerInsert.dto';
 import { CareerUpdateDto } from '../dto/CareerUpdate.dto';
 import { CareerUpdateBulkDto } from '../dto/CareerUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../enums/Permission.enum';
 import { CareerService } from '../services/Career.service';
 
 @Controller({ path: 'careers', version: '1' })
@@ -25,14 +23,12 @@ export class CareerController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
         return await this.careerService.getAll(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getById(
         @Param('id')
         id: number
@@ -40,23 +36,20 @@ export class CareerController {
         return await this.careerService.getById(id);
     }
 
-    //@Post('insert')
+    @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insert(@Body() careerInsertDto: CareerInsertDto) {
         return await this.careerService.insert(careerInsertDto);
     }
 
-    @Post('insert')
+    @Post('insert/many')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertMany(@Body() careerInsertDtos: CareerInsertDto[]) {
         return await this.careerService.insertMany(careerInsertDtos);
     }
 
     @Put('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async update(
         @Param('id')
         id: number,
@@ -67,14 +60,12 @@ export class CareerController {
 
     @Put('update/many')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateMany(@Body() careerUpdateBulkDtos: CareerUpdateBulkDto[]) {
         return await this.careerService.updateMany(careerUpdateBulkDtos);
     }
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @Permissions(Permission.Admin)
     async delete(
         @Param('id')
         id: number

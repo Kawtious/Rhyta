@@ -10,8 +10,6 @@ export const EnvConfiguration: ConfigModuleOptions = {
             .valid('development', 'production', 'test', 'provision')
             .default('development'),
         SERVER_PORT: Joi.number().port().default(3000),
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION: Joi.string().default('1h'),
         DATABASE_HOST: Joi.string().required(),
         DATABASE_PORT: Joi.number().port().required(),
         DATABASE_USER: Joi.string().required(),

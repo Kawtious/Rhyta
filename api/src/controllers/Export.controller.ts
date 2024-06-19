@@ -7,8 +7,6 @@ import {
     Param
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
-import { Permission } from '../enums/Permission.enum';
 import { ExportService } from '../services/Export.service';
 
 @Controller({ path: 'export', version: '1' })
@@ -19,7 +17,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=courses.csv')
-    @Permissions(Permission.Admin)
     async exportCSVCourses() {
         return await this.exportService.exportCSVCourses();
     }
@@ -28,7 +25,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=groups.csv')
-    @Permissions(Permission.Admin)
     async exportCSVGroups() {
         return await this.exportService.exportCSVGroups();
     }
@@ -37,7 +33,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=careers.csv')
-    @Permissions(Permission.Admin)
     async exportCSVPaths() {
         return await this.exportService.exportCSVPaths();
     }
@@ -46,7 +41,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=professors.csv')
-    @Permissions(Permission.Admin)
     async exportCSVProfessors() {
         return await this.exportService.exportCSVProfessors();
     }
@@ -55,7 +49,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=programs.csv')
-    @Permissions(Permission.Admin)
     async exportCSVPrograms() {
         return await this.exportService.exportCSVPrograms();
     }
@@ -64,7 +57,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=programTypes.csv')
-    @Permissions(Permission.Admin)
     async exportCSVProgramTypes() {
         return await this.exportService.exportCSVProgramTypes();
     }
@@ -73,7 +65,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors`)
-    @Permissions(Permission.Admin)
     async exportHexProfessors(
         @Param('cycleId')
         cycleId: number
@@ -85,7 +76,6 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms')
-    @Permissions(Permission.Admin)
     async exportHexClassrooms(
         @Param('cycleId')
         cycleId: number

@@ -11,12 +11,10 @@ import {
     Query
 } from '@nestjs/common';
 
-import { Permissions } from '../decorators/Permissions.decorator';
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
 import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Permission } from '../enums/Permission.enum';
 import { ProfessorService } from '../services/Professor.service';
 
 @Controller({ path: 'professors', version: '1' })
@@ -25,14 +23,12 @@ export class ProfessorController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
         return await this.professorService.getAll(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async getById(
         @Param('id')
         id: number
@@ -40,23 +36,20 @@ export class ProfessorController {
         return await this.professorService.getById(id);
     }
 
-    // @Post()
+    @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insert(@Body() professorInsertDto: ProfessorInsertDto) {
         return await this.professorService.insert(professorInsertDto);
     }
 
-    @Post('insert')
+    @Post('insert/many')
     @HttpCode(HttpStatus.CREATED)
-    @Permissions(Permission.Admin)
     async insertMany(@Body() professorInsertDtos: ProfessorInsertDto[]) {
         return await this.professorService.insertMany(professorInsertDtos);
     }
 
     @Put('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async update(
         @Param('id')
         id: number,
@@ -67,7 +60,6 @@ export class ProfessorController {
 
     @Put('update/many')
     @HttpCode(HttpStatus.OK)
-    @Permissions(Permission.Admin)
     async updateMany(
         @Body() professorUpdateBulkDtos: ProfessorUpdateBulkDto[]
     ) {
@@ -76,7 +68,6 @@ export class ProfessorController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @Permissions(Permission.Admin)
     async delete(
         @Param('id')
         id: number

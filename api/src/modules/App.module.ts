@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DatabaseConfiguration } from '../configuration/Database.configuration';
 import { EnvConfiguration } from '../configuration/Env.configuration';
-import { AuthGuard } from '../guards/Auth.guard';
-import { AuthModule } from './Auth.module';
 import { CareerModule } from './Career.module';
 import { ClassroomModule } from './Classroom.module';
 import { CourseModule } from './Course.module';
@@ -19,7 +16,6 @@ import { ProgramModule } from './Program.module';
 import { ProgramTypeModule } from './ProgramType.module';
 import { ScheduleModule } from './Schedule.module';
 import { ScheduleEntryModule } from './ScheduleEntry.module';
-import { UserModule } from './User.module';
 
 @Module({
     imports: [
@@ -28,7 +24,6 @@ import { UserModule } from './User.module';
             name: 'mySqlConnection',
             useClass: DatabaseConfiguration
         }),
-        AuthModule,
         CareerModule,
         ClassroomModule,
         CourseModule,
@@ -40,14 +35,7 @@ import { UserModule } from './User.module';
         ProgramModule,
         ProgramTypeModule,
         ScheduleModule,
-        ScheduleEntryModule,
-        UserModule
-    ],
-    providers: [
-        {
-            provide: APP_GUARD,
-            useClass: AuthGuard
-        }
+        ScheduleEntryModule
     ]
 })
 export class AppModule {}
