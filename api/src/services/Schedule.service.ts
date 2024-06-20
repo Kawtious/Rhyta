@@ -12,6 +12,7 @@ import { Classroom } from '../entities/Classroom.entity';
 import { Cycle } from '../entities/Cycle.entity';
 import { Professor } from '../entities/Professor.entity';
 import { Schedule } from '../entities/Schedule.entity';
+import { ScheduleEntry } from '../entities/ScheduleEntry.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
@@ -48,6 +49,7 @@ export class ScheduleService {
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Schedule>> {
         const [schedules, count] = await this.scheduleRepository.findAndCount({
+            relations: { entries: true },
             where: {
                 professor: { id: professorId }
             },
@@ -69,6 +71,7 @@ export class ScheduleService {
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Schedule>> {
         const [schedules, count] = await this.scheduleRepository.findAndCount({
+            relations: { entries: true },
             where: {
                 classroom: { id: classroomId }
             },
@@ -85,24 +88,12 @@ export class ScheduleService {
         return new PageDto(schedules, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Schedule> {
-        const schedule = await this.scheduleRepository.findOneBy({
-            id: id
-        });
-
-        if (!schedule) {
-            throw new EntityNotFoundError('Schedule not found');
-        }
-
-        return schedule;
-    }
-
     async getByCycleIdAndProfessorId(
         cycleId: number,
         professorId: number
     ): Promise<Schedule> {
         const schedule = await this.scheduleRepository.findOne({
-            relations: { professor: true },
+            relations: { entries: true },
             where: { cycle: { id: cycleId }, professor: { id: professorId } }
         });
 
@@ -118,6 +109,7 @@ export class ScheduleService {
         classroomId: number
     ): Promise<Schedule> {
         const schedule = await this.scheduleRepository.findOne({
+            relations: { entries: true },
             where: { classroom: { id: classroomId }, cycle: { id: cycleId } }
         });
 
@@ -128,7 +120,8 @@ export class ScheduleService {
         return schedule;
     }
 
-    async insertByProfessorId(
+    async insertByCycleIdAndProfessorId(
+        cycleId: number,
         professorId: number,
         scheduleInsertDto: ScheduleInsertDto
     ): Promise<Schedule> {
@@ -141,7 +134,7 @@ export class ScheduleService {
         }
 
         const cycle = await this.cycleRepository.findOneBy({
-            id: scheduleInsertDto.cycleId
+            id: cycleId
         });
 
         if (!cycle) {
@@ -158,10 +151,25 @@ export class ScheduleService {
             schedule.description = scheduleInsertDto.description;
         }
 
+        if (scheduleInsertDto.entries != null) {
+            schedule.entries = [];
+
+            for (const entry of scheduleInsertDto.entries) {
+                const scheduleEntry = new ScheduleEntry();
+
+                scheduleEntry.day = entry.day;
+                scheduleEntry.hour = entry.hour;
+                scheduleEntry.active = entry.active;
+
+                schedule.entries.push(scheduleEntry);
+            }
+        }
+
         return await this.scheduleRepository.save(schedule);
     }
 
-    async insertByClassroomId(
+    async insertByCycleIdAndClassroomId(
+        cycleId: number,
         classroomId: number,
         scheduleInsertDto: ScheduleInsertDto
     ): Promise<Schedule> {
@@ -174,7 +182,7 @@ export class ScheduleService {
         }
 
         const cycle = await this.cycleRepository.findOneBy({
-            id: scheduleInsertDto.cycleId
+            id: cycleId
         });
 
         if (!cycle) {
@@ -191,6 +199,20 @@ export class ScheduleService {
             schedule.description = scheduleInsertDto.description;
         }
 
+        if (scheduleInsertDto.entries != null) {
+            schedule.entries = [];
+
+            for (const entry of scheduleInsertDto.entries) {
+                const scheduleEntry = new ScheduleEntry();
+
+                scheduleEntry.day = entry.day;
+                scheduleEntry.hour = entry.hour;
+                scheduleEntry.active = entry.active;
+
+                schedule.entries.push(scheduleEntry);
+            }
+        }
+
         return await this.scheduleRepository.save(schedule);
     }
 
@@ -199,12 +221,15 @@ export class ScheduleService {
         professorId: number,
         scheduleUpdateDto: ScheduleUpdateDto
     ): Promise<Schedule> {
-        const existingSchedule = await this.scheduleRepository.findOneBy({
-            cycle: {
-                id: cycleId
-            },
-            professor: {
-                id: professorId
+        const existingSchedule = await this.scheduleRepository.findOne({
+            relations: { entries: true },
+            where: {
+                cycle: {
+                    id: cycleId
+                },
+                professor: {
+                    id: professorId
+                }
             }
         });
 
@@ -234,6 +259,41 @@ export class ScheduleService {
 
         if (scheduleUpdateDto.description != null) {
             existingSchedule.description = scheduleUpdateDto.description;
+        }
+
+        if (scheduleUpdateDto.entries != null) {
+            for (const scheduleEntryUpdateBulkDto of scheduleUpdateDto.entries) {
+                const existingScheduleEntry = existingSchedule.entries.filter(
+                    (existingEntry) => {
+                        return (
+                            existingEntry.day ==
+                                scheduleEntryUpdateBulkDto.day &&
+                            existingEntry.hour ==
+                                scheduleEntryUpdateBulkDto.hour
+                        );
+                    }
+                )[0];
+
+                if (!existingScheduleEntry) {
+                    const scheduleEntry = new ScheduleEntry();
+
+                    scheduleEntry.day = scheduleEntryUpdateBulkDto.day;
+                    scheduleEntry.hour = scheduleEntryUpdateBulkDto.hour;
+
+                    if (scheduleEntryUpdateBulkDto.active != null) {
+                        scheduleEntry.active =
+                            scheduleEntryUpdateBulkDto.active;
+                    }
+
+                    existingSchedule.entries.push(scheduleEntry);
+                    continue;
+                }
+
+                if (scheduleEntryUpdateBulkDto.active != null) {
+                    existingScheduleEntry.active =
+                        scheduleEntryUpdateBulkDto.active;
+                }
+            }
         }
 
         return await this.scheduleRepository.save(existingSchedule);
@@ -244,12 +304,15 @@ export class ScheduleService {
         classroomId: number,
         scheduleUpdateDto: ScheduleUpdateDto
     ): Promise<Schedule> {
-        const existingSchedule = await this.scheduleRepository.findOneBy({
-            classroom: {
-                id: classroomId
-            },
-            cycle: {
-                id: cycleId
+        const existingSchedule = await this.scheduleRepository.findOne({
+            relations: { entries: true },
+            where: {
+                classroom: {
+                    id: classroomId
+                },
+                cycle: {
+                    id: cycleId
+                }
             }
         });
 
@@ -279,6 +342,41 @@ export class ScheduleService {
 
         if (scheduleUpdateDto.description != null) {
             existingSchedule.description = scheduleUpdateDto.description;
+        }
+
+        if (scheduleUpdateDto.entries != null) {
+            for (const scheduleEntryUpdateBulkDto of scheduleUpdateDto.entries) {
+                const existingScheduleEntry = existingSchedule.entries.filter(
+                    (existingEntry) => {
+                        return (
+                            existingEntry.day ==
+                                scheduleEntryUpdateBulkDto.day &&
+                            existingEntry.hour ==
+                                scheduleEntryUpdateBulkDto.hour
+                        );
+                    }
+                )[0];
+
+                if (!existingScheduleEntry) {
+                    const scheduleEntry = new ScheduleEntry();
+
+                    scheduleEntry.day = scheduleEntryUpdateBulkDto.day;
+                    scheduleEntry.hour = scheduleEntryUpdateBulkDto.hour;
+
+                    if (scheduleEntryUpdateBulkDto.active != null) {
+                        scheduleEntry.active =
+                            scheduleEntryUpdateBulkDto.active;
+                    }
+
+                    existingSchedule.entries.push(scheduleEntry);
+                    continue;
+                }
+
+                if (scheduleEntryUpdateBulkDto.active != null) {
+                    existingScheduleEntry.active =
+                        scheduleEntryUpdateBulkDto.active;
+                }
+            }
         }
 
         return await this.scheduleRepository.save(existingSchedule);

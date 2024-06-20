@@ -6,6 +6,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
     Relation,
+    Unique,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
@@ -13,6 +14,7 @@ import {
 import { Schedule } from './Schedule.entity';
 
 @Entity()
+@Unique(['day', 'hour', 'schedule'])
 export class ScheduleEntry {
     @PrimaryGeneratedColumn()
     id!: number;

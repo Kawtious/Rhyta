@@ -54,15 +54,6 @@ export class ScheduleController {
         );
     }
 
-    @Get('search/id/:id')
-    @HttpCode(HttpStatus.OK)
-    async getById(
-        @Param('id')
-        id: number
-    ) {
-        return await this.scheduleService.getById(id);
-    }
-
     @Get('search/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
     async getByCycleIdAndProfessorId(
@@ -89,27 +80,33 @@ export class ScheduleController {
         );
     }
 
-    @Post('insert/professor/:professorId')
+    @Post('insert/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.CREATED)
-    async insertByProfessorId(
+    async insertByCycleIdAndProfessorId(
+        @Param('cycleId')
+        cycleId: number,
         @Param('professorId')
         professorId: number,
         @Body() scheduleInsertDto: ScheduleInsertDto
     ) {
-        return await this.scheduleService.insertByProfessorId(
+        return await this.scheduleService.insertByCycleIdAndProfessorId(
+            cycleId,
             professorId,
             scheduleInsertDto
         );
     }
 
-    @Post('insert/classroom/:classroomId')
+    @Post('insert/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.CREATED)
-    async insertByClassroomId(
+    async insertByCycleIdAndClassroomId(
+        @Param('cycleId')
+        cycleId: number,
         @Param('classroomId')
         classroomId: number,
         @Body() scheduleInsertDto: ScheduleInsertDto
     ) {
-        return await this.scheduleService.insertByClassroomId(
+        return await this.scheduleService.insertByCycleIdAndClassroomId(
+            cycleId,
             classroomId,
             scheduleInsertDto
         );
