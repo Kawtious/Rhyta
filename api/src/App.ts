@@ -11,6 +11,7 @@ import helmet from 'helmet';
 
 import { CorsConfiguration } from './configuration/Cors.configuration';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
+import { TypeORMExceptionFilter } from './filters/TypeORMException.filter';
 import { AppModule } from './modules/App.module';
 
 async function bootstrap() {
@@ -31,7 +32,10 @@ async function bootstrap() {
     });
 
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
-    app.useGlobalFilters(new HttpExceptionFilter());
+    app.useGlobalFilters(
+        new HttpExceptionFilter(),
+        new TypeORMExceptionFilter()
+    );
 
     const options: SwaggerDocumentOptions = {
         operationIdFactory: (controllerKey: string, methodKey: string) =>
