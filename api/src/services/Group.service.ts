@@ -11,6 +11,7 @@ import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Course } from '../entities/Course.entity';
 import { Group } from '../entities/Group.entity';
+import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
 
@@ -20,7 +21,9 @@ export class GroupService {
         @InjectRepository(Group, 'mySqlConnection')
         private readonly groupRepository: Repository<Group>,
         @InjectRepository(Course, 'mySqlConnection')
-        private readonly courseRepository: Repository<Course>
+        private readonly courseRepository: Repository<Course>,
+        @InjectRepository(Professor, 'mySqlConnection')
+        private readonly professorRepository: Repository<Professor>
     ) {}
 
     async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Group>> {
@@ -57,10 +60,18 @@ export class GroupService {
             throw new EntityNotFoundError('Course not found');
         }
 
+        const professor = await this.professorRepository.findOneBy({
+            id: groupInsertDto.professorId
+        });
+
+        if (!professor) {
+            throw new EntityNotFoundError('Professor not found');
+        }
+
         const group = new Group();
 
         group.firstNumberKey = groupInsertDto.firstNumberKey;
-        group.secondNumberKey = groupInsertDto.secondNumberKey;
+        group.professor = professor;
         group.course = course;
 
         return await this.groupRepository.save(group);
@@ -78,10 +89,18 @@ export class GroupService {
                 throw new EntityNotFoundError('Course not found');
             }
 
+            const professor = await this.professorRepository.findOneBy({
+                id: groupInsertDto.professorId
+            });
+
+            if (!professor) {
+                throw new EntityNotFoundError('Professor not found');
+            }
+
             const group = new Group();
 
             group.firstNumberKey = groupInsertDto.firstNumberKey;
-            group.secondNumberKey = groupInsertDto.secondNumberKey;
+            group.professor = professor;
             group.course = course;
 
             groups.push(group);
@@ -119,8 +138,16 @@ export class GroupService {
             existingGroup.firstNumberKey = groupUpdateDto.firstNumberKey;
         }
 
-        if (groupUpdateDto.secondNumberKey != null) {
-            existingGroup.secondNumberKey = groupUpdateDto.secondNumberKey;
+        if (groupUpdateDto.professorId != null) {
+            const professor = await this.professorRepository.findOneBy({
+                id: groupUpdateDto.professorId
+            });
+
+            if (!professor) {
+                throw new EntityNotFoundError('Professor not found');
+            }
+
+            existingGroup.professor = professor;
         }
 
         if (groupUpdateDto.courseId != null) {
@@ -173,9 +200,16 @@ export class GroupService {
                     groupUpdateBulkDto.firstNumberKey;
             }
 
-            if (groupUpdateBulkDto.secondNumberKey != null) {
-                existingGroup.secondNumberKey =
-                    groupUpdateBulkDto.secondNumberKey;
+            if (groupUpdateBulkDto.professorId != null) {
+                const professor = await this.professorRepository.findOneBy({
+                    id: groupUpdateBulkDto.professorId
+                });
+
+                if (!professor) {
+                    throw new EntityNotFoundError('Professor not found');
+                }
+
+                existingGroup.professor = professor;
             }
 
             if (groupUpdateBulkDto.courseId != null) {

@@ -8,6 +8,7 @@ import {
     VersionColumn
 } from 'typeorm';
 
+import { Group } from './Group.entity';
 import { Schedule } from './Schedule.entity';
 
 @Entity()
@@ -30,7 +31,8 @@ export class Professor {
     typeKey!: string;
 
     @Column({
-        nullable: false
+        nullable: false,
+        unique: true
     })
     controlNumberKey!: number;
 
@@ -43,4 +45,9 @@ export class Professor {
         cascade: true
     })
     schedules!: Schedule[];
+
+    @OneToMany(() => Group, (group) => group.professor, {
+        cascade: true
+    })
+    groups!: Group[];
 }

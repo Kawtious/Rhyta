@@ -52,11 +52,11 @@ export class ExportService {
         let output: string = '';
 
         const groups = await this.groupRepository.find({
-            relations: { course: true }
+            relations: { course: true, professor: true }
         });
 
         for (const group of groups) {
-            output += `${group.course.courseKey},${group.firstNumberKey},${group.secondNumberKey}\n`;
+            output += `${group.course.courseKey},${group.firstNumberKey},${group.professor.controlNumberKey}\n`;
         }
 
         return output;

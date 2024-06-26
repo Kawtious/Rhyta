@@ -5,7 +5,7 @@ export class GroupInsertDto {
     firstNumberKey!: number;
 
     @IsNumber()
-    secondNumberKey!: number;
+    professorId!: number;
 
     @IsNumber()
     courseId!: number;

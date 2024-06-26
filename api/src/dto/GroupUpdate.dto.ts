@@ -10,7 +10,7 @@ export class GroupUpdateDto {
 
     @IsOptional()
     @IsNumber()
-    secondNumberKey?: number;
+    professorId?: number;
 
     @IsOptional()
     @IsNumber()

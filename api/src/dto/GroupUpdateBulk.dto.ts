@@ -13,7 +13,7 @@ export class GroupUpdateBulkDto {
 
     @IsOptional()
     @IsNumber()
-    secondNumberKey?: number;
+    professorId?: number;
 
     @IsOptional()
     @IsNumber()
