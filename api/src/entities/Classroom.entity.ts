@@ -26,7 +26,8 @@ export class Classroom {
     version!: number;
 
     @Column({
-        nullable: false
+        nullable: false,
+        unique: true
     })
     typeKey!: string;
 
