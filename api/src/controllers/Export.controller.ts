@@ -13,7 +13,7 @@ import { ExportService } from '../services/Export.service';
 export class ExportController {
     constructor(private readonly exportService: ExportService) {}
 
-    @Get('csv/courses')
+    @Get('courses')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=courses.csv')
@@ -21,7 +21,7 @@ export class ExportController {
         return await this.exportService.exportCSVCourses();
     }
 
-    @Get('csv/groups')
+    @Get('groups')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=groups.csv')
@@ -29,7 +29,7 @@ export class ExportController {
         return await this.exportService.exportCSVGroups();
     }
 
-    @Get('csv/paths')
+    @Get('paths')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=careers.csv')
@@ -37,7 +37,7 @@ export class ExportController {
         return await this.exportService.exportCSVPaths();
     }
 
-    @Get('csv/professors')
+    @Get('professors')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=professors.csv')
@@ -45,7 +45,7 @@ export class ExportController {
         return await this.exportService.exportCSVProfessors();
     }
 
-    @Get('csv/programs')
+    @Get('programs')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=programs.csv')
@@ -53,7 +53,7 @@ export class ExportController {
         return await this.exportService.exportCSVPrograms();
     }
 
-    @Get('csv/programs/types')
+    @Get('programs/types')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=programTypes.csv')
@@ -61,7 +61,7 @@ export class ExportController {
         return await this.exportService.exportCSVProgramTypes();
     }
 
-    @Get('hex/professors/:cycleId')
+    @Get('schedules/professors/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors.dat`)
@@ -72,7 +72,7 @@ export class ExportController {
         return await this.exportService.exportHexProfessors(cycleId);
     }
 
-    @Get('hex/classrooms/:cycleId')
+    @Get('schedules/classrooms/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms.dat')
