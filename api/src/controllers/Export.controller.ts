@@ -64,7 +64,7 @@ export class ExportController {
     @Get('hex/professors/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
-    @Header('Content-Disposition', `attachment;filename=professors`)
+    @Header('Content-Disposition', `attachment;filename=professors.dat`)
     async exportHexProfessors(
         @Param('cycleId')
         cycleId: number
@@ -75,7 +75,7 @@ export class ExportController {
     @Get('hex/classrooms/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
-    @Header('Content-Disposition', 'attachment;filename=classrooms')
+    @Header('Content-Disposition', 'attachment;filename=classrooms.dat')
     async exportHexClassrooms(
         @Param('cycleId')
         cycleId: number
