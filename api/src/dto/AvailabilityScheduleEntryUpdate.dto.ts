@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 
-export class ScheduleEntryUpdateDto {
+export class AvailabilityScheduleEntryUpdateDto {
     @IsNumber()
     version!: number;
 

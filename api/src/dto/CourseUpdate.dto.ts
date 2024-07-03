@@ -6,15 +6,15 @@ export class CourseUpdateDto {
 
     @IsOptional()
     @IsNotEmpty()
-    courseKey?: string;
+    key?: string;
 
     @IsOptional()
     @IsNotEmpty()
-    scheduleKey?: string;
+    schedule?: string;
 
     @IsOptional()
     @IsNotEmpty()
-    descriptionKey?: string;
+    description?: string;
 
     @IsOptional()
     @IsNumber()

@@ -2,11 +2,8 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
-    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
-    Relation,
-    Unique,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
@@ -14,8 +11,7 @@ import {
 import { Schedule } from './Schedule.entity';
 
 @Entity()
-@Unique(['day', 'hour', 'schedule'])
-export class ScheduleEntry {
+export class ScheduleType {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -31,21 +27,20 @@ export class ScheduleEntry {
     @Column({
         nullable: false
     })
-    day!: number;
+    description!: string;
 
     @Column({
         nullable: false
     })
-    hour!: number;
+    availableHours!: string;
 
     @Column({
         nullable: false
     })
-    active!: boolean;
+    sessionMask!: string;
 
-    @ManyToOne(() => Schedule, (schedule) => schedule.entries, {
-        nullable: false
+    @OneToMany(() => Schedule, (schedule) => schedule.scheduleType, {
+        cascade: true
     })
-    @JoinColumn()
-    schedule!: Relation<Schedule>;
+    schedules!: Schedule[];
 }

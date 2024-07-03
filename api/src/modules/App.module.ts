@@ -4,18 +4,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DatabaseConfiguration } from '../configuration/Database.configuration';
 import { EnvConfiguration } from '../configuration/Env.configuration';
+import { AvailabilityScheduleModule } from './AvailabilitySchedule.module';
+import { AvailabilityScheduleEntryModule } from './AvailabilityScheduleEntry.module';
 import { CareerModule } from './Career.module';
 import { ClassroomModule } from './Classroom.module';
 import { CourseModule } from './Course.module';
 import { CycleModule } from './Cycle.module';
 import { ExportModule } from './Export.module';
 import { GroupModule } from './Group.module';
-import { PathModule } from './Path.module';
 import { ProfessorModule } from './Professor.module';
-import { ProgramModule } from './Program.module';
-import { ProgramTypeModule } from './ProgramType.module';
 import { ScheduleModule } from './Schedule.module';
-import { ScheduleEntryModule } from './ScheduleEntry.module';
+import { ScheduleTypeModule } from './ScheduleType.module';
+import { SemesterCareerModule } from './SemesterCareer.module';
 
 @Module({
     imports: [
@@ -30,12 +30,12 @@ import { ScheduleEntryModule } from './ScheduleEntry.module';
         CycleModule,
         ExportModule,
         GroupModule,
-        PathModule,
+        SemesterCareerModule,
         ProfessorModule,
-        ProgramModule,
-        ProgramTypeModule,
         ScheduleModule,
-        ScheduleEntryModule
+        ScheduleTypeModule,
+        AvailabilityScheduleModule,
+        AvailabilityScheduleEntryModule
     ]
 })
 export class AppModule {}

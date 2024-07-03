@@ -6,11 +6,11 @@ export class ProfessorUpdateDto {
 
     @IsOptional()
     @IsNotEmpty()
-    typeKey?: string;
+    type?: string;
 
     @IsOptional()
     @IsNumber()
-    controlNumberKey?: number;
+    controlNumber?: number;
 
     @IsOptional()
     @IsNotEmpty()

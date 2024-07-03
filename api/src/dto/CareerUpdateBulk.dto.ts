@@ -9,5 +9,5 @@ export class CareerUpdateBulkDto {
 
     @IsOptional()
     @IsNotEmpty()
-    careerKey?: string;
+    career?: string;
 }

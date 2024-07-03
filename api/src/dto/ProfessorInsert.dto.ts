@@ -2,10 +2,10 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class ProfessorInsertDto {
     @IsNotEmpty()
-    typeKey!: string;
+    type!: string;
 
     @IsNumber()
-    controlNumberKey!: number;
+    controlNumber!: number;
 
     @IsNotEmpty()
     name!: string;

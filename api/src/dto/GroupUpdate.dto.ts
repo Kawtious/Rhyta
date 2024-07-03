@@ -6,7 +6,7 @@ export class GroupUpdateDto {
 
     @IsOptional()
     @IsNumber()
-    firstNumberKey?: number;
+    group?: number;
 
     @IsOptional()
     @IsNumber()

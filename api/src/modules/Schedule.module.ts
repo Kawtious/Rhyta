@@ -2,18 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ScheduleController } from '../controllers/Schedule.controller';
-import { Classroom } from '../entities/Classroom.entity';
-import { Cycle } from '../entities/Cycle.entity';
-import { Professor } from '../entities/Professor.entity';
 import { Schedule } from '../entities/Schedule.entity';
+import { ScheduleType } from '../entities/ScheduleType.entity';
 import { ScheduleService } from '../services/Schedule.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature(
-            [Cycle, Classroom, Professor, Schedule],
-            'mySqlConnection'
-        )
+        TypeOrmModule.forFeature([Schedule, ScheduleType], 'mySqlConnection')
     ],
     providers: [ScheduleService],
     controllers: [ScheduleController],

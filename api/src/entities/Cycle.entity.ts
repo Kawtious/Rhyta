@@ -8,7 +8,7 @@ import {
     VersionColumn
 } from 'typeorm';
 
-import { Schedule } from './Schedule.entity';
+import { AvailabilitySchedule } from './AvailabilitySchedule.entity';
 
 @Entity()
 export class Cycle {
@@ -32,8 +32,12 @@ export class Cycle {
     @Column()
     description!: string;
 
-    @OneToMany(() => Schedule, (schedules) => schedules.cycle, {
-        cascade: true
-    })
-    schedules!: Schedule[];
+    @OneToMany(
+        () => AvailabilitySchedule,
+        (availabilitySchedules) => availabilitySchedules.cycle,
+        {
+            cascade: true
+        }
+    )
+    availabilitySchedules!: AvailabilitySchedule[];
 }

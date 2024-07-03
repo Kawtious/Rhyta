@@ -6,5 +6,5 @@ export class ClassroomUpdateDto {
 
     @IsOptional()
     @IsNotEmpty()
-    typeKey?: string;
+    type?: string;
 }

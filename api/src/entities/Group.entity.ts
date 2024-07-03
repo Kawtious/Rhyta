@@ -15,7 +15,7 @@ import { Course } from './Course.entity';
 import { Professor } from './Professor.entity';
 
 @Entity()
-@Unique(['firstNumberKey', 'course', 'professor'])
+@Unique(['group', 'course', 'professor'])
 export class Group {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -32,7 +32,7 @@ export class Group {
     @Column({
         nullable: false
     })
-    firstNumberKey!: number;
+    group!: number;
 
     @ManyToOne(() => Course, (course) => course.groups, {
         nullable: false

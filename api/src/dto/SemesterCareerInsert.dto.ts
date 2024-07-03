@@ -1,6 +1,6 @@
 import { IsNumber } from 'class-validator';
 
-export class PathInsertDto {
+export class SemesterCareerInsertDto {
     @IsNumber()
     careerId!: number;
 
@@ -8,8 +8,11 @@ export class PathInsertDto {
     courseId!: number;
 
     @IsNumber()
-    pathStartKey!: number;
+    start!: number;
 
     @IsNumber()
-    pathEndKey!: number;
+    end!: number;
+
+    @IsNumber()
+    semester!: number;
 }

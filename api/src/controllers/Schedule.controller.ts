@@ -13,6 +13,7 @@ import {
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
+import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleService } from '../services/Schedule.service';
 
@@ -26,122 +27,41 @@ export class ScheduleController {
         return await this.scheduleService.getAll(pageOptionsDto);
     }
 
-    @Get('search/professor/:professorId')
+    @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getAllByProfessorId(
-        @Param('professorId')
-        professorId: number,
-        @Query()
-        pageOptionsDto: PageOptionsDto
+    async getById(
+        @Param('id')
+        id: number
     ) {
-        return await this.scheduleService.getAllByProfessorId(
-            professorId,
-            pageOptionsDto
-        );
+        return await this.scheduleService.getById(id);
     }
 
-    @Get('search/classroom/:classroomId')
-    @HttpCode(HttpStatus.OK)
-    async getAllByClassroomId(
-        @Param('classroomId')
-        classroomId: number,
-        @Query()
-        pageOptionsDto: PageOptionsDto
-    ) {
-        return await this.scheduleService.getAllByClassroomId(
-            classroomId,
-            pageOptionsDto
-        );
-    }
-
-    @Get('search/cycle/professor/:cycleId/:professorId')
-    @HttpCode(HttpStatus.OK)
-    async getByCycleIdAndProfessorId(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('professorId') professorId: number
-    ) {
-        return await this.scheduleService.getByCycleIdAndProfessorId(
-            cycleId,
-            professorId
-        );
-    }
-
-    @Get('search/cycle/classroom/:cycleId/:classroomId')
-    @HttpCode(HttpStatus.OK)
-    async getByCycleIdAndClassroomId(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('classroomId') classroomId: number
-    ) {
-        return await this.scheduleService.getByCycleIdAndClassroomId(
-            cycleId,
-            classroomId
-        );
-    }
-
-    @Post('insert/cycle/professor/:cycleId/:professorId')
+    @Post('insert')
     @HttpCode(HttpStatus.CREATED)
-    async insertByCycleIdAndProfessorId(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('professorId')
-        professorId: number,
-        @Body() scheduleInsertDto: ScheduleInsertDto
-    ) {
-        return await this.scheduleService.insertByCycleIdAndProfessorId(
-            cycleId,
-            professorId,
-            scheduleInsertDto
-        );
+    async insert(@Body() scheduleInsertDto: ScheduleInsertDto) {
+        return await this.scheduleService.insert(scheduleInsertDto);
     }
 
-    @Post('insert/cycle/classroom/:cycleId/:classroomId')
+    @Post('insert/many')
     @HttpCode(HttpStatus.CREATED)
-    async insertByCycleIdAndClassroomId(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('classroomId')
-        classroomId: number,
-        @Body() scheduleInsertDto: ScheduleInsertDto
-    ) {
-        return await this.scheduleService.insertByCycleIdAndClassroomId(
-            cycleId,
-            classroomId,
-            scheduleInsertDto
-        );
+    async insertMany(@Body() scheduleInsertDtos: ScheduleInsertDto[]) {
+        return await this.scheduleService.insertMany(scheduleInsertDtos);
     }
 
-    @Put('update/cycle/professor/:cycleId/:professorId')
-    @HttpCode(HttpStatus.OK)
-    async updateByCycleIdAndProfessorId(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('professorId')
-        professorId: number,
-        @Body() scheduleUpdateDto: ScheduleUpdateDto
-    ) {
-        return await this.scheduleService.updateByCycleIdAndProfessorId(
-            cycleId,
-            professorId,
-            scheduleUpdateDto
-        );
-    }
-
-    @Put('update/cycle/classroom/:cycleId/:classroomId')
+    @Put('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
-        @Param('cycleId')
-        cycleId: number,
-        @Param('classroomId')
-        classroomId: number,
+        @Param('id')
+        id: number,
         @Body() scheduleUpdateDto: ScheduleUpdateDto
     ) {
-        return await this.scheduleService.updateByCycleIdAndClassroomId(
-            cycleId,
-            classroomId,
-            scheduleUpdateDto
-        );
+        return await this.scheduleService.update(id, scheduleUpdateDto);
+    }
+
+    @Put('update/many')
+    @HttpCode(HttpStatus.OK)
+    async updateMany(@Body() scheduleUpdateBulkDtos: ScheduleUpdateBulkDto[]) {
+        return await this.scheduleService.updateMany(scheduleUpdateBulkDtos);
     }
 
     @Delete('delete/id/:id')
@@ -150,6 +70,6 @@ export class ScheduleController {
         @Param('id')
         id: number
     ) {
-        return await this.scheduleService.delete(Number(id));
+        return await this.scheduleService.delete(id);
     }
 }

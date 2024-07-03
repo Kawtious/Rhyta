@@ -14,7 +14,7 @@ import { Career } from './Career.entity';
 import { Course } from './Course.entity';
 
 @Entity()
-export class Path {
+export class SemesterCareer {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -30,20 +30,25 @@ export class Path {
     @Column({
         nullable: false
     })
-    pathStartKey!: number;
+    semester!: number;
 
     @Column({
         nullable: false
     })
-    pathEndKey!: number;
+    start!: number;
 
-    @ManyToOne(() => Career, (career) => career.paths, {
+    @Column({
+        nullable: false
+    })
+    end!: number;
+
+    @ManyToOne(() => Career, (career) => career.semesterCareers, {
         nullable: false
     })
     @JoinColumn()
     career!: Relation<Career>;
 
-    @ManyToOne(() => Course, (course) => course.paths, {
+    @ManyToOne(() => Course, (course) => course.semesterCareers, {
         nullable: false
     })
     @JoinColumn()

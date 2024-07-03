@@ -9,8 +9,8 @@ import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Cycle } from '../entities/Cycle.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class CycleService {

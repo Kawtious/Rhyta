@@ -2,7 +2,7 @@ import { IsNumber } from 'class-validator';
 
 export class GroupInsertDto {
     @IsNumber()
-    firstNumberKey!: number;
+    group!: number;
 
     @IsNumber()
     professorId!: number;

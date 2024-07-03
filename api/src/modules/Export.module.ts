@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ExportController } from '../controllers/Export.controller';
+import { AvailabilitySchedule } from '../entities/AvailabilitySchedule.entity';
 import { Career } from '../entities/Career.entity';
 import { Classroom } from '../entities/Classroom.entity';
 import { Course } from '../entities/Course.entity';
 import { Group } from '../entities/Group.entity';
-import { Path } from '../entities/Path.entity';
 import { Professor } from '../entities/Professor.entity';
-import { Program } from '../entities/Program.entity';
-import { ProgramType } from '../entities/ProgramType.entity';
 import { Schedule } from '../entities/Schedule.entity';
+import { ScheduleType } from '../entities/ScheduleType.entity';
+import { SemesterCareer } from '../entities/SemesterCareer.entity';
 import { ExportService } from '../services/Export.service';
 
 @Module({
@@ -21,11 +21,11 @@ import { ExportService } from '../services/Export.service';
                 Classroom,
                 Course,
                 Group,
-                Path,
+                SemesterCareer,
                 Professor,
-                Program,
-                ProgramType,
-                Schedule
+                Schedule,
+                ScheduleType,
+                AvailabilitySchedule
             ],
             'mySqlConnection'
         )

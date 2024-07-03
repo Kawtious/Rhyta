@@ -5,28 +5,22 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
+import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { Classroom } from '../entities/Classroom.entity';
-import { Cycle } from '../entities/Cycle.entity';
-import { Professor } from '../entities/Professor.entity';
 import { Schedule } from '../entities/Schedule.entity';
-import { ScheduleEntry } from '../entities/ScheduleEntry.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { ScheduleType } from '../entities/ScheduleType.entity';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class ScheduleService {
     constructor(
-        @InjectRepository(Cycle, 'mySqlConnection')
-        private readonly cycleRepository: Repository<Cycle>,
-        @InjectRepository(Classroom, 'mySqlConnection')
-        private readonly classroomRepository: Repository<Classroom>,
-        @InjectRepository(Professor, 'mySqlConnection')
-        private readonly professorRepository: Repository<Professor>,
         @InjectRepository(Schedule, 'mySqlConnection')
-        private readonly scheduleRepository: Repository<Schedule>
+        private readonly scheduleRepository: Repository<Schedule>,
+        @InjectRepository(ScheduleType, 'mySqlConnection')
+        private readonly scheduleTypeRepository: Repository<ScheduleType>
     ) {}
 
     async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Schedule>> {
@@ -44,58 +38,8 @@ export class ScheduleService {
         return new PageDto(schedules, pageMetaDto);
     }
 
-    async getAllByProfessorId(
-        professorId: number,
-        pageOptionsDto: PageOptionsDto
-    ): Promise<PageDto<Schedule>> {
-        const [schedules, count] = await this.scheduleRepository.findAndCount({
-            relations: { entries: true },
-            where: {
-                professor: { id: professorId }
-            },
-            order: { id: { direction: pageOptionsDto.order } },
-            skip: pageOptionsDto.skip,
-            take: pageOptionsDto.take
-        });
-
-        const pageMetaDto = new PageMetaDto({
-            itemCount: count,
-            pageOptionsDto
-        });
-
-        return new PageDto(schedules, pageMetaDto);
-    }
-
-    async getAllByClassroomId(
-        classroomId: number,
-        pageOptionsDto: PageOptionsDto
-    ): Promise<PageDto<Schedule>> {
-        const [schedules, count] = await this.scheduleRepository.findAndCount({
-            relations: { entries: true },
-            where: {
-                classroom: { id: classroomId }
-            },
-            order: { id: { direction: pageOptionsDto.order } },
-            skip: pageOptionsDto.skip,
-            take: pageOptionsDto.take
-        });
-
-        const pageMetaDto = new PageMetaDto({
-            itemCount: count,
-            pageOptionsDto
-        });
-
-        return new PageDto(schedules, pageMetaDto);
-    }
-
-    async getByCycleIdAndProfessorId(
-        cycleId: number,
-        professorId: number
-    ): Promise<Schedule> {
-        const schedule = await this.scheduleRepository.findOne({
-            relations: { entries: true },
-            where: { cycle: { id: cycleId }, professor: { id: professorId } }
-        });
+    async getById(id: number): Promise<Schedule> {
+        const schedule = await this.scheduleRepository.findOneBy({ id: id });
 
         if (!schedule) {
             throw new EntityNotFoundError('Schedule not found');
@@ -104,133 +48,56 @@ export class ScheduleService {
         return schedule;
     }
 
-    async getByCycleIdAndClassroomId(
-        cycleId: number,
-        classroomId: number
-    ): Promise<Schedule> {
-        const schedule = await this.scheduleRepository.findOne({
-            relations: { entries: true },
-            where: { classroom: { id: classroomId }, cycle: { id: cycleId } }
+    async insert(scheduleInsertDto: ScheduleInsertDto): Promise<Schedule> {
+        const scheduleType = await this.scheduleTypeRepository.findOneBy({
+            id: scheduleInsertDto.scheduleTypeId
         });
 
-        if (!schedule) {
-            throw new EntityNotFoundError('Schedule not found');
-        }
-
-        return schedule;
-    }
-
-    async insertByCycleIdAndProfessorId(
-        cycleId: number,
-        professorId: number,
-        scheduleInsertDto: ScheduleInsertDto
-    ): Promise<Schedule> {
-        const professor = await this.professorRepository.findOneBy({
-            id: professorId
-        });
-
-        if (!professor) {
-            throw new EntityNotFoundError('Professor not found');
-        }
-
-        const cycle = await this.cycleRepository.findOneBy({
-            id: cycleId
-        });
-
-        if (!cycle) {
-            throw new EntityNotFoundError('Cycle not found');
+        if (!scheduleType) {
+            throw new EntityNotFoundError('ScheduleType not found');
         }
 
         const schedule = new Schedule();
 
-        schedule.cycle = cycle;
-        schedule.professor = professor;
-        schedule.title = scheduleInsertDto.title;
-
-        if (scheduleInsertDto.description != null) {
-            schedule.description = scheduleInsertDto.description;
-        }
-
-        if (scheduleInsertDto.entries != null) {
-            schedule.entries = [];
-
-            for (const entry of scheduleInsertDto.entries) {
-                const scheduleEntry = new ScheduleEntry();
-
-                scheduleEntry.day = entry.day;
-                scheduleEntry.hour = entry.hour;
-                scheduleEntry.active = entry.active;
-
-                schedule.entries.push(scheduleEntry);
-            }
-        }
+        schedule.type = scheduleInsertDto.type;
+        schedule.offset = scheduleInsertDto.offset;
+        schedule.scheduleType = scheduleType;
 
         return await this.scheduleRepository.save(schedule);
     }
 
-    async insertByCycleIdAndClassroomId(
-        cycleId: number,
-        classroomId: number,
-        scheduleInsertDto: ScheduleInsertDto
-    ): Promise<Schedule> {
-        const classroom = await this.classroomRepository.findOneBy({
-            id: classroomId
-        });
+    async insertMany(
+        scheduleInsertDtos: ScheduleInsertDto[]
+    ): Promise<Schedule[]> {
+        const schedules: Schedule[] = [];
 
-        if (!classroom) {
-            throw new EntityNotFoundError('Classroom not found');
-        }
+        for (const scheduleInsertDto of scheduleInsertDtos) {
+            const scheduleType = await this.scheduleTypeRepository.findOneBy({
+                id: scheduleInsertDto.scheduleTypeId
+            });
 
-        const cycle = await this.cycleRepository.findOneBy({
-            id: cycleId
-        });
-
-        if (!cycle) {
-            throw new EntityNotFoundError('Cycle not found');
-        }
-
-        const schedule = new Schedule();
-
-        schedule.cycle = cycle;
-        schedule.classroom = classroom;
-        schedule.title = scheduleInsertDto.title;
-
-        if (scheduleInsertDto.description != null) {
-            schedule.description = scheduleInsertDto.description;
-        }
-
-        if (scheduleInsertDto.entries != null) {
-            schedule.entries = [];
-
-            for (const entry of scheduleInsertDto.entries) {
-                const scheduleEntry = new ScheduleEntry();
-
-                scheduleEntry.day = entry.day;
-                scheduleEntry.hour = entry.hour;
-                scheduleEntry.active = entry.active;
-
-                schedule.entries.push(scheduleEntry);
+            if (!scheduleType) {
+                throw new EntityNotFoundError('ScheduleType not found');
             }
+
+            const schedule = new Schedule();
+
+            schedule.type = scheduleInsertDto.type;
+            schedule.offset = scheduleInsertDto.offset;
+            schedule.scheduleType = scheduleType;
+
+            schedules.push(schedule);
         }
 
-        return await this.scheduleRepository.save(schedule);
+        return await this.scheduleRepository.save(schedules);
     }
 
-    async updateByCycleIdAndProfessorId(
-        cycleId: number,
-        professorId: number,
+    async update(
+        id: number,
         scheduleUpdateDto: ScheduleUpdateDto
     ): Promise<Schedule> {
-        const existingSchedule = await this.scheduleRepository.findOne({
-            relations: { entries: true },
-            where: {
-                cycle: {
-                    id: cycleId
-                },
-                professor: {
-                    id: professorId
-                }
-            }
+        const existingSchedule = await this.scheduleRepository.findOneBy({
+            id: id
         });
 
         if (!existingSchedule) {
@@ -253,133 +120,84 @@ export class ScheduleService {
             );
         }
 
-        if (scheduleUpdateDto.title != null) {
-            existingSchedule.title = scheduleUpdateDto.title;
+        if (scheduleUpdateDto.type != null) {
+            existingSchedule.type = scheduleUpdateDto.type;
         }
 
-        if (scheduleUpdateDto.description != null) {
-            existingSchedule.description = scheduleUpdateDto.description;
+        if (scheduleUpdateDto.offset != null) {
+            existingSchedule.offset = scheduleUpdateDto.offset;
         }
 
-        if (scheduleUpdateDto.entries != null) {
-            for (const scheduleEntryUpdateBulkDto of scheduleUpdateDto.entries) {
-                const existingScheduleEntry = existingSchedule.entries.filter(
-                    (existingEntry) => {
-                        return (
-                            existingEntry.day ==
-                                scheduleEntryUpdateBulkDto.day &&
-                            existingEntry.hour ==
-                                scheduleEntryUpdateBulkDto.hour
-                        );
-                    }
-                )[0];
+        if (scheduleUpdateDto.scheduleTypeId != null) {
+            const scheduleType = await this.scheduleTypeRepository.findOneBy({
+                id: scheduleUpdateDto.scheduleTypeId
+            });
 
-                if (!existingScheduleEntry) {
-                    const scheduleEntry = new ScheduleEntry();
-
-                    scheduleEntry.day = scheduleEntryUpdateBulkDto.day;
-                    scheduleEntry.hour = scheduleEntryUpdateBulkDto.hour;
-
-                    if (scheduleEntryUpdateBulkDto.active != null) {
-                        scheduleEntry.active =
-                            scheduleEntryUpdateBulkDto.active;
-                    }
-
-                    existingSchedule.entries.push(scheduleEntry);
-                    continue;
-                }
-
-                if (scheduleEntryUpdateBulkDto.active != null) {
-                    existingScheduleEntry.active =
-                        scheduleEntryUpdateBulkDto.active;
-                }
+            if (!scheduleType) {
+                throw new EntityNotFoundError('ScheduleType not found');
             }
+
+            existingSchedule.scheduleType = scheduleType;
         }
 
         return await this.scheduleRepository.save(existingSchedule);
     }
 
-    async updateByCycleIdAndClassroomId(
-        cycleId: number,
-        classroomId: number,
-        scheduleUpdateDto: ScheduleUpdateDto
-    ): Promise<Schedule> {
-        const existingSchedule = await this.scheduleRepository.findOne({
-            relations: { entries: true },
-            where: {
-                classroom: {
-                    id: classroomId
-                },
-                cycle: {
-                    id: cycleId
-                }
+    async updateMany(
+        scheduleUpdateBulkDtos: ScheduleUpdateBulkDto[]
+    ): Promise<Schedule[]> {
+        const schedules: Schedule[] = [];
+
+        for (const scheduleUpdateBulkDto of scheduleUpdateBulkDtos) {
+            const existingSchedule = await this.scheduleRepository.findOneBy({
+                id: scheduleUpdateBulkDto.id
+            });
+
+            if (!existingSchedule) {
+                throw new EntityNotFoundError('Schedule not found');
             }
-        });
 
-        if (!existingSchedule) {
-            throw new EntityNotFoundError('Schedule not found');
-        }
-
-        if (scheduleUpdateDto.version == null) {
-            throw new OptimisticLockingFailureError(
-                'Resource versions do not match',
-                existingSchedule.version,
-                -1
-            );
-        }
-
-        if (scheduleUpdateDto.version !== existingSchedule.version) {
-            throw new OptimisticLockingFailureError(
-                'Resource versions do not match',
-                existingSchedule.version,
-                scheduleUpdateDto.version
-            );
-        }
-
-        if (scheduleUpdateDto.title != null) {
-            existingSchedule.title = scheduleUpdateDto.title;
-        }
-
-        if (scheduleUpdateDto.description != null) {
-            existingSchedule.description = scheduleUpdateDto.description;
-        }
-
-        if (scheduleUpdateDto.entries != null) {
-            for (const scheduleEntryUpdateBulkDto of scheduleUpdateDto.entries) {
-                const existingScheduleEntry = existingSchedule.entries.filter(
-                    (existingEntry) => {
-                        return (
-                            existingEntry.day ==
-                                scheduleEntryUpdateBulkDto.day &&
-                            existingEntry.hour ==
-                                scheduleEntryUpdateBulkDto.hour
-                        );
-                    }
-                )[0];
-
-                if (!existingScheduleEntry) {
-                    const scheduleEntry = new ScheduleEntry();
-
-                    scheduleEntry.day = scheduleEntryUpdateBulkDto.day;
-                    scheduleEntry.hour = scheduleEntryUpdateBulkDto.hour;
-
-                    if (scheduleEntryUpdateBulkDto.active != null) {
-                        scheduleEntry.active =
-                            scheduleEntryUpdateBulkDto.active;
-                    }
-
-                    existingSchedule.entries.push(scheduleEntry);
-                    continue;
-                }
-
-                if (scheduleEntryUpdateBulkDto.active != null) {
-                    existingScheduleEntry.active =
-                        scheduleEntryUpdateBulkDto.active;
-                }
+            if (scheduleUpdateBulkDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingSchedule.version,
+                    -1
+                );
             }
+
+            if (scheduleUpdateBulkDto.version !== existingSchedule.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingSchedule.version,
+                    scheduleUpdateBulkDto.version
+                );
+            }
+
+            if (scheduleUpdateBulkDto.type != null) {
+                existingSchedule.type = scheduleUpdateBulkDto.type;
+            }
+
+            if (scheduleUpdateBulkDto.offset != null) {
+                existingSchedule.offset = scheduleUpdateBulkDto.offset;
+            }
+
+            if (scheduleUpdateBulkDto.scheduleTypeId != null) {
+                const scheduleType =
+                    await this.scheduleTypeRepository.findOneBy({
+                        id: scheduleUpdateBulkDto.scheduleTypeId
+                    });
+
+                if (!scheduleType) {
+                    throw new EntityNotFoundError('ScheduleType not found');
+                }
+
+                existingSchedule.scheduleType = scheduleType;
+            }
+
+            schedules.push(existingSchedule);
         }
 
-        return await this.scheduleRepository.save(existingSchedule);
+        return await this.scheduleRepository.save(schedules);
     }
 
     async delete(id: number): Promise<DeleteResult> {

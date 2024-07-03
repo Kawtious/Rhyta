@@ -10,20 +10,24 @@ import {
     Query
 } from '@nestjs/common';
 
-import { ScheduleEntryInsertDto } from '../dto/ScheduleEntryInsert.dto';
-import { ScheduleEntryUpdateDto } from '../dto/ScheduleEntryUpdate.dto';
-import { ScheduleEntryUpdateBulkDto } from '../dto/ScheduleEntryUpdateBulk.dto';
+import { AvailabilityScheduleEntryInsertDto } from '../dto/AvailabilityScheduleEntryInsert.dto';
+import { AvailabilityScheduleEntryUpdateDto } from '../dto/AvailabilityScheduleEntryUpdate.dto';
+import { AvailabilityScheduleEntryUpdateBulkDto } from '../dto/AvailabilityScheduleEntryUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
-import { ScheduleEntryService } from '../services/ScheduleEntry.service';
+import { AvailabilityScheduleEntryService } from '../services/AvailabilityScheduleEntry.service';
 
-@Controller({ path: 'scheduleEntries', version: '1' })
-export class ScheduleEntryController {
-    constructor(private readonly scheduleEntryService: ScheduleEntryService) {}
+@Controller({ path: 'availabilityScheduleEntries', version: '1' })
+export class AvailabilityScheduleEntryController {
+    constructor(
+        private readonly availabilityScheduleEntryService: AvailabilityScheduleEntryService
+    ) {}
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
     async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.scheduleEntryService.getAll(pageOptionsDto);
+        return await this.availabilityScheduleEntryService.getAll(
+            pageOptionsDto
+        );
     }
 
     @Get('search/cycle/professor/:cycleId/:professorId')
@@ -36,7 +40,7 @@ export class ScheduleEntryController {
         @Query()
         pageOptionsDto: PageOptionsDto
     ) {
-        return await this.scheduleEntryService.getAllByCycleIdAndProfessorId(
+        return await this.availabilityScheduleEntryService.getAllByCycleIdAndProfessorId(
             cycleId,
             professorId,
             pageOptionsDto
@@ -53,7 +57,7 @@ export class ScheduleEntryController {
         @Query()
         pageOptionsDto: PageOptionsDto
     ) {
-        return await this.scheduleEntryService.getAllByCycleIdAndClassroomId(
+        return await this.availabilityScheduleEntryService.getAllByCycleIdAndClassroomId(
             cycleId,
             classroomId,
             pageOptionsDto
@@ -66,7 +70,7 @@ export class ScheduleEntryController {
         @Param('id')
         id: number
     ) {
-        return await this.scheduleEntryService.getById(id);
+        return await this.availabilityScheduleEntryService.getById(id);
     }
 
     @Post('insert/cycle/professor/:cycleId/:professorId')
@@ -76,12 +80,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('professorId')
         professorId: number,
-        @Body() scheduleEntryInsertDto: ScheduleEntryInsertDto
+        @Body()
+        availabilityScheduleEntryInsertDto: AvailabilityScheduleEntryInsertDto
     ) {
-        return await this.scheduleEntryService.insertByCycleIdAndProfessorId(
+        return await this.availabilityScheduleEntryService.insertByCycleIdAndProfessorId(
             cycleId,
             professorId,
-            scheduleEntryInsertDto
+            availabilityScheduleEntryInsertDto
         );
     }
 
@@ -92,12 +97,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('classroomId')
         classroomId: number,
-        @Body() scheduleEntryInsertDto: ScheduleEntryInsertDto
+        @Body()
+        availabilityScheduleEntryInsertDto: AvailabilityScheduleEntryInsertDto
     ) {
-        return await this.scheduleEntryService.insertByCycleIdAndClassroomId(
+        return await this.availabilityScheduleEntryService.insertByCycleIdAndClassroomId(
             cycleId,
             classroomId,
-            scheduleEntryInsertDto
+            availabilityScheduleEntryInsertDto
         );
     }
 
@@ -108,12 +114,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('professorId')
         professorId: number,
-        @Body() scheduleEntryInsertDtos: ScheduleEntryInsertDto[]
+        @Body()
+        availabilityScheduleEntryInsertDtos: AvailabilityScheduleEntryInsertDto[]
     ) {
-        return await this.scheduleEntryService.insertManyByCycleIdAndProfessorId(
+        return await this.availabilityScheduleEntryService.insertManyByCycleIdAndProfessorId(
             cycleId,
             professorId,
-            scheduleEntryInsertDtos
+            availabilityScheduleEntryInsertDtos
         );
     }
 
@@ -124,12 +131,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('classroomId')
         classroomId: number,
-        @Body() scheduleEntryInsertDtos: ScheduleEntryInsertDto[]
+        @Body()
+        availabilityScheduleEntryInsertDtos: AvailabilityScheduleEntryInsertDto[]
     ) {
-        return await this.scheduleEntryService.insertManyByCycleIdAndClassroomId(
+        return await this.availabilityScheduleEntryService.insertManyByCycleIdAndClassroomId(
             cycleId,
             classroomId,
-            scheduleEntryInsertDtos
+            availabilityScheduleEntryInsertDtos
         );
     }
 
@@ -144,14 +152,15 @@ export class ScheduleEntryController {
         day: number,
         @Param('hour')
         hour: number,
-        @Body() scheduleEntryUpdateDto: ScheduleEntryUpdateDto
+        @Body()
+        availabilityScheduleEntryUpdateDto: AvailabilityScheduleEntryUpdateDto
     ) {
-        return await this.scheduleEntryService.updateByCycleIdAndProfessorIdAndDayAndHour(
+        return await this.availabilityScheduleEntryService.updateByCycleIdAndProfessorIdAndDayAndHour(
             cycleId,
             professorId,
             day,
             hour,
-            scheduleEntryUpdateDto
+            availabilityScheduleEntryUpdateDto
         );
     }
 
@@ -166,14 +175,15 @@ export class ScheduleEntryController {
         day: number,
         @Param('hour')
         hour: number,
-        @Body() scheduleEntryUpdateDto: ScheduleEntryUpdateDto
+        @Body()
+        availabilityScheduleEntryUpdateDto: AvailabilityScheduleEntryUpdateDto
     ) {
-        return await this.scheduleEntryService.updateByCycleIdAndClassroomIdAndDayAndHour(
+        return await this.availabilityScheduleEntryService.updateByCycleIdAndClassroomIdAndDayAndHour(
             cycleId,
             classroomId,
             day,
             hour,
-            scheduleEntryUpdateDto
+            availabilityScheduleEntryUpdateDto
         );
     }
 
@@ -184,12 +194,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('professorId')
         professorId: number,
-        @Body() scheduleEntryUpdateBulkDtos: ScheduleEntryUpdateBulkDto[]
+        @Body()
+        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
     ) {
-        return await this.scheduleEntryService.updateManyByCycleIdAndProfessorId(
+        return await this.availabilityScheduleEntryService.updateManyByCycleIdAndProfessorId(
             cycleId,
             professorId,
-            scheduleEntryUpdateBulkDtos
+            availabilityScheduleEntryUpdateBulkDtos
         );
     }
 
@@ -200,12 +211,13 @@ export class ScheduleEntryController {
         cycleId: number,
         @Param('classroomId')
         classroomId: number,
-        @Body() scheduleEntryUpdateBulkDtos: ScheduleEntryUpdateBulkDto[]
+        @Body()
+        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
     ) {
-        return await this.scheduleEntryService.updateManyByCycleIdAndClassroomId(
+        return await this.availabilityScheduleEntryService.updateManyByCycleIdAndClassroomId(
             cycleId,
             classroomId,
-            scheduleEntryUpdateBulkDtos
+            availabilityScheduleEntryUpdateBulkDtos
         );
     }
 }

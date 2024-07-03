@@ -1,18 +1,21 @@
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
-export class ProgramTypeUpdateDto {
+export class ScheduleTypeUpdateBulkDto {
+    @IsNumber()
+    id!: number;
+
     @IsNumber()
     version!: number;
 
     @IsOptional()
     @IsNotEmpty()
-    descriptionKey?: string;
+    description?: string;
 
     @IsOptional()
     @IsNotEmpty()
-    availableHoursKey?: string;
+    availableHours?: string;
 
     @IsOptional()
     @IsNotEmpty()
-    sessionMaskKey?: string;
+    sessionMask?: string;
 }

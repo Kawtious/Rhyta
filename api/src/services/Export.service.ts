@@ -3,15 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import { AvailabilitySchedule } from '../entities/AvailabilitySchedule.entity';
 import { Classroom } from '../entities/Classroom.entity';
 import { Course } from '../entities/Course.entity';
 import { Group } from '../entities/Group.entity';
-import { Path } from '../entities/Path.entity';
 import { Professor } from '../entities/Professor.entity';
-import { Program } from '../entities/Program.entity';
-import { ProgramType } from '../entities/ProgramType.entity';
 import { Schedule } from '../entities/Schedule.entity';
-import { HexConverter } from '../utils/HexConverter';
+import { ScheduleType } from '../entities/ScheduleType.entity';
+import { SemesterCareer } from '../entities/SemesterCareer.entity';
+import { HexConverter } from '../utils/HexConverter.util';
 
 @Injectable()
 export class ExportService {
@@ -22,19 +22,19 @@ export class ExportService {
         private readonly courseRepository: Repository<Course>,
         @InjectRepository(Group, 'mySqlConnection')
         private readonly groupRepository: Repository<Group>,
-        @InjectRepository(Path, 'mySqlConnection')
-        private readonly pathRepository: Repository<Path>,
+        @InjectRepository(SemesterCareer, 'mySqlConnection')
+        private readonly semesterCareerRepository: Repository<SemesterCareer>,
         @InjectRepository(Professor, 'mySqlConnection')
         private readonly professorRepository: Repository<Professor>,
-        @InjectRepository(Program, 'mySqlConnection')
-        private readonly programRepository: Repository<Program>,
-        @InjectRepository(ProgramType, 'mySqlConnection')
-        private readonly programTypeRepository: Repository<ProgramType>,
         @InjectRepository(Schedule, 'mySqlConnection')
-        private readonly scheduleRepository: Repository<Schedule>
+        private readonly scheduleRepository: Repository<Schedule>,
+        @InjectRepository(ScheduleType, 'mySqlConnection')
+        private readonly scheduleTypeRepository: Repository<ScheduleType>,
+        @InjectRepository(AvailabilitySchedule, 'mySqlConnection')
+        private readonly availabilityScheduleRepository: Repository<AvailabilitySchedule>
     ) {}
 
-    async exportCSVCourses(): Promise<string> {
+    async exportCoursesAsCSV(): Promise<string> {
         let output: string = '';
 
         const courses = await this.courseRepository.find({
@@ -42,13 +42,13 @@ export class ExportService {
         });
 
         for (const course of courses) {
-            output += `${course.courseKey},${course.classroom.typeKey},${course.scheduleKey},${course.descriptionKey}\n`;
+            output += `${course.key},${course.classroom.type},${course.schedule},${course.description}\n`;
         }
 
         return output;
     }
 
-    async exportCSVGroups(): Promise<string> {
+    async exportGroupsAsCSV(): Promise<string> {
         let output: string = '';
 
         const groups = await this.groupRepository.find({
@@ -56,108 +56,117 @@ export class ExportService {
         });
 
         for (const group of groups) {
-            output += `${group.course.courseKey},${group.firstNumberKey},${group.professor.controlNumberKey}\n`;
+            output += `${group.course.key},${group.group},${group.professor.controlNumber}\n`;
         }
 
         return output;
     }
 
-    async exportCSVPaths(): Promise<string> {
+    async exportSemesterCareersAsCSV(): Promise<string> {
         let output: string = '';
 
-        const paths = await this.pathRepository.find({
+        const semesterCareers = await this.semesterCareerRepository.find({
             relations: { career: true, course: true }
         });
 
-        for (const path of paths) {
-            output += `${path.career.careerKey},${path.course.courseKey},${path.pathStartKey},${path.pathEndKey}\n`;
+        for (const semesterCareer of semesterCareers) {
+            output += `${semesterCareer.career.key}${semesterCareer.semester},${semesterCareer.course.key},${semesterCareer.start},${semesterCareer.end}\n`;
         }
 
         return output;
     }
 
-    async exportCSVProfessors(): Promise<string> {
+    async exportProfessorsAsCSV(): Promise<string> {
         let output: string = '';
 
         const professors = await this.professorRepository.find();
 
         for (const professor of professors) {
-            output += `${professor.typeKey},${professor.controlNumberKey},${professor.name}\n`;
+            output += `${professor.type},${professor.controlNumber},${professor.name}\n`;
         }
 
         return output;
     }
 
-    async exportCSVPrograms(): Promise<string> {
+    async exportSchedulesAsCSV(): Promise<string> {
         let output: string = '';
 
-        const programs = await this.programRepository.find({
-            relations: { programType: true }
+        const schedules = await this.scheduleRepository.find({
+            relations: { scheduleType: true }
         });
 
-        for (const program of programs) {
-            output += `${program.typeKey},${program.offsetKey},${program.programType.sessionMaskKey},${program.programType.descriptionKey}\n`;
+        for (const schedule of schedules) {
+            output += `${schedule.type},${schedule.offset},${schedule.scheduleType.sessionMask},${schedule.scheduleType.description}\n`;
         }
 
         return output;
     }
 
-    async exportCSVProgramTypes(): Promise<string> {
+    async exportScheduleTypesAsCSV(): Promise<string> {
         let output: string = '';
 
-        const programTypes = await this.programTypeRepository.find();
+        const scheduleTypes = await this.scheduleTypeRepository.find();
 
-        for (const programType of programTypes) {
-            output += `${programType.descriptionKey},${programType.availableHoursKey},${programType.sessionMaskKey}\n`;
+        for (const scheduleType of scheduleTypes) {
+            output += `${scheduleType.description},${scheduleType.availableHours},${scheduleType.sessionMask}\n`;
         }
 
         return output;
     }
 
-    async exportHexProfessors(cycleId: number): Promise<StreamableFile> {
+    async exportAvailabilityScheduleOfProfessorsAsBinary(
+        cycleId: number
+    ): Promise<StreamableFile> {
         const [professors, count] =
             await this.professorRepository.findAndCount();
 
         let hex: string = HexConverter.numberToPaddedHex(count, 4, true);
 
         for (const professor of professors) {
-            const schedule = await this.scheduleRepository.findOne({
-                relations: { entries: true },
-                where: {
-                    cycle: { id: cycleId },
-                    professor: { id: professor.id }
-                }
-            });
+            const availabilitySchedule =
+                await this.availabilityScheduleRepository.findOne({
+                    relations: { entries: true },
+                    where: {
+                        cycle: { id: cycleId },
+                        professor: { id: professor.id }
+                    }
+                });
 
-            if (schedule == null) {
+            if (availabilitySchedule == null) {
                 continue;
             }
 
-            hex += HexConverter.stringToPaddedHex(professor.typeKey, 4);
+            hex += HexConverter.stringToPaddedHex(professor.type, 4);
             hex += HexConverter.numberToPaddedHex(
-                professor.controlNumberKey,
+                professor.controlNumber,
                 4,
                 true
             );
             hex += HexConverter.stringToHexWithNullTerminator(professor.name);
 
-            const scheduleBytes: string[][] = [];
+            const availabilityScheduleBytes: string[][] = [];
 
             for (let i = 0; i < 6; i++) {
-                scheduleBytes[i] = [];
+                availabilityScheduleBytes[i] = [];
                 for (let j = 0; j < 29; j++) {
-                    scheduleBytes[i][j] = HexConverter.getEmptyBytes(4);
+                    availabilityScheduleBytes[i][j] =
+                        HexConverter.getEmptyBytes(4);
                 }
             }
 
-            for (const scheduleEntry of schedule.entries) {
-                scheduleBytes[scheduleEntry.day][scheduleEntry.hour] =
-                    HexConverter.booleanToHex(scheduleEntry.active, 4, false);
+            for (const availabilityScheduleEntry of availabilitySchedule.entries) {
+                availabilityScheduleBytes[availabilityScheduleEntry.day][
+                    availabilityScheduleEntry.hour
+                ] = HexConverter.booleanToHex(
+                    availabilityScheduleEntry.active,
+                    4,
+                    false
+                );
             }
 
             for (let i = 0; i < 5; i++) {
                 for (let j = 0; j < 28; j++) {
-                    hex += scheduleBytes[i][j];
+                    hex += availabilityScheduleBytes[i][j];
                 }
             }
         }
@@ -165,44 +174,53 @@ export class ExportService {
         return new StreamableFile(Buffer.from(hex, 'hex'));
     }
 
-    async exportHexClassrooms(cycleId: number): Promise<StreamableFile> {
+    async exportAvailabilityScheduleOfClassroomsAsBinary(
+        cycleId: number
+    ): Promise<StreamableFile> {
         const [classrooms, count] =
             await this.classroomRepository.findAndCount();
 
         let hex: string = HexConverter.numberToPaddedHex(count, 4, true);
 
         for (const classroom of classrooms) {
-            const schedule = await this.scheduleRepository.findOne({
-                relations: { entries: true },
-                where: {
-                    classroom: { id: classroom.id },
-                    cycle: { id: cycleId }
-                }
-            });
+            const availabilitySchedule =
+                await this.availabilityScheduleRepository.findOne({
+                    relations: { entries: true },
+                    where: {
+                        classroom: { id: classroom.id },
+                        cycle: { id: cycleId }
+                    }
+                });
 
-            if (schedule == null) {
+            if (availabilitySchedule == null) {
                 continue;
             }
 
-            hex += HexConverter.stringToPaddedHex(classroom.typeKey, 4);
+            hex += HexConverter.stringToPaddedHex(classroom.type, 4);
 
-            const scheduleBytes: string[][] = [];
+            const availabilityScheduleBytes: string[][] = [];
 
             for (let i = 0; i < 6; i++) {
-                scheduleBytes[i] = [];
+                availabilityScheduleBytes[i] = [];
                 for (let j = 0; j < 29; j++) {
-                    scheduleBytes[i][j] = HexConverter.getEmptyBytes(4);
+                    availabilityScheduleBytes[i][j] =
+                        HexConverter.getEmptyBytes(4);
                 }
             }
 
-            for (const scheduleEntry of schedule.entries) {
-                scheduleBytes[scheduleEntry.day][scheduleEntry.hour] =
-                    HexConverter.booleanToHex(scheduleEntry.active, 4, false);
+            for (const availabilityScheduleEntry of availabilitySchedule.entries) {
+                availabilityScheduleBytes[availabilityScheduleEntry.day][
+                    availabilityScheduleEntry.hour
+                ] = HexConverter.booleanToHex(
+                    availabilityScheduleEntry.active,
+                    4,
+                    false
+                );
             }
 
             for (let i = 0; i < 6; i++) {
                 for (let j = 0; j < 29; j++) {
-                    hex += scheduleBytes[i][j];
+                    hex += availabilityScheduleBytes[i][j];
                 }
             }
         }

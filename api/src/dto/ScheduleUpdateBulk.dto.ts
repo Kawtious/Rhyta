@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional } from 'class-validator';
 
-export class ProgramUpdateBulkDto {
+export class ScheduleUpdateBulkDto {
     @IsNumber()
     id!: number;
 
@@ -9,13 +9,13 @@ export class ProgramUpdateBulkDto {
 
     @IsOptional()
     @IsNumber()
-    typeKey?: number;
+    type?: number;
 
     @IsOptional()
     @IsNumber()
-    offsetKey?: number;
+    offset?: number;
 
     @IsOptional()
     @IsNumber()
-    programTypeId?: number;
+    scheduleTypeId?: number;
 }

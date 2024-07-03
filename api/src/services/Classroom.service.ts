@@ -10,8 +10,8 @@ import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Classroom } from '../entities/Classroom.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class ClassroomService {
@@ -50,7 +50,7 @@ export class ClassroomService {
     async insert(classroomInsertDto: ClassroomInsertDto): Promise<Classroom> {
         const classroom = new Classroom();
 
-        classroom.typeKey = classroomInsertDto.typeKey;
+        classroom.type = classroomInsertDto.type;
 
         return await this.classroomRepository.save(classroom);
     }
@@ -63,7 +63,7 @@ export class ClassroomService {
         for (const classroomInsertDto of classroomInsertDtos) {
             const classroom = new Classroom();
 
-            classroom.typeKey = classroomInsertDto.typeKey;
+            classroom.type = classroomInsertDto.type;
 
             classrooms.push(classroom);
         }
@@ -99,8 +99,8 @@ export class ClassroomService {
             );
         }
 
-        if (classroomUpdateDto.typeKey != null) {
-            existingClassroom.typeKey = classroomUpdateDto.typeKey;
+        if (classroomUpdateDto.type != null) {
+            existingClassroom.type = classroomUpdateDto.type;
         }
 
         return await this.classroomRepository.save(existingClassroom);
@@ -136,8 +136,8 @@ export class ClassroomService {
                 );
             }
 
-            if (classroomUpdateBulkDto.typeKey != null) {
-                existingClassroom.typeKey = classroomUpdateBulkDto.typeKey;
+            if (classroomUpdateBulkDto.type != null) {
+                existingClassroom.type = classroomUpdateBulkDto.type;
             }
 
             classrooms.push(existingClassroom);

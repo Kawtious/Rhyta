@@ -9,7 +9,7 @@ export class GroupUpdateBulkDto {
 
     @IsOptional()
     @IsNumber()
-    firstNumberKey?: number;
+    group?: number;
 
     @IsOptional()
     @IsNumber()

@@ -9,5 +9,5 @@ export class ClassroomUpdateBulkDto {
 
     @IsOptional()
     @IsNotEmpty()
-    typeKey?: string;
+    type?: string;
 }

@@ -4,22 +4,15 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
     Relation,
-    Unique,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
-import { Classroom } from './Classroom.entity';
-import { Cycle } from './Cycle.entity';
-import { Professor } from './Professor.entity';
-import { ScheduleEntry } from './ScheduleEntry.entity';
+import { ScheduleType } from './ScheduleType.entity';
 
 @Entity()
-@Unique(['cycle', 'professor'])
-@Unique(['cycle', 'classroom'])
 export class Schedule {
     @PrimaryGeneratedColumn()
     id!: number;
@@ -36,31 +29,16 @@ export class Schedule {
     @Column({
         nullable: false
     })
-    title!: string;
+    type!: number;
 
-    @Column()
-    description!: string;
+    @Column({
+        nullable: false
+    })
+    offset!: number;
 
-    @ManyToOne(() => Cycle, (cycle) => cycle.schedules, {
-        nullable: true
+    @ManyToOne(() => ScheduleType, (scheduleType) => scheduleType.schedules, {
+        nullable: false
     })
     @JoinColumn()
-    cycle?: Relation<Cycle>;
-
-    @ManyToOne(() => Professor, (professor) => professor.schedules, {
-        nullable: true
-    })
-    @JoinColumn()
-    professor?: Relation<Professor>;
-
-    @ManyToOne(() => Classroom, (classroom) => classroom.schedules, {
-        nullable: true
-    })
-    @JoinColumn()
-    classroom?: Relation<Classroom>;
-
-    @OneToMany(() => ScheduleEntry, (entries) => entries.schedule, {
-        cascade: true
-    })
-    entries!: ScheduleEntry[];
+    scheduleType!: Relation<ScheduleType>;
 }

@@ -13,7 +13,7 @@ import {
 
 import { Classroom } from './Classroom.entity';
 import { Group } from './Group.entity';
-import { Path } from './Path.entity';
+import { SemesterCareer } from './SemesterCareer.entity';
 
 @Entity()
 export class Course {
@@ -32,17 +32,17 @@ export class Course {
     @Column({
         nullable: false
     })
-    courseKey!: string;
+    key!: string;
 
     @Column({
         nullable: false
     })
-    scheduleKey!: string;
+    schedule!: string;
 
     @Column({
         nullable: false
     })
-    descriptionKey!: string;
+    description!: string;
 
     @ManyToOne(() => Classroom, (classroom) => classroom.courses, {
         nullable: false
@@ -50,10 +50,14 @@ export class Course {
     @JoinColumn()
     classroom!: Relation<Classroom>;
 
-    @OneToMany(() => Path, (path) => path.course, {
-        cascade: true
-    })
-    paths!: Path[];
+    @OneToMany(
+        () => SemesterCareer,
+        (semesterCareer) => semesterCareer.course,
+        {
+            cascade: true
+        }
+    )
+    semesterCareers!: SemesterCareer[];
 
     @OneToMany(() => Group, (group) => group.course, {
         cascade: true

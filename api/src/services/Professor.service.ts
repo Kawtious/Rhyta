@@ -10,8 +10,8 @@ import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Professor } from '../entities/Professor.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class ProfessorService {
@@ -50,8 +50,8 @@ export class ProfessorService {
     async insert(professorInsertDto: ProfessorInsertDto): Promise<Professor> {
         const professor = new Professor();
 
-        professor.typeKey = professorInsertDto.typeKey;
-        professor.controlNumberKey = professorInsertDto.controlNumberKey;
+        professor.type = professorInsertDto.type;
+        professor.controlNumber = professorInsertDto.controlNumber;
         professor.name = professorInsertDto.name;
 
         return await this.professorRepository.save(professor);
@@ -65,8 +65,8 @@ export class ProfessorService {
         for (const professorInsertDto of professorInsertDtos) {
             const professor = new Professor();
 
-            professor.typeKey = professorInsertDto.typeKey;
-            professor.controlNumberKey = professorInsertDto.controlNumberKey;
+            professor.type = professorInsertDto.type;
+            professor.controlNumber = professorInsertDto.controlNumber;
             professor.name = professorInsertDto.name;
 
             professors.push(professor);
@@ -103,13 +103,12 @@ export class ProfessorService {
             );
         }
 
-        if (professorUpdateDto.typeKey != null) {
-            existingProfessor.typeKey = professorUpdateDto.typeKey;
+        if (professorUpdateDto.type != null) {
+            existingProfessor.type = professorUpdateDto.type;
         }
 
-        if (professorUpdateDto.controlNumberKey != null) {
-            existingProfessor.controlNumberKey =
-                professorUpdateDto.controlNumberKey;
+        if (professorUpdateDto.controlNumber != null) {
+            existingProfessor.controlNumber = professorUpdateDto.controlNumber;
         }
 
         if (professorUpdateDto.name != null) {
@@ -149,13 +148,13 @@ export class ProfessorService {
                 );
             }
 
-            if (professorUpdateBulkDto.typeKey != null) {
-                existingProfessor.typeKey = professorUpdateBulkDto.typeKey;
+            if (professorUpdateBulkDto.type != null) {
+                existingProfessor.type = professorUpdateBulkDto.type;
             }
 
-            if (professorUpdateBulkDto.controlNumberKey != null) {
-                existingProfessor.controlNumberKey =
-                    professorUpdateBulkDto.controlNumberKey;
+            if (professorUpdateBulkDto.controlNumber != null) {
+                existingProfessor.controlNumber =
+                    professorUpdateBulkDto.controlNumber;
             }
 
             if (professorUpdateBulkDto.name != null) {

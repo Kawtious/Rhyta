@@ -1,16 +1,12 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-
-import { ScheduleEntryInsertDto } from './ScheduleEntryInsert.dto';
+import { IsNumber } from 'class-validator';
 
 export class ScheduleInsertDto {
-    @IsNotEmpty()
-    title!: string;
+    @IsNumber()
+    type!: number;
 
-    @IsOptional()
-    @IsNotEmpty()
-    description?: string;
+    @IsNumber()
+    offset!: number;
 
-    @IsOptional()
-    @IsArray()
-    entries?: ScheduleEntryInsertDto[];
+    @IsNumber()
+    scheduleTypeId!: number;
 }

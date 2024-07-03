@@ -1,20 +1,18 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
-
-import { ScheduleEntryUpdateBulkDto } from './ScheduleEntryUpdateBulk.dto';
+import { IsNumber, IsOptional } from 'class-validator';
 
 export class ScheduleUpdateDto {
     @IsNumber()
     version!: number;
 
     @IsOptional()
-    @IsNotEmpty()
-    title?: string;
+    @IsNumber()
+    type?: number;
 
     @IsOptional()
-    @IsNotEmpty()
-    description?: string;
+    @IsNumber()
+    offset?: number;
 
     @IsOptional()
-    @IsArray()
-    entries?: ScheduleEntryUpdateBulkDto[];
+    @IsNumber()
+    scheduleTypeId?: number;
 }

@@ -11,8 +11,8 @@ import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Classroom } from '../entities/Classroom.entity';
 import { Course } from '../entities/Course.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class CourseService {
@@ -59,9 +59,9 @@ export class CourseService {
 
         const course = new Course();
 
-        course.courseKey = courseInsertDto.courseKey;
-        course.scheduleKey = courseInsertDto.scheduleKey;
-        course.descriptionKey = courseInsertDto.descriptionKey;
+        course.key = courseInsertDto.key;
+        course.schedule = courseInsertDto.schedule;
+        course.description = courseInsertDto.description;
         course.classroom = classroom;
 
         return await this.courseRepository.save(course);
@@ -81,9 +81,9 @@ export class CourseService {
 
             const course = new Course();
 
-            course.courseKey = courseInsertDto.courseKey;
-            course.scheduleKey = courseInsertDto.scheduleKey;
-            course.descriptionKey = courseInsertDto.descriptionKey;
+            course.key = courseInsertDto.key;
+            course.schedule = courseInsertDto.schedule;
+            course.description = courseInsertDto.description;
             course.classroom = classroom;
 
             courses.push(course);
@@ -120,8 +120,8 @@ export class CourseService {
             );
         }
 
-        if (courseUpdateDto.courseKey != null) {
-            existingCourse.courseKey = courseUpdateDto.courseKey;
+        if (courseUpdateDto.key != null) {
+            existingCourse.key = courseUpdateDto.key;
         }
 
         if (courseUpdateDto.classroomId != null) {
@@ -136,12 +136,12 @@ export class CourseService {
             existingCourse.classroom = classroom;
         }
 
-        if (courseUpdateDto.scheduleKey != null) {
-            existingCourse.scheduleKey = courseUpdateDto.scheduleKey;
+        if (courseUpdateDto.schedule != null) {
+            existingCourse.schedule = courseUpdateDto.schedule;
         }
 
-        if (courseUpdateDto.descriptionKey != null) {
-            existingCourse.descriptionKey = courseUpdateDto.descriptionKey;
+        if (courseUpdateDto.description != null) {
+            existingCourse.description = courseUpdateDto.description;
         }
 
         return await this.courseRepository.save(existingCourse);
@@ -177,8 +177,8 @@ export class CourseService {
                 );
             }
 
-            if (courseUpdateBulkDto.courseKey != null) {
-                existingCourse.courseKey = courseUpdateBulkDto.courseKey;
+            if (courseUpdateBulkDto.key != null) {
+                existingCourse.key = courseUpdateBulkDto.key;
             }
 
             if (courseUpdateBulkDto.classroomId != null) {
@@ -193,13 +193,12 @@ export class CourseService {
                 existingCourse.classroom = classroom;
             }
 
-            if (courseUpdateBulkDto.scheduleKey != null) {
-                existingCourse.scheduleKey = courseUpdateBulkDto.scheduleKey;
+            if (courseUpdateBulkDto.schedule != null) {
+                existingCourse.schedule = courseUpdateBulkDto.schedule;
             }
 
-            if (courseUpdateBulkDto.descriptionKey != null) {
-                existingCourse.descriptionKey =
-                    courseUpdateBulkDto.descriptionKey;
+            if (courseUpdateBulkDto.description != null) {
+                existingCourse.description = courseUpdateBulkDto.description;
             }
 
             courses.push(existingCourse);

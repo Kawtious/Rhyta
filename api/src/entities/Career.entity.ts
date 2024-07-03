@@ -8,7 +8,7 @@ import {
     VersionColumn
 } from 'typeorm';
 
-import { Path } from './Path.entity';
+import { SemesterCareer } from './SemesterCareer.entity';
 
 @Entity()
 export class Career {
@@ -28,10 +28,14 @@ export class Career {
         nullable: false,
         unique: true
     })
-    careerKey!: string;
+    key!: string;
 
-    @OneToMany(() => Path, (path) => path.career, {
-        cascade: true
-    })
-    paths!: Path[];
+    @OneToMany(
+        () => SemesterCareer,
+        (semesterCareer) => semesterCareer.career,
+        {
+            cascade: true
+        }
+    )
+    semesterCareers!: SemesterCareer[];
 }

@@ -10,8 +10,8 @@ import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Career } from '../entities/Career.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class CareerService {
@@ -48,7 +48,7 @@ export class CareerService {
     async insert(careerInsertDto: CareerInsertDto): Promise<Career> {
         const career = new Career();
 
-        career.careerKey = careerInsertDto.careerKey;
+        career.key = careerInsertDto.career;
 
         return await this.careerRepository.save(career);
     }
@@ -59,7 +59,7 @@ export class CareerService {
         for (const careerInsertDto of careerInsertDtos) {
             const career = new Career();
 
-            career.careerKey = careerInsertDto.careerKey;
+            career.key = careerInsertDto.career;
 
             careers.push(career);
         }
@@ -95,8 +95,8 @@ export class CareerService {
             );
         }
 
-        if (careerUpdateDto.careerKey != null) {
-            existingCareer.careerKey = careerUpdateDto.careerKey;
+        if (careerUpdateDto.career != null) {
+            existingCareer.key = careerUpdateDto.career;
         }
 
         return await this.careerRepository.save(existingCareer);
@@ -132,8 +132,8 @@ export class CareerService {
                 );
             }
 
-            if (careerUpdateBulkDto.careerKey != null) {
-                existingCareer.careerKey = careerUpdateBulkDto.careerKey;
+            if (careerUpdateBulkDto.career != null) {
+                existingCareer.key = careerUpdateBulkDto.career;
             }
 
             careers.push(existingCareer);

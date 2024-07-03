@@ -6,14 +6,16 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
     Relation,
+    Unique,
     UpdateDateColumn,
     VersionColumn
 } from 'typeorm';
 
-import { ProgramType } from './ProgramType.entity';
+import { AvailabilitySchedule } from './AvailabilitySchedule.entity';
 
 @Entity()
-export class Program {
+@Unique(['day', 'hour', 'availabilitySchedule'])
+export class AvailabilityScheduleEntry {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -29,16 +31,25 @@ export class Program {
     @Column({
         nullable: false
     })
-    typeKey!: number;
+    day!: number;
 
     @Column({
         nullable: false
     })
-    offsetKey!: number;
+    hour!: number;
 
-    @ManyToOne(() => ProgramType, (programType) => programType.programs, {
+    @Column({
         nullable: false
     })
+    active!: boolean;
+
+    @ManyToOne(
+        () => AvailabilitySchedule,
+        (availabilitySchedule) => availabilitySchedule.entries,
+        {
+            nullable: false
+        }
+    )
     @JoinColumn()
-    programType!: Relation<ProgramType>;
+    availabilitySchedule!: Relation<AvailabilitySchedule>;
 }

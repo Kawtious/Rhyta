@@ -12,8 +12,8 @@ import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { Course } from '../entities/Course.entity';
 import { Group } from '../entities/Group.entity';
 import { Professor } from '../entities/Professor.entity';
-import { EntityNotFoundError } from '../errors/EntityNotFoundError';
-import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailureError';
+import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
 export class GroupService {
@@ -70,7 +70,7 @@ export class GroupService {
 
         const group = new Group();
 
-        group.firstNumberKey = groupInsertDto.firstNumberKey;
+        group.group = groupInsertDto.group;
         group.professor = professor;
         group.course = course;
 
@@ -99,7 +99,7 @@ export class GroupService {
 
             const group = new Group();
 
-            group.firstNumberKey = groupInsertDto.firstNumberKey;
+            group.group = groupInsertDto.group;
             group.professor = professor;
             group.course = course;
 
@@ -134,8 +134,8 @@ export class GroupService {
             );
         }
 
-        if (groupUpdateDto.firstNumberKey != null) {
-            existingGroup.firstNumberKey = groupUpdateDto.firstNumberKey;
+        if (groupUpdateDto.group != null) {
+            existingGroup.group = groupUpdateDto.group;
         }
 
         if (groupUpdateDto.professorId != null) {
@@ -195,9 +195,8 @@ export class GroupService {
                 );
             }
 
-            if (groupUpdateBulkDto.firstNumberKey != null) {
-                existingGroup.firstNumberKey =
-                    groupUpdateBulkDto.firstNumberKey;
+            if (groupUpdateBulkDto.group != null) {
+                existingGroup.group = groupUpdateBulkDto.group;
             }
 
             if (groupUpdateBulkDto.professorId != null) {

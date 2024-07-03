@@ -2,13 +2,13 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CourseInsertDto {
     @IsNotEmpty()
-    courseKey!: string;
+    key!: string;
 
     @IsNotEmpty()
-    scheduleKey!: string;
+    schedule!: string;
 
     @IsNotEmpty()
-    descriptionKey!: string;
+    description!: string;
 
     @IsNumber()
     classroomId!: number;

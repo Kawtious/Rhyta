@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber, IsOptional, Max, Min } from 'class-validator';
 
-export class ScheduleEntryUpdateBulkDto {
+export class AvailabilityScheduleEntryUpdateBulkDto {
     @IsNumber()
     @Min(0)
     @Max(4)

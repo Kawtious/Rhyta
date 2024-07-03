@@ -8,8 +8,8 @@ import {
     VersionColumn
 } from 'typeorm';
 
+import { AvailabilitySchedule } from './AvailabilitySchedule.entity';
 import { Group } from './Group.entity';
-import { Schedule } from './Schedule.entity';
 
 @Entity()
 export class Professor {
@@ -28,23 +28,27 @@ export class Professor {
     @Column({
         nullable: false
     })
-    typeKey!: string;
+    type!: string;
 
     @Column({
         nullable: false,
         unique: true
     })
-    controlNumberKey!: number;
+    controlNumber!: number;
 
     @Column({
         nullable: false
     })
     name!: string;
 
-    @OneToMany(() => Schedule, (schedule) => schedule.professor, {
-        cascade: true
-    })
-    schedules!: Schedule[];
+    @OneToMany(
+        () => AvailabilitySchedule,
+        (availabilitySchedule) => availabilitySchedule.professor,
+        {
+            cascade: true
+        }
+    )
+    availabilitySchedules!: AvailabilitySchedule[];
 
     @OneToMany(() => Group, (group) => group.professor, {
         cascade: true

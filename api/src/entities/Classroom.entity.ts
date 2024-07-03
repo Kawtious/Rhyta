@@ -8,8 +8,8 @@ import {
     VersionColumn
 } from 'typeorm';
 
+import { AvailabilitySchedule } from './AvailabilitySchedule.entity';
 import { Course } from './Course.entity';
-import { Schedule } from './Schedule.entity';
 
 @Entity()
 export class Classroom {
@@ -29,15 +29,19 @@ export class Classroom {
         nullable: false,
         unique: true
     })
-    typeKey!: string;
+    type!: string;
 
     @OneToMany(() => Course, (course) => course.classroom, {
         cascade: true
     })
     courses!: Course[];
 
-    @OneToMany(() => Schedule, (schedule) => schedule.classroom, {
-        cascade: true
-    })
-    schedules!: Schedule[];
+    @OneToMany(
+        () => AvailabilitySchedule,
+        (availabilitySchedule) => availabilitySchedule.classroom,
+        {
+            cascade: true
+        }
+    )
+    availabilitySchedules!: AvailabilitySchedule[];
 }
