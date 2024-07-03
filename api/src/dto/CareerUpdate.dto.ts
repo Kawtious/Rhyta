@@ -6,5 +6,5 @@ export class CareerUpdateDto {
 
     @IsOptional()
     @IsNotEmpty()
-    career?: string;
+    key?: string;
 }
