@@ -29,7 +29,7 @@ export class ExportController {
         return await this.exportService.exportGroupsAsCSV();
     }
 
-    @Get('careers')
+    @Get('semester_careers')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=semester_careers.csv')
