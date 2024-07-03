@@ -48,7 +48,7 @@ export class CareerService {
     async insert(careerInsertDto: CareerInsertDto): Promise<Career> {
         const career = new Career();
 
-        career.key = careerInsertDto.career;
+        career.key = careerInsertDto.key;
 
         return await this.careerRepository.save(career);
     }
@@ -59,7 +59,7 @@ export class CareerService {
         for (const careerInsertDto of careerInsertDtos) {
             const career = new Career();
 
-            career.key = careerInsertDto.career;
+            career.key = careerInsertDto.key;
 
             careers.push(career);
         }
@@ -95,8 +95,8 @@ export class CareerService {
             );
         }
 
-        if (careerUpdateDto.career != null) {
-            existingCareer.key = careerUpdateDto.career;
+        if (careerUpdateDto.key != null) {
+            existingCareer.key = careerUpdateDto.key;
         }
 
         return await this.careerRepository.save(existingCareer);
@@ -132,8 +132,8 @@ export class CareerService {
                 );
             }
 
-            if (careerUpdateBulkDto.career != null) {
-                existingCareer.key = careerUpdateBulkDto.career;
+            if (careerUpdateBulkDto.key != null) {
+                existingCareer.key = careerUpdateBulkDto.key;
             }
 
             careers.push(existingCareer);
