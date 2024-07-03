@@ -16,7 +16,7 @@ import { AvailabilityScheduleEntryUpdateBulkDto } from '../dto/AvailabilitySched
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { AvailabilityScheduleEntryService } from '../services/AvailabilityScheduleEntry.service';
 
-@Controller({ path: 'availabilityScheduleEntries', version: '1' })
+@Controller({ path: 'availability_schedule_entries', version: '1' })
 export class AvailabilityScheduleEntryController {
     constructor(
         private readonly availabilityScheduleEntryService: AvailabilityScheduleEntryService

@@ -61,7 +61,7 @@ export class ExportController {
         return await this.exportService.exportScheduleTypesAsCSV();
     }
 
-    @Get('availability/professors/:cycleId')
+    @Get('availability_schedules/professors/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors.dat`)
@@ -74,7 +74,7 @@ export class ExportController {
         );
     }
 
-    @Get('availability/classrooms/:cycleId')
+    @Get('availability_schedules/classrooms/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms.dat')

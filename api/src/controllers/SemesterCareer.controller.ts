@@ -14,7 +14,7 @@ import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { SemesterCareerService } from '../services/SemesterCareer.service';
 
-@Controller({ path: 'semesterCareers', version: '1' })
+@Controller({ path: 'semester_careers', version: '1' })
 export class SemesterCareerController {
     constructor(
         private readonly semesterCareerService: SemesterCareerService
