@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -53,7 +53,7 @@ export class GroupController {
         return await this.groupService.insertMany(groupInsertDtos);
     }
 
-    @Put('update/id/:id')
+    @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id')
@@ -63,7 +63,7 @@ export class GroupController {
         return await this.groupService.update(id, groupUpdateDto);
     }
 
-    @Put('update/many')
+    @Patch('update/many')
     @HttpCode(HttpStatus.OK)
     async updateMany(@Body() groupUpdateBulkDtos: GroupUpdateBulkDto[]) {
         return await this.groupService.updateMany(groupUpdateBulkDtos);

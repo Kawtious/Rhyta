@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -56,7 +56,7 @@ export class ProfessorController {
         return await this.professorService.insertMany(professorInsertDtos);
     }
 
-    @Put('update/id/:id')
+    @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id')
@@ -66,7 +66,7 @@ export class ProfessorController {
         return await this.professorService.update(id, professorUpdateDto);
     }
 
-    @Put('update/many')
+    @Patch('update/many')
     @HttpCode(HttpStatus.OK)
     async updateMany(
         @Body() professorUpdateBulkDtos: ProfessorUpdateBulkDto[]

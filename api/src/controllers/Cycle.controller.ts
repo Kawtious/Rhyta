@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -41,7 +41,7 @@ export class CycleController {
         return await this.cycleService.insert(cycleInsertDto);
     }
 
-    @Put('update/id/:id')
+    @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id')

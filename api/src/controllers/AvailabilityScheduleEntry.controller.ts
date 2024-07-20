@@ -5,8 +5,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -141,7 +141,7 @@ export class AvailabilityScheduleEntryController {
         );
     }
 
-    @Put('update/cycle/professor/:cycleId/:professorId/:day/:hour')
+    @Patch('update/cycle/professor/:cycleId/:professorId/:day/:hour')
     @HttpCode(HttpStatus.OK)
     async updateByCycleIdAndProfessorIdAndDayAndHour(
         @Param('cycleId')
@@ -164,7 +164,7 @@ export class AvailabilityScheduleEntryController {
         );
     }
 
-    @Put('update/cycle/classroom/:cycleId/:classroomId/:day/:hour')
+    @Patch('update/cycle/classroom/:cycleId/:classroomId/:day/:hour')
     @HttpCode(HttpStatus.OK)
     async updateByCycleIdAndClassroomIdAndDayAndHour(
         @Param('cycleId')
@@ -187,7 +187,7 @@ export class AvailabilityScheduleEntryController {
         );
     }
 
-    @Put('update/many/cycle/professor/:cycleId/:professorId')
+    @Patch('update/many/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
     async updateManyByCycleIdAndProfessorId(
         @Param('cycleId')
@@ -204,7 +204,7 @@ export class AvailabilityScheduleEntryController {
         );
     }
 
-    @Put('update/many/cycle/classroom/:cycleId/:classroomId')
+    @Patch('update/many/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
     async updateManyByCycleIdAndClassroomId(
         @Param('cycleId')

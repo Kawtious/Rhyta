@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -127,7 +127,7 @@ export class AvailabilityScheduleController {
         );
     }
 
-    @Put('update/cycle/professor/:cycleId/:professorId')
+    @Patch('update/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
     async updateByCycleIdAndProfessorId(
         @Param('cycleId')
@@ -143,7 +143,7 @@ export class AvailabilityScheduleController {
         );
     }
 
-    @Put('update/cycle/classroom/:cycleId/:classroomId')
+    @Patch('update/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('cycleId')

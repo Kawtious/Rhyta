@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -48,7 +48,7 @@ export class CareerController {
         return await this.careerService.insertMany(careerInsertDtos);
     }
 
-    @Put('update/id/:id')
+    @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id')
@@ -58,7 +58,7 @@ export class CareerController {
         return await this.careerService.update(id, careerUpdateDto);
     }
 
-    @Put('update/many')
+    @Patch('update/many')
     @HttpCode(HttpStatus.OK)
     async updateMany(@Body() careerUpdateBulkDtos: CareerUpdateBulkDto[]) {
         return await this.careerService.updateMany(careerUpdateBulkDtos);

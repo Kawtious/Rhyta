@@ -6,8 +6,8 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
-    Put,
     Query
 } from '@nestjs/common';
 
@@ -50,7 +50,7 @@ export class ScheduleTypeController {
         );
     }
 
-    @Put('update/id/:id')
+    @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
     async update(
         @Param('id')
@@ -60,7 +60,7 @@ export class ScheduleTypeController {
         return await this.scheduleTypeService.update(id, scheduleTypeUpdateDto);
     }
 
-    @Put('update/many')
+    @Patch('update/many')
     @HttpCode(HttpStatus.OK)
     async updateMany(
         @Body() scheduleTypeUpdateBulkDtos: ScheduleTypeUpdateBulkDto[]
