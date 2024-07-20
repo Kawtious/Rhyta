@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { AvailabilityScheduleInsertDto } from '../dto/AvailabilityScheduleInsert.dto';
+import { AvailabilityScheduleOptionsDto } from '../dto/AvailabilityScheduleOptions.dto';
 import { AvailabilityScheduleUpdateDto } from '../dto/AvailabilityScheduleUpdate.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -30,10 +31,15 @@ export class AvailabilityScheduleService {
     ) {}
 
     async getAll(
+        availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<AvailabilitySchedule>> {
         const [availabilitySchedules, count] =
             await this.availabilityScheduleRepository.findAndCount({
+                relations: {
+                    cycle: availabilityScheduleOptions.includeCycle,
+                    entries: availabilityScheduleOptions.includeEntries
+                },
                 order: { id: { direction: pageOptionsDto.order } },
                 skip: pageOptionsDto.skip,
                 take: pageOptionsDto.take
@@ -49,11 +55,15 @@ export class AvailabilityScheduleService {
 
     async getAllByProfessorId(
         professorId: number,
+        availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<AvailabilitySchedule>> {
         const [availabilitySchedules, count] =
             await this.availabilityScheduleRepository.findAndCount({
-                relations: { entries: true },
+                relations: {
+                    cycle: availabilityScheduleOptions.includeCycle,
+                    entries: availabilityScheduleOptions.includeEntries
+                },
                 where: {
                     professor: { id: professorId }
                 },
@@ -72,11 +82,15 @@ export class AvailabilityScheduleService {
 
     async getAllByClassroomId(
         classroomId: number,
+        availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<AvailabilitySchedule>> {
         const [availabilitySchedules, count] =
             await this.availabilityScheduleRepository.findAndCount({
-                relations: { entries: true },
+                relations: {
+                    cycle: availabilityScheduleOptions.includeCycle,
+                    entries: availabilityScheduleOptions.includeEntries
+                },
                 where: {
                     classroom: { id: classroomId }
                 },
@@ -95,11 +109,15 @@ export class AvailabilityScheduleService {
 
     async getByCycleIdAndProfessorId(
         cycleId: number,
-        professorId: number
+        professorId: number,
+        availabilityScheduleOptions: AvailabilityScheduleOptionsDto
     ): Promise<AvailabilitySchedule> {
         const availabilitySchedule =
             await this.availabilityScheduleRepository.findOne({
-                relations: { entries: true },
+                relations: {
+                    cycle: availabilityScheduleOptions.includeCycle,
+                    entries: availabilityScheduleOptions.includeEntries
+                },
                 where: {
                     cycle: { id: cycleId },
                     professor: { id: professorId }
@@ -115,11 +133,15 @@ export class AvailabilityScheduleService {
 
     async getByCycleIdAndClassroomId(
         cycleId: number,
-        classroomId: number
+        classroomId: number,
+        availabilityScheduleOptions: AvailabilityScheduleOptionsDto
     ): Promise<AvailabilitySchedule> {
         const availabilitySchedule =
             await this.availabilityScheduleRepository.findOne({
-                relations: { entries: true },
+                relations: {
+                    cycle: availabilityScheduleOptions.includeCycle,
+                    entries: availabilityScheduleOptions.includeEntries
+                },
                 where: {
                     classroom: { id: classroomId },
                     cycle: { id: cycleId }

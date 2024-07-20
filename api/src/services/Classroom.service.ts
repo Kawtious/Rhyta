@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
+import { ClassroomOptionsDto } from '../dto/ClassroomOptions.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
 import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
@@ -20,9 +21,16 @@ export class ClassroomService {
         private readonly classroomRepository: Repository<Classroom>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Classroom>> {
+    async getAll(
+        classroomOptionsDto: ClassroomOptionsDto,
+        pageOptionsDto: PageOptionsDto
+    ): Promise<PageDto<Classroom>> {
         const [classrooms, count] = await this.classroomRepository.findAndCount(
             {
+                relations: {
+                    availabilitySchedules:
+                        classroomOptionsDto.includeAvailabilitySchedules
+                },
                 order: { id: { direction: pageOptionsDto.order } },
                 skip: pageOptionsDto.skip,
                 take: pageOptionsDto.take
@@ -37,8 +45,17 @@ export class ClassroomService {
         return new PageDto(classrooms, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Classroom> {
-        const classroom = await this.classroomRepository.findOneBy({ id: id });
+    async getById(
+        id: number,
+        classroomOptionsDto: ClassroomOptionsDto
+    ): Promise<Classroom> {
+        const classroom = await this.classroomRepository.findOne({
+            relations: {
+                availabilitySchedules:
+                    classroomOptionsDto.includeAvailabilitySchedules
+            },
+            where: { id: id }
+        });
 
         if (!classroom) {
             throw new EntityNotFoundError('Classroom not found');

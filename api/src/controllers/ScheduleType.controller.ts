@@ -17,7 +17,7 @@ import { ScheduleTypeUpdateBulkDto } from '../dto/ScheduleTypeUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleTypeService } from '../services/ScheduleType.service';
 
-@Controller({ path: 'schedule_types', version: '1' })
+@Controller({ path: 'schedule-types', version: '1' })
 export class ScheduleTypeController {
     constructor(private readonly scheduleTypeService: ScheduleTypeService) {}
 

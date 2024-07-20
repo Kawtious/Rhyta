@@ -11,10 +11,11 @@ import {
 } from '@nestjs/common';
 
 import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
+import { SemesterCareerOptionsDto } from '../dto/SemesterCareerOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { SemesterCareerService } from '../services/SemesterCareer.service';
 
-@Controller({ path: 'semester_careers', version: '1' })
+@Controller({ path: 'semester-careers', version: '1' })
 export class SemesterCareerController {
     constructor(
         private readonly semesterCareerService: SemesterCareerService
@@ -22,17 +23,27 @@ export class SemesterCareerController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.semesterCareerService.getAll(pageOptionsDto);
+    async getAll(
+        @Query() semesterCareerOptionsDto: SemesterCareerOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
+    ) {
+        return await this.semesterCareerService.getAll(
+            semesterCareerOptionsDto,
+            pageOptionsDto
+        );
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
     async getById(
         @Param('id')
-        id: number
+        id: number,
+        @Query() semesterCareerOptionsDto: SemesterCareerOptionsDto
     ) {
-        return await this.semesterCareerService.getById(id);
+        return await this.semesterCareerService.getById(
+            id,
+            semesterCareerOptionsDto
+        );
     }
 
     @Post('insert')

@@ -12,11 +12,12 @@ import {
 } from '@nestjs/common';
 
 import { AvailabilityScheduleInsertDto } from '../dto/AvailabilityScheduleInsert.dto';
+import { AvailabilityScheduleOptionsDto } from '../dto/AvailabilityScheduleOptions.dto';
 import { AvailabilityScheduleUpdateDto } from '../dto/AvailabilityScheduleUpdate.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { AvailabilityScheduleService } from '../services/AvailabilitySchedule.service';
 
-@Controller({ path: 'availability_schedules', version: '1' })
+@Controller({ path: 'availability-schedules', version: '1' })
 export class AvailabilityScheduleController {
     constructor(
         private readonly availabilityScheduleService: AvailabilityScheduleService
@@ -24,8 +25,14 @@ export class AvailabilityScheduleController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.availabilityScheduleService.getAll(pageOptionsDto);
+    async getAll(
+        @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
+    ) {
+        return await this.availabilityScheduleService.getAll(
+            availabilityScheduleOptionsDto,
+            pageOptionsDto
+        );
     }
 
     @Get('search/professor/:professorId')
@@ -33,11 +40,12 @@ export class AvailabilityScheduleController {
     async getAllByProfessorId(
         @Param('professorId')
         professorId: number,
-        @Query()
-        pageOptionsDto: PageOptionsDto
+        @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
     ) {
         return await this.availabilityScheduleService.getAllByProfessorId(
             professorId,
+            availabilityScheduleOptionsDto,
             pageOptionsDto
         );
     }
@@ -47,11 +55,12 @@ export class AvailabilityScheduleController {
     async getAllByClassroomId(
         @Param('classroomId')
         classroomId: number,
-        @Query()
-        pageOptionsDto: PageOptionsDto
+        @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
     ) {
         return await this.availabilityScheduleService.getAllByClassroomId(
             classroomId,
+            availabilityScheduleOptionsDto,
             pageOptionsDto
         );
     }
@@ -61,11 +70,13 @@ export class AvailabilityScheduleController {
     async getByCycleIdAndProfessorId(
         @Param('cycleId')
         cycleId: number,
-        @Param('professorId') professorId: number
+        @Param('professorId') professorId: number,
+        @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto
     ) {
         return await this.availabilityScheduleService.getByCycleIdAndProfessorId(
             cycleId,
-            professorId
+            professorId,
+            availabilityScheduleOptionsDto
         );
     }
 
@@ -74,11 +85,13 @@ export class AvailabilityScheduleController {
     async getByCycleIdAndClassroomId(
         @Param('cycleId')
         cycleId: number,
-        @Param('classroomId') classroomId: number
+        @Param('classroomId') classroomId: number,
+        @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto
     ) {
         return await this.availabilityScheduleService.getByCycleIdAndClassroomId(
             cycleId,
-            classroomId
+            classroomId,
+            availabilityScheduleOptionsDto
         );
     }
 

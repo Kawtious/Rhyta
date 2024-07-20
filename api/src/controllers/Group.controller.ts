@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
+import { GroupOptionsDto } from '../dto/GroupOptions.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -23,17 +24,21 @@ export class GroupController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.groupService.getAll(pageOptionsDto);
+    async getAll(
+        @Query() groupOptionsDto: GroupOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
+    ) {
+        return await this.groupService.getAll(groupOptionsDto, pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
     async getById(
         @Param('id')
-        id: number
+        id: number,
+        @Query() groupOptionsDto: GroupOptionsDto
     ) {
-        return await this.groupService.getById(id);
+        return await this.groupService.getById(id, groupOptionsDto);
     }
 
     @Post('insert')

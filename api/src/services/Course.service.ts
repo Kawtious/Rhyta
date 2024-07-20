@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
+import { CourseOptionsDto } from '../dto/CourseOptions.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
 import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
@@ -23,8 +24,14 @@ export class CourseService {
         private readonly courseRepository: Repository<Course>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Course>> {
+    async getAll(
+        courseOptionsDto: CourseOptionsDto,
+        pageOptionsDto: PageOptionsDto
+    ): Promise<PageDto<Course>> {
         const [courses, count] = await this.courseRepository.findAndCount({
+            relations: {
+                classroom: courseOptionsDto.includeClassrooms
+            },
             order: { id: { direction: pageOptionsDto.order } },
             skip: pageOptionsDto.skip,
             take: pageOptionsDto.take
@@ -38,8 +45,16 @@ export class CourseService {
         return new PageDto(courses, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Course> {
-        const course = await this.courseRepository.findOneBy({ id: id });
+    async getById(
+        id: number,
+        courseOptionsDto: CourseOptionsDto
+    ): Promise<Course> {
+        const course = await this.courseRepository.findOne({
+            relations: {
+                classroom: courseOptionsDto.includeClassrooms
+            },
+            where: { id: id }
+        });
 
         if (!course) {
             throw new EntityNotFoundError('Course not found');

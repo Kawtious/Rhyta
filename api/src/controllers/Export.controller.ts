@@ -29,7 +29,7 @@ export class ExportController {
         return await this.exportService.exportGroupsAsCSV();
     }
 
-    @Get('semester_careers')
+    @Get('semester-careers')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=semester_careers.csv')
@@ -61,7 +61,7 @@ export class ExportController {
         return await this.exportService.exportScheduleTypesAsCSV();
     }
 
-    @Get('availability_schedules/professors/:cycleId')
+    @Get('availability-schedules/professors/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors.dat`)
@@ -74,7 +74,7 @@ export class ExportController {
         );
     }
 
-    @Get('availability_schedules/classrooms/:cycleId')
+    @Get('availability-schedules/classrooms/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms.dat')

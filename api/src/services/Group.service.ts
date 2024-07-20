@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
+import { GroupOptionsDto } from '../dto/GroupOptions.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
@@ -26,8 +27,15 @@ export class GroupService {
         private readonly professorRepository: Repository<Professor>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Group>> {
+    async getAll(
+        groupOptionsDto: GroupOptionsDto,
+        pageOptionsDto: PageOptionsDto
+    ): Promise<PageDto<Group>> {
         const [groups, count] = await this.groupRepository.findAndCount({
+            relations: {
+                course: groupOptionsDto.includeCourse,
+                professor: groupOptionsDto.includeProfessor
+            },
             order: { id: { direction: pageOptionsDto.order } },
             skip: pageOptionsDto.skip,
             take: pageOptionsDto.take
@@ -41,8 +49,17 @@ export class GroupService {
         return new PageDto(groups, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Group> {
-        const group = await this.groupRepository.findOneBy({ id: id });
+    async getById(
+        id: number,
+        groupOptionsDto: GroupOptionsDto
+    ): Promise<Group> {
+        const group = await this.groupRepository.findOne({
+            relations: {
+                course: groupOptionsDto.includeCourse,
+                professor: groupOptionsDto.includeProfessor
+            },
+            where: { id: id }
+        });
 
         if (!group) {
             throw new EntityNotFoundError('Group not found');

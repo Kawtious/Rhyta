@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
+import { CourseOptionsDto } from '../dto/CourseOptions.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
 import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -23,17 +24,24 @@ export class CourseController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.courseService.getAll(pageOptionsDto);
+    async getAll(
+        @Query() courseOptionsDto: CourseOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
+    ) {
+        return await this.courseService.getAll(
+            courseOptionsDto,
+            pageOptionsDto
+        );
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
     async getById(
         @Param('id')
-        id: number
+        id: number,
+        @Query() courseOptionsDto: CourseOptionsDto
     ) {
-        return await this.courseService.getById(id);
+        return await this.courseService.getById(id, courseOptionsDto);
     }
 
     @Post('insert')

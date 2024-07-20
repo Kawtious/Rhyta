@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
+import { ProfessorOptionsDto } from '../dto/ProfessorOptions.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
 import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
@@ -20,9 +21,17 @@ export class ProfessorService {
         private readonly professorRepository: Repository<Professor>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Professor>> {
+    async getAll(
+        professorOptionsDto: ProfessorOptionsDto,
+        pageOptionsDto: PageOptionsDto
+    ): Promise<PageDto<Professor>> {
         const [professors, count] = await this.professorRepository.findAndCount(
             {
+                relations: {
+                    availabilitySchedules:
+                        professorOptionsDto.includeAvailabilitySchedules,
+                    groups: professorOptionsDto.includeGroups
+                },
                 order: { id: { direction: pageOptionsDto.order } },
                 skip: pageOptionsDto.skip,
                 take: pageOptionsDto.take
@@ -37,8 +46,18 @@ export class ProfessorService {
         return new PageDto(professors, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Professor> {
-        const professor = await this.professorRepository.findOneBy({ id: id });
+    async getById(
+        id: number,
+        professorOptionsDto: ProfessorOptionsDto
+    ): Promise<Professor> {
+        const professor = await this.professorRepository.findOne({
+            relations: {
+                availabilitySchedules:
+                    professorOptionsDto.includeAvailabilitySchedules,
+                groups: professorOptionsDto.includeGroups
+            },
+            where: { id: id }
+        });
 
         if (!professor) {
             throw new EntityNotFoundError('Professor not found');

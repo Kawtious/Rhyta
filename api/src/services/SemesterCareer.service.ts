@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
+import { SemesterCareerOptionsDto } from '../dto/SemesterCareerOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -24,10 +25,15 @@ export class SemesterCareerService {
     ) {}
 
     async getAll(
+        semesterCareerOptionsDto: SemesterCareerOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<SemesterCareer>> {
         const [semesterCareers, count] =
             await this.semesterCareerRepository.findAndCount({
+                relations: {
+                    career: semesterCareerOptionsDto.includeCareer,
+                    course: semesterCareerOptionsDto.includeCourse
+                },
                 order: { id: { direction: pageOptionsDto.order } },
                 skip: pageOptionsDto.skip,
                 take: pageOptionsDto.take
@@ -41,9 +47,18 @@ export class SemesterCareerService {
         return new PageDto(semesterCareers, pageMetaDto);
     }
 
-    async getById(id: number): Promise<SemesterCareer> {
-        const semesterCareer = await this.semesterCareerRepository.findOneBy({
-            id: id
+    async getById(
+        id: number,
+        semesterCareerOptionsDto: SemesterCareerOptionsDto
+    ): Promise<SemesterCareer> {
+        const semesterCareer = await this.semesterCareerRepository.findOne({
+            relations: {
+                career: semesterCareerOptionsDto.includeCareer,
+                course: semesterCareerOptionsDto.includeCourse
+            },
+            where: {
+                id: id
+            }
         });
 
         if (!semesterCareer) {

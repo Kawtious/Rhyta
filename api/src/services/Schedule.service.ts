@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
+import { ScheduleOptionsDto } from '../dto/ScheduleOptions.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
 import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
@@ -23,8 +24,14 @@ export class ScheduleService {
         private readonly scheduleTypeRepository: Repository<ScheduleType>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Schedule>> {
+    async getAll(
+        scheduleOptionsDto: ScheduleOptionsDto,
+        pageOptionsDto: PageOptionsDto
+    ): Promise<PageDto<Schedule>> {
         const [schedules, count] = await this.scheduleRepository.findAndCount({
+            relations: {
+                scheduleType: scheduleOptionsDto.includeScheduleType
+            },
             order: { id: { direction: pageOptionsDto.order } },
             skip: pageOptionsDto.skip,
             take: pageOptionsDto.take
@@ -38,8 +45,16 @@ export class ScheduleService {
         return new PageDto(schedules, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Schedule> {
-        const schedule = await this.scheduleRepository.findOneBy({ id: id });
+    async getById(
+        id: number,
+        scheduleOptionsDto: ScheduleOptionsDto
+    ): Promise<Schedule> {
+        const schedule = await this.scheduleRepository.findOne({
+            relations: {
+                scheduleType: scheduleOptionsDto.includeScheduleType
+            },
+            where: { id: id }
+        });
 
         if (!schedule) {
             throw new EntityNotFoundError('Schedule not found');

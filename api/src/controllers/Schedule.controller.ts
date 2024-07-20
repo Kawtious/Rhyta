@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
+import { ScheduleOptionsDto } from '../dto/ScheduleOptions.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
 import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -23,17 +24,24 @@ export class ScheduleController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.scheduleService.getAll(pageOptionsDto);
+    async getAll(
+        @Query() scheduleOptionsDto: ScheduleOptionsDto,
+        @Query() pageOptionsDto: PageOptionsDto
+    ) {
+        return await this.scheduleService.getAll(
+            scheduleOptionsDto,
+            pageOptionsDto
+        );
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
     async getById(
         @Param('id')
-        id: number
+        id: number,
+        @Query() scheduleOptionsDto: ScheduleOptionsDto
     ) {
-        return await this.scheduleService.getById(id);
+        return await this.scheduleService.getById(id, scheduleOptionsDto);
     }
 
     @Post('insert')
