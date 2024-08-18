@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
-import { ClassroomOptionsDto } from '../dto/ClassroomOptions.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
 import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
+import { ClassroomOptionsDto } from '../dto/options/ClassroomOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';

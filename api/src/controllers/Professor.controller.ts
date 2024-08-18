@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
-import { ProfessorOptionsDto } from '../dto/ProfessorOptions.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
 import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
+import { ProfessorOptionsDto } from '../dto/options/ProfessorOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ProfessorService } from '../services/Professor.service';
 

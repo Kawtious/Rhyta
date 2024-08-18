@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 
 import { AvailabilityScheduleInsertDto } from '../dto/AvailabilityScheduleInsert.dto';
-import { AvailabilityScheduleOptionsDto } from '../dto/AvailabilityScheduleOptions.dto';
 import { AvailabilityScheduleUpdateDto } from '../dto/AvailabilityScheduleUpdate.dto';
+import { AvailabilityScheduleOptionsDto } from '../dto/options/AvailabilityScheduleOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { AvailabilityScheduleService } from '../services/AvailabilitySchedule.service';
 

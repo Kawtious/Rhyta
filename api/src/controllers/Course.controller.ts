@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
-import { CourseOptionsDto } from '../dto/CourseOptions.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
 import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
+import { CourseOptionsDto } from '../dto/options/CourseOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { CourseService } from '../services/Course.service';
 

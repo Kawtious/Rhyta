@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
-import { SemesterCareerOptionsDto } from '../dto/SemesterCareerOptions.dto';
+import { SemesterCareerOptionsDto } from '../dto/options/SemesterCareerOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { SemesterCareerService } from '../services/SemesterCareer.service';
 

@@ -4,8 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { AvailabilityScheduleInsertDto } from '../dto/AvailabilityScheduleInsert.dto';
-import { AvailabilityScheduleOptionsDto } from '../dto/AvailabilityScheduleOptions.dto';
 import { AvailabilityScheduleUpdateDto } from '../dto/AvailabilityScheduleUpdate.dto';
+import { AvailabilityScheduleOptionsDto } from '../dto/options/AvailabilityScheduleOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';

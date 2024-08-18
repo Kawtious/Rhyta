@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
-import { ScheduleOptionsDto } from '../dto/ScheduleOptions.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
 import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
+import { ScheduleOptionsDto } from '../dto/options/ScheduleOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleService } from '../services/Schedule.service';
 

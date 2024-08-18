@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
-import { GroupOptionsDto } from '../dto/GroupOptions.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
+import { GroupOptionsDto } from '../dto/options/GroupOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { GroupService } from '../services/Group.service';
 

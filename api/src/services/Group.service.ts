@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
-import { GroupOptionsDto } from '../dto/GroupOptions.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
 import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
+import { GroupOptionsDto } from '../dto/options/GroupOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';

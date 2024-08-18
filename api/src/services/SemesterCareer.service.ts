@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 
 import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
-import { SemesterCareerOptionsDto } from '../dto/SemesterCareerOptions.dto';
+import { SemesterCareerOptionsDto } from '../dto/options/SemesterCareerOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
