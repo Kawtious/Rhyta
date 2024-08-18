@@ -53,7 +53,7 @@ export class ExportController {
         return await this.exportService.exportSchedulesAsCSV();
     }
 
-    @Get('schedules/types')
+    @Get('schedule-types')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=scheduleTypes.csv')
