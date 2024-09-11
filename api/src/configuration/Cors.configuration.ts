@@ -7,7 +7,7 @@ const allowedOrigins: string[] = [
     'http://localhost:63342'
 ];
 
-const allowedMethods: string[] = ['GET', 'PUT', 'POST', 'DELETE'];
+const allowedMethods: string[] = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'];
 
 export const CorsConfiguration: CorsOptions = {
     origin: allowedOrigins,
