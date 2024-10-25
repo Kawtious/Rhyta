@@ -114,7 +114,7 @@ export class ExportService {
         return output;
     }
 
-    async exportAvailabilityScheduleOfProfessorsAsBinary(
+    async exportProfessorsAvailabilityScheduleAsBinary(
         cycleId: number
     ): Promise<StreamableFile> {
         const [professors, count] =
@@ -155,13 +155,11 @@ export class ExportService {
             }
 
             for (const availabilityScheduleEntry of availabilitySchedule.entries) {
+                const value = availabilityScheduleEntry.value > 0;
+
                 availabilityScheduleBytes[availabilityScheduleEntry.day][
                     availabilityScheduleEntry.hour
-                ] = HexConverter.booleanToHex(
-                    availabilityScheduleEntry.active,
-                    4,
-                    false
-                );
+                ] = HexConverter.booleanToHex(value, 4, false);
             }
 
             for (let i = 0; i < 5; i++) {
@@ -174,7 +172,7 @@ export class ExportService {
         return new StreamableFile(Buffer.from(hex, 'hex'));
     }
 
-    async exportAvailabilityScheduleOfClassroomsAsBinary(
+    async exportClassroomsAvailabilityScheduleAsBinary(
         cycleId: number
     ): Promise<StreamableFile> {
         const [classrooms, count] =
@@ -211,8 +209,8 @@ export class ExportService {
             for (const availabilityScheduleEntry of availabilitySchedule.entries) {
                 availabilityScheduleBytes[availabilityScheduleEntry.day][
                     availabilityScheduleEntry.hour
-                ] = HexConverter.booleanToHex(
-                    availabilityScheduleEntry.active,
+                ] = HexConverter.numberToPaddedHex(
+                    availabilityScheduleEntry.value,
                     4,
                     false
                 );

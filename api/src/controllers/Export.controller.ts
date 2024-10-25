@@ -65,11 +65,11 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors.dat`)
-    async exportAvailabilityScheduleOfProfessorsAsBinary(
+    async exportProfessorsAvailabilityScheduleAsBinary(
         @Param('cycleId')
         cycleId: number
     ) {
-        return await this.exportService.exportAvailabilityScheduleOfProfessorsAsBinary(
+        return await this.exportService.exportProfessorsAvailabilityScheduleAsBinary(
             cycleId
         );
     }
@@ -78,11 +78,11 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms.dat')
-    async exportAvailabilityScheduleOfClassroomsAsBinary(
+    async exportClassroomsAvailabilityScheduleAsBinary(
         @Param('cycleId')
         cycleId: number
     ) {
-        return await this.exportService.exportAvailabilityScheduleOfClassroomsAsBinary(
+        return await this.exportService.exportClassroomsAvailabilityScheduleAsBinary(
             cycleId
         );
     }

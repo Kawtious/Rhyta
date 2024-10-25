@@ -41,7 +41,7 @@ export class AvailabilityScheduleEntry {
     @Column({
         nullable: false
     })
-    active!: boolean;
+    value!: number;
 
     @ManyToOne(
         () => AvailabilitySchedule,

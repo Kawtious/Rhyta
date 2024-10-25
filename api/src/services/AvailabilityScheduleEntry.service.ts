@@ -151,8 +151,8 @@ export class AvailabilityScheduleEntryService {
         availabilityScheduleEntry.day = availabilityScheduleEntryInsertDto.day;
         availabilityScheduleEntry.hour =
             availabilityScheduleEntryInsertDto.hour;
-        availabilityScheduleEntry.active =
-            availabilityScheduleEntryInsertDto.active;
+        availabilityScheduleEntry.value =
+            availabilityScheduleEntryInsertDto.value;
 
         availabilityScheduleEntry.availabilitySchedule = availabilitySchedule;
 
@@ -203,8 +203,8 @@ export class AvailabilityScheduleEntryService {
         availabilityScheduleEntry.day = availabilityScheduleEntryInsertDto.day;
         availabilityScheduleEntry.hour =
             availabilityScheduleEntryInsertDto.hour;
-        availabilityScheduleEntry.active =
-            availabilityScheduleEntryInsertDto.active;
+        availabilityScheduleEntry.value =
+            availabilityScheduleEntryInsertDto.value;
 
         availabilityScheduleEntry.availabilitySchedule = availabilitySchedule;
 
@@ -259,8 +259,8 @@ export class AvailabilityScheduleEntryService {
                 availabilityScheduleEntryInsertDto.day;
             availabilityScheduleEntry.hour =
                 availabilityScheduleEntryInsertDto.hour;
-            availabilityScheduleEntry.active =
-                availabilityScheduleEntryInsertDto.active;
+            availabilityScheduleEntry.value =
+                availabilityScheduleEntryInsertDto.value;
 
             availabilityScheduleEntry.availabilitySchedule =
                 availabilitySchedule;
@@ -317,8 +317,8 @@ export class AvailabilityScheduleEntryService {
                 availabilityScheduleEntryInsertDto.day;
             availabilityScheduleEntry.hour =
                 availabilityScheduleEntryInsertDto.hour;
-            availabilityScheduleEntry.active =
-                availabilityScheduleEntryInsertDto.active;
+            availabilityScheduleEntry.value =
+                availabilityScheduleEntryInsertDto.value;
 
             availabilityScheduleEntry.availabilitySchedule =
                 availabilitySchedule;
@@ -373,9 +373,9 @@ export class AvailabilityScheduleEntryService {
             );
         }
 
-        if (availabilityScheduleEntryUpdateDto.active != null) {
-            existingScheduleEntry.active =
-                availabilityScheduleEntryUpdateDto.active;
+        if (availabilityScheduleEntryUpdateDto.value != null) {
+            existingScheduleEntry.value =
+                availabilityScheduleEntryUpdateDto.value;
         }
 
         return await this.availabilityScheduleEntryRepository.save(
@@ -427,9 +427,9 @@ export class AvailabilityScheduleEntryService {
             );
         }
 
-        if (availabilityScheduleEntryUpdateDto.active != null) {
-            existingScheduleEntry.active =
-                availabilityScheduleEntryUpdateDto.active;
+        if (availabilityScheduleEntryUpdateDto.value != null) {
+            existingScheduleEntry.value =
+                availabilityScheduleEntryUpdateDto.value;
         }
 
         return await this.availabilityScheduleEntryRepository.save(
@@ -482,9 +482,9 @@ export class AvailabilityScheduleEntryService {
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                existingScheduleEntry.active =
-                    availabilityScheduleEntryUpdateBulkDto.active;
+            if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                existingScheduleEntry.value =
+                    availabilityScheduleEntryUpdateBulkDto.value;
             }
 
             availabilityScheduleEntries.push(existingScheduleEntry);
@@ -540,9 +540,9 @@ export class AvailabilityScheduleEntryService {
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                existingScheduleEntry.active =
-                    availabilityScheduleEntryUpdateBulkDto.active;
+            if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                existingScheduleEntry.value =
+                    availabilityScheduleEntryUpdateBulkDto.value;
             }
 
             availabilityScheduleEntries.push(existingScheduleEntry);

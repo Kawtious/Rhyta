@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { IsNumber, IsOptional, Max, Min } from 'class-validator';
 
 export class AvailabilityScheduleEntryUpdateBulkDto {
     @IsNumber()
@@ -15,6 +15,7 @@ export class AvailabilityScheduleEntryUpdateBulkDto {
     version!: number;
 
     @IsOptional()
-    @IsBoolean()
-    active?: boolean;
+    @IsNumber()
+    @Min(0)
+    value?: number;
 }

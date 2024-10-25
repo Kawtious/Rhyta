@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, Max, Min } from 'class-validator';
+import { IsNumber, Max, Min } from 'class-validator';
 
 export class AvailabilityScheduleEntryInsertDto {
     @IsNumber()
@@ -11,6 +11,7 @@ export class AvailabilityScheduleEntryInsertDto {
     @Max(27)
     hour!: number;
 
-    @IsBoolean()
-    active!: boolean;
+    @IsNumber()
+    @Min(0)
+    value!: number;
 }

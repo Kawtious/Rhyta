@@ -196,7 +196,7 @@ export class AvailabilityScheduleService {
 
                 availabilityScheduleEntry.day = entry.day;
                 availabilityScheduleEntry.hour = entry.hour;
-                availabilityScheduleEntry.active = entry.active;
+                availabilityScheduleEntry.value = entry.value;
 
                 availabilitySchedule.entries.push(availabilityScheduleEntry);
             }
@@ -248,7 +248,7 @@ export class AvailabilityScheduleService {
 
                 availabilityScheduleEntry.day = entry.day;
                 availabilityScheduleEntry.hour = entry.hour;
-                availabilityScheduleEntry.active = entry.active;
+                availabilityScheduleEntry.value = entry.value;
 
                 availabilitySchedule.entries.push(availabilityScheduleEntry);
             }
@@ -330,18 +330,18 @@ export class AvailabilityScheduleService {
                     availabilityScheduleEntry.hour =
                         availabilityScheduleEntryUpdateBulkDto.hour;
 
-                    if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                        availabilityScheduleEntry.active =
-                            availabilityScheduleEntryUpdateBulkDto.active;
+                    if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                        availabilityScheduleEntry.value =
+                            availabilityScheduleEntryUpdateBulkDto.value;
                     }
 
                     existingSchedule.entries.push(availabilityScheduleEntry);
                     continue;
                 }
 
-                if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                    existingScheduleEntry.active =
-                        availabilityScheduleEntryUpdateBulkDto.active;
+                if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                    existingScheduleEntry.value =
+                        availabilityScheduleEntryUpdateBulkDto.value;
                 }
             }
         }
@@ -420,18 +420,18 @@ export class AvailabilityScheduleService {
                     availabilityScheduleEntry.hour =
                         availabilityScheduleEntryUpdateBulkDto.hour;
 
-                    if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                        availabilityScheduleEntry.active =
-                            availabilityScheduleEntryUpdateBulkDto.active;
+                    if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                        availabilityScheduleEntry.value =
+                            availabilityScheduleEntryUpdateBulkDto.value;
                     }
 
                     existingSchedule.entries.push(availabilityScheduleEntry);
                     continue;
                 }
 
-                if (availabilityScheduleEntryUpdateBulkDto.active != null) {
-                    existingScheduleEntry.active =
-                        availabilityScheduleEntryUpdateBulkDto.active;
+                if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                    existingScheduleEntry.value =
+                        availabilityScheduleEntryUpdateBulkDto.value;
                 }
             }
         }

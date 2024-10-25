@@ -1,10 +1,11 @@
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, Min } from 'class-validator';
 
 export class AvailabilityScheduleEntryUpdateDto {
     @IsNumber()
     version!: number;
 
     @IsOptional()
-    @IsBoolean()
-    active?: boolean;
+    @IsNumber()
+    @Min(0)
+    value?: number;
 }
