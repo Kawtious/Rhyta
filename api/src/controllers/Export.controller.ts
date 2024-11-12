@@ -4,9 +4,18 @@ import {
     Header,
     HttpCode,
     HttpStatus,
-    Param
+    Param,
+    Query
 } from '@nestjs/common';
 
+import { ExportAvailabilitySchedulesClassroomsOptionsDto } from '../dto/options/export/ExportAvailabilitySchedulesClassroomsOptions.dto';
+import { ExportAvailabilitySchedulesProfessorsOptionsDto } from '../dto/options/export/ExportAvailabilitySchedulesProfessorsOptions.dto';
+import { ExportCoursesOptionsDto } from '../dto/options/export/ExportCoursesOptions.dto';
+import { ExportGroupsOptionsDto } from '../dto/options/export/ExportGroupsOptions.dto';
+import { ExportProfessorsOptionsDto } from '../dto/options/export/ExportProfessorsOptions.dto';
+import { ExportScheduleTypesOptionsDto } from '../dto/options/export/ExportScheduleTypesOptions.dto';
+import { ExportSchedulesOptionsDto } from '../dto/options/export/ExportSchedulesOptions.dto';
+import { ExportSemesterCareersOptionsDto } from '../dto/options/export/ExportSemesterCareersOptions.dto';
 import { ExportService } from '../services/Export.service';
 
 @Controller({ path: 'export', version: '1' })
@@ -17,60 +26,88 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=courses.csv')
-    async exportCoursesAsCSV() {
-        return await this.exportService.exportCoursesAsCSV();
+    async exportCoursesAsCSV(
+        @Query() exportCoursesOptions: ExportCoursesOptionsDto
+    ) {
+        return await this.exportService.exportCoursesAsCSV(
+            exportCoursesOptions
+        );
     }
 
     @Get('groups')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=groups.csv')
-    async exportGroupsAsCSV() {
-        return await this.exportService.exportGroupsAsCSV();
+    async exportGroupsAsCSV(
+        @Query() exportGroupsOptionsDto: ExportGroupsOptionsDto
+    ) {
+        return await this.exportService.exportGroupsAsCSV(
+            exportGroupsOptionsDto
+        );
     }
 
     @Get('semester-careers')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=semester_careers.csv')
-    async exportSemesterCareersAsCSV() {
-        return await this.exportService.exportSemesterCareersAsCSV();
+    async exportSemesterCareersAsCSV(
+        @Query()
+        exportSemesterCareersOptionsDto: ExportSemesterCareersOptionsDto
+    ) {
+        return await this.exportService.exportSemesterCareersAsCSV(
+            exportSemesterCareersOptionsDto
+        );
     }
 
     @Get('professors')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=professors.csv')
-    async exportProfessorsAsCSV() {
-        return await this.exportService.exportProfessorsAsCSV();
+    async exportProfessorsAsCSV(
+        @Query() exportProfessorsOptionsDto: ExportProfessorsOptionsDto
+    ) {
+        return await this.exportService.exportProfessorsAsCSV(
+            exportProfessorsOptionsDto
+        );
     }
 
     @Get('schedules')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=schedules.csv')
-    async exportSchedulesAsCSV() {
-        return await this.exportService.exportSchedulesAsCSV();
+    async exportSchedulesAsCSV(
+        @Query() exportSchedulesOptionsDto: ExportSchedulesOptionsDto
+    ) {
+        return await this.exportService.exportSchedulesAsCSV(
+            exportSchedulesOptionsDto
+        );
     }
 
     @Get('schedule-types')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'text/csv')
     @Header('Content-Disposition', 'attachment;filename=scheduleTypes.csv')
-    async exportScheduleTypesAsCSV() {
-        return await this.exportService.exportScheduleTypesAsCSV();
+    async exportScheduleTypesAsCSV(
+        @Query() exportScheduleTypesOptionsDto: ExportScheduleTypesOptionsDto
+    ) {
+        return await this.exportService.exportScheduleTypesAsCSV(
+            exportScheduleTypesOptionsDto
+        );
     }
 
     @Get('availability-schedules/professors/:cycleId')
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', `attachment;filename=professors.dat`)
-    async exportProfessorsAvailabilityScheduleAsBinary(
+    async exportAvailabilityScheduleProfessorsAsBinary(
         @Param('cycleId')
-        cycleId: number
+        cycleId: number,
+        @Query()
+        exportAvailabilitySchedulesProfessorsOptionsDto: ExportAvailabilitySchedulesProfessorsOptionsDto
     ) {
-        return await this.exportService.exportProfessorsAvailabilityScheduleAsBinary(
-            cycleId
+        return await this.exportService.exportAvailabilityScheduleProfessorsAsBinary(
+            cycleId,
+            exportAvailabilitySchedulesProfessorsOptionsDto
         );
     }
 
@@ -78,12 +115,15 @@ export class ExportController {
     @HttpCode(HttpStatus.OK)
     @Header('Content-Type', 'application/octet-stream')
     @Header('Content-Disposition', 'attachment;filename=classrooms.dat')
-    async exportClassroomsAvailabilityScheduleAsBinary(
+    async exportAvailabilityScheduleClassroomsAsBinary(
         @Param('cycleId')
-        cycleId: number
+        cycleId: number,
+        @Query()
+        exportAvailabilitySchedulesClassroomsOptionsDto: ExportAvailabilitySchedulesClassroomsOptionsDto
     ) {
-        return await this.exportService.exportClassroomsAvailabilityScheduleAsBinary(
-            cycleId
+        return await this.exportService.exportAvailabilityScheduleClassroomsAsBinary(
+            cycleId,
+            exportAvailabilitySchedulesClassroomsOptionsDto
         );
     }
 }

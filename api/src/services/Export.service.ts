@@ -1,8 +1,16 @@
 import { Injectable, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
+import { ExportAvailabilitySchedulesClassroomsOptionsDto } from '../dto/options/export/ExportAvailabilitySchedulesClassroomsOptions.dto';
+import { ExportAvailabilitySchedulesProfessorsOptionsDto } from '../dto/options/export/ExportAvailabilitySchedulesProfessorsOptions.dto';
+import { ExportCoursesOptionsDto } from '../dto/options/export/ExportCoursesOptions.dto';
+import { ExportGroupsOptionsDto } from '../dto/options/export/ExportGroupsOptions.dto';
+import { ExportProfessorsOptionsDto } from '../dto/options/export/ExportProfessorsOptions.dto';
+import { ExportScheduleTypesOptionsDto } from '../dto/options/export/ExportScheduleTypesOptions.dto';
+import { ExportSchedulesOptionsDto } from '../dto/options/export/ExportSchedulesOptions.dto';
+import { ExportSemesterCareersOptionsDto } from '../dto/options/export/ExportSemesterCareersOptions.dto';
 import { AvailabilitySchedule } from '../entities/AvailabilitySchedule.entity';
 import { Classroom } from '../entities/Classroom.entity';
 import { Course } from '../entities/Course.entity';
@@ -34,12 +42,28 @@ export class ExportService {
         private readonly availabilityScheduleRepository: Repository<AvailabilitySchedule>
     ) {}
 
-    async exportCoursesAsCSV(): Promise<string> {
+    async exportCoursesAsCSV(
+        exportCoursesOptionsDto: ExportCoursesOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const courses = await this.courseRepository.find({
-            relations: { classroom: true }
-        });
+        let courses: Course[];
+
+        const relations = { classroom: true };
+
+        if (
+            exportCoursesOptionsDto.courseIds &&
+            exportCoursesOptionsDto.courseIds.length > 0
+        ) {
+            courses = await this.courseRepository.find({
+                where: { id: In(exportCoursesOptionsDto.courseIds) },
+                relations: relations
+            });
+        } else {
+            courses = await this.courseRepository.find({
+                relations: relations
+            });
+        }
 
         for (const course of courses) {
             output += `${course.key},${course.classroom.type},${course.schedule},${course.description}\n`;
@@ -48,12 +72,28 @@ export class ExportService {
         return output;
     }
 
-    async exportGroupsAsCSV(): Promise<string> {
+    async exportGroupsAsCSV(
+        exportGroupsOptionsDto: ExportGroupsOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const groups = await this.groupRepository.find({
-            relations: { course: true, professor: true }
-        });
+        let groups: Group[];
+
+        const relations = { course: true, professor: true };
+
+        if (
+            exportGroupsOptionsDto.groupIds &&
+            exportGroupsOptionsDto.groupIds.length > 0
+        ) {
+            groups = await this.groupRepository.find({
+                where: { id: In(exportGroupsOptionsDto.groupIds) },
+                relations: relations
+            });
+        } else {
+            groups = await this.groupRepository.find({
+                relations: relations
+            });
+        }
 
         for (const group of groups) {
             output += `${group.course.key},${group.group},${group.professor.controlNumber}\n`;
@@ -62,12 +102,30 @@ export class ExportService {
         return output;
     }
 
-    async exportSemesterCareersAsCSV(): Promise<string> {
+    async exportSemesterCareersAsCSV(
+        exportSemesterCareersOptionsDto: ExportSemesterCareersOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const semesterCareers = await this.semesterCareerRepository.find({
-            relations: { career: true, course: true }
-        });
+        let semesterCareers: SemesterCareer[];
+
+        const relations = { career: true, course: true };
+
+        if (
+            exportSemesterCareersOptionsDto.semesterCareerIds &&
+            exportSemesterCareersOptionsDto.semesterCareerIds.length > 0
+        ) {
+            semesterCareers = await this.semesterCareerRepository.find({
+                where: {
+                    id: In(exportSemesterCareersOptionsDto.semesterCareerIds)
+                },
+                relations: relations
+            });
+        } else {
+            semesterCareers = await this.semesterCareerRepository.find({
+                relations: relations
+            });
+        }
 
         for (const semesterCareer of semesterCareers) {
             output += `${semesterCareer.career.key}${semesterCareer.semester},${semesterCareer.course.key},${semesterCareer.start},${semesterCareer.end}\n`;
@@ -76,10 +134,23 @@ export class ExportService {
         return output;
     }
 
-    async exportProfessorsAsCSV(): Promise<string> {
+    async exportProfessorsAsCSV(
+        exportProfessorsOptionsDto: ExportProfessorsOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const professors = await this.professorRepository.find();
+        let professors: Professor[];
+
+        if (
+            exportProfessorsOptionsDto.professorIds &&
+            exportProfessorsOptionsDto.professorIds.length > 0
+        ) {
+            professors = await this.professorRepository.find({
+                where: { id: In(exportProfessorsOptionsDto.professorIds) }
+            });
+        } else {
+            professors = await this.professorRepository.find();
+        }
 
         for (const professor of professors) {
             output += `${professor.type},${professor.controlNumber},${professor.name}\n`;
@@ -88,12 +159,26 @@ export class ExportService {
         return output;
     }
 
-    async exportSchedulesAsCSV(): Promise<string> {
+    async exportSchedulesAsCSV(
+        exportSchedulesOptionsDto: ExportSchedulesOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const schedules = await this.scheduleRepository.find({
-            relations: { scheduleType: true }
-        });
+        let schedules: Schedule[];
+
+        if (
+            exportSchedulesOptionsDto.scheduleIds &&
+            exportSchedulesOptionsDto.scheduleIds.length > 0
+        ) {
+            schedules = await this.scheduleRepository.find({
+                where: { id: In(exportSchedulesOptionsDto.scheduleIds) },
+                relations: { scheduleType: true }
+            });
+        } else {
+            schedules = await this.scheduleRepository.find({
+                relations: { scheduleType: true }
+            });
+        }
 
         for (const schedule of schedules) {
             output += `${schedule.type},${schedule.offset},${schedule.scheduleType.sessionMask},${schedule.scheduleType.description}\n`;
@@ -102,10 +187,23 @@ export class ExportService {
         return output;
     }
 
-    async exportScheduleTypesAsCSV(): Promise<string> {
+    async exportScheduleTypesAsCSV(
+        exportScheduleTypesOptionsDto: ExportScheduleTypesOptionsDto
+    ): Promise<string> {
         let output: string = '';
 
-        const scheduleTypes = await this.scheduleTypeRepository.find();
+        let scheduleTypes: ScheduleType[];
+
+        if (
+            exportScheduleTypesOptionsDto.scheduleTypeIds &&
+            exportScheduleTypesOptionsDto.scheduleTypeIds.length > 0
+        ) {
+            scheduleTypes = await this.scheduleTypeRepository.find({
+                where: { id: In(exportScheduleTypesOptionsDto.scheduleTypeIds) }
+            });
+        } else {
+            scheduleTypes = await this.scheduleTypeRepository.find();
+        }
 
         for (const scheduleType of scheduleTypes) {
             output += `${scheduleType.description},${scheduleType.availableHours},${scheduleType.sessionMask}\n`;
@@ -114,11 +212,34 @@ export class ExportService {
         return output;
     }
 
-    async exportProfessorsAvailabilityScheduleAsBinary(
-        cycleId: number
+    async exportAvailabilityScheduleProfessorsAsBinary(
+        cycleId: number,
+        exportAvailabilitySchedulesProfessorsOptionsDto: ExportAvailabilitySchedulesProfessorsOptionsDto
     ): Promise<StreamableFile> {
-        const [professors, count] =
-            await this.professorRepository.findAndCount();
+        let professors: Professor[];
+        let count: number;
+
+        if (
+            exportAvailabilitySchedulesProfessorsOptionsDto.professorIds &&
+            exportAvailabilitySchedulesProfessorsOptionsDto.professorIds
+                .length > 0
+        ) {
+            const [professors1, count1] =
+                await this.professorRepository.findAndCount({
+                    where: {
+                        id: In(
+                            exportAvailabilitySchedulesProfessorsOptionsDto.professorIds
+                        )
+                    }
+                });
+            professors = professors1;
+            count = count1;
+        } else {
+            const [professors1, count1] =
+                await this.professorRepository.findAndCount();
+            professors = professors1;
+            count = count1;
+        }
 
         let hex: string = HexConverter.numberToPaddedHex(count, 4, true);
 
@@ -172,11 +293,34 @@ export class ExportService {
         return new StreamableFile(Buffer.from(hex, 'hex'));
     }
 
-    async exportClassroomsAvailabilityScheduleAsBinary(
-        cycleId: number
+    async exportAvailabilityScheduleClassroomsAsBinary(
+        cycleId: number,
+        exportAvailabilitySchedulesClassroomsOptionsDto: ExportAvailabilitySchedulesClassroomsOptionsDto
     ): Promise<StreamableFile> {
-        const [classrooms, count] =
-            await this.classroomRepository.findAndCount();
+        let classrooms: Classroom[];
+        let count: number;
+
+        if (
+            exportAvailabilitySchedulesClassroomsOptionsDto.classroomIds &&
+            exportAvailabilitySchedulesClassroomsOptionsDto.classroomIds
+                .length > 0
+        ) {
+            const [classrooms1, count1] =
+                await this.classroomRepository.findAndCount({
+                    where: {
+                        id: In(
+                            exportAvailabilitySchedulesClassroomsOptionsDto.classroomIds
+                        )
+                    }
+                });
+            classrooms = classrooms1;
+            count = count1;
+        } else {
+            const [classrooms1, count1] =
+                await this.classroomRepository.findAndCount();
+            classrooms = classrooms1;
+            count = count1;
+        }
 
         let hex: string = HexConverter.numberToPaddedHex(count, 4, true);
 
