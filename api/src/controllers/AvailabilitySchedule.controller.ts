@@ -25,11 +25,11 @@ export class AvailabilityScheduleController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.availabilityScheduleService.getAll(
+        return await this.availabilityScheduleService.search(
             availabilityScheduleOptionsDto,
             pageOptionsDto
         );
@@ -37,13 +37,13 @@ export class AvailabilityScheduleController {
 
     @Get('search/professor/:professorId')
     @HttpCode(HttpStatus.OK)
-    async getAllByProfessorId(
+    async searchByProfessorId(
         @Param('professorId')
         professorId: number,
         @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.availabilityScheduleService.getAllByProfessorId(
+        return await this.availabilityScheduleService.searchByProfessorId(
             professorId,
             availabilityScheduleOptionsDto,
             pageOptionsDto
@@ -52,13 +52,13 @@ export class AvailabilityScheduleController {
 
     @Get('search/classroom/:classroomId')
     @HttpCode(HttpStatus.OK)
-    async getAllByClassroomId(
+    async searchByClassroomId(
         @Param('classroomId')
         classroomId: number,
         @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.availabilityScheduleService.getAllByClassroomId(
+        return await this.availabilityScheduleService.searchByClassroomId(
             classroomId,
             availabilityScheduleOptionsDto,
             pageOptionsDto
@@ -67,13 +67,13 @@ export class AvailabilityScheduleController {
 
     @Get('search/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
-    async getByCycleIdAndProfessorId(
+    async searchByCycleIdAndProfessorId(
         @Param('cycleId')
         cycleId: number,
         @Param('professorId') professorId: number,
         @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto
     ) {
-        return await this.availabilityScheduleService.getByCycleIdAndProfessorId(
+        return await this.availabilityScheduleService.searchByCycleIdAndProfessorId(
             cycleId,
             professorId,
             availabilityScheduleOptionsDto
@@ -82,13 +82,13 @@ export class AvailabilityScheduleController {
 
     @Get('search/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
-    async getByCycleIdAndClassroomId(
+    async searchByCycleIdAndClassroomId(
         @Param('cycleId')
         cycleId: number,
         @Param('classroomId') classroomId: number,
         @Query() availabilityScheduleOptionsDto: AvailabilityScheduleOptionsDto
     ) {
-        return await this.availabilityScheduleService.getByCycleIdAndClassroomId(
+        return await this.availabilityScheduleService.searchByCycleIdAndClassroomId(
             cycleId,
             classroomId,
             availabilityScheduleOptionsDto
@@ -161,10 +161,10 @@ export class AvailabilityScheduleController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.availabilityScheduleService.delete(Number(id));
+        return await this.availabilityScheduleService.deleteById(Number(id));
     }
 }

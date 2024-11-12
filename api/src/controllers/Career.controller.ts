@@ -23,17 +23,17 @@ export class CareerController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.careerService.getAll(pageOptionsDto);
+    async search(@Query() pageOptionsDto: PageOptionsDto) {
+        return await this.careerService.search(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number
     ) {
-        return await this.careerService.getById(id);
+        return await this.careerService.searchById(id);
     }
 
     @Post('insert')
@@ -50,12 +50,12 @@ export class CareerController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() careerUpdateDto: CareerUpdateDto
     ) {
-        return await this.careerService.update(id, careerUpdateDto);
+        return await this.careerService.updateById(id, careerUpdateDto);
     }
 
     @Patch('update/many')
@@ -66,10 +66,10 @@ export class CareerController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.careerService.delete(id);
+        return await this.careerService.deleteById(id);
     }
 }

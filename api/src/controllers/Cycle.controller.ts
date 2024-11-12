@@ -22,17 +22,17 @@ export class CycleController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.cycleService.getAll(pageOptionsDto);
+    async search(@Query() pageOptionsDto: PageOptionsDto) {
+        return await this.cycleService.search(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number
     ) {
-        return await this.cycleService.getById(id);
+        return await this.cycleService.searchById(id);
     }
 
     @Post('insert')
@@ -43,20 +43,20 @@ export class CycleController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() cycleUpdateDto: CycleUpdateDto
     ) {
-        return await this.cycleService.update(id, cycleUpdateDto);
+        return await this.cycleService.updateById(id, cycleUpdateDto);
     }
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.cycleService.delete(id);
+        return await this.cycleService.deleteById(id);
     }
 }

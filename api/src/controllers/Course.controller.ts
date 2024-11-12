@@ -24,11 +24,11 @@ export class CourseController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() courseOptionsDto: CourseOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.courseService.getAll(
+        return await this.courseService.search(
             courseOptionsDto,
             pageOptionsDto
         );
@@ -36,12 +36,12 @@ export class CourseController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() courseOptionsDto: CourseOptionsDto
     ) {
-        return await this.courseService.getById(id, courseOptionsDto);
+        return await this.courseService.searchById(id, courseOptionsDto);
     }
 
     @Post('insert')
@@ -58,12 +58,12 @@ export class CourseController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() courseUpdateDto: CourseUpdateDto
     ) {
-        return await this.courseService.update(id, courseUpdateDto);
+        return await this.courseService.updateById(id, courseUpdateDto);
     }
 
     @Patch('update/many')
@@ -74,10 +74,10 @@ export class CourseController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.courseService.delete(Number(id));
+        return await this.courseService.deleteById(Number(id));
     }
 }

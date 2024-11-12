@@ -24,7 +24,7 @@ export class CourseService {
         private readonly courseRepository: Repository<Course>
     ) {}
 
-    async getAll(
+    async search(
         courseOptionsDto: CourseOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Course>> {
@@ -45,7 +45,7 @@ export class CourseService {
         return new PageDto(courses, pageMetaDto);
     }
 
-    async getById(
+    async searchById(
         id: number,
         courseOptionsDto: CourseOptionsDto
     ): Promise<Course> {
@@ -107,7 +107,7 @@ export class CourseService {
         return await this.courseRepository.save(courses);
     }
 
-    async update(
+    async updateById(
         id: number,
         courseUpdateDto: CourseUpdateDto
     ): Promise<Course> {
@@ -222,7 +222,7 @@ export class CourseService {
         return await this.courseRepository.save(courses);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.courseRepository.delete(id);
     }
 }

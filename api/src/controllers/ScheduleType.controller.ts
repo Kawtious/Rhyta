@@ -23,17 +23,17 @@ export class ScheduleTypeController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.scheduleTypeService.getAll(pageOptionsDto);
+    async search(@Query() pageOptionsDto: PageOptionsDto) {
+        return await this.scheduleTypeService.search(pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number
     ) {
-        return await this.scheduleTypeService.getById(id);
+        return await this.scheduleTypeService.searchById(id);
     }
 
     @Post('insert')
@@ -52,12 +52,15 @@ export class ScheduleTypeController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() scheduleTypeUpdateDto: ScheduleTypeUpdateDto
     ) {
-        return await this.scheduleTypeService.update(id, scheduleTypeUpdateDto);
+        return await this.scheduleTypeService.updateById(
+            id,
+            scheduleTypeUpdateDto
+        );
     }
 
     @Patch('update/many')
@@ -72,10 +75,10 @@ export class ScheduleTypeController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.scheduleTypeService.delete(Number(id));
+        return await this.scheduleTypeService.deleteById(Number(id));
     }
 }

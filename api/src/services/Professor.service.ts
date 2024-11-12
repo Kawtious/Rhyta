@@ -21,7 +21,7 @@ export class ProfessorService {
         private readonly professorRepository: Repository<Professor>
     ) {}
 
-    async getAll(
+    async search(
         professorOptionsDto: ProfessorOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Professor>> {
@@ -46,7 +46,7 @@ export class ProfessorService {
         return new PageDto(professors, pageMetaDto);
     }
 
-    async getById(
+    async searchById(
         id: number,
         professorOptionsDto: ProfessorOptionsDto
     ): Promise<Professor> {
@@ -94,7 +94,7 @@ export class ProfessorService {
         return await this.professorRepository.save(professors);
     }
 
-    async update(
+    async updateById(
         id: number,
         professorUpdateDto: ProfessorUpdateDto
     ): Promise<Professor> {
@@ -186,7 +186,7 @@ export class ProfessorService {
         return await this.professorRepository.save(professors);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.professorRepository.delete(id);
     }
 }

@@ -24,11 +24,11 @@ export class ScheduleController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() scheduleOptionsDto: ScheduleOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.scheduleService.getAll(
+        return await this.scheduleService.search(
             scheduleOptionsDto,
             pageOptionsDto
         );
@@ -36,12 +36,12 @@ export class ScheduleController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() scheduleOptionsDto: ScheduleOptionsDto
     ) {
-        return await this.scheduleService.getById(id, scheduleOptionsDto);
+        return await this.scheduleService.searchById(id, scheduleOptionsDto);
     }
 
     @Post('insert')
@@ -58,12 +58,12 @@ export class ScheduleController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() scheduleUpdateDto: ScheduleUpdateDto
     ) {
-        return await this.scheduleService.update(id, scheduleUpdateDto);
+        return await this.scheduleService.updateById(id, scheduleUpdateDto);
     }
 
     @Patch('update/many')
@@ -74,10 +74,10 @@ export class ScheduleController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.scheduleService.delete(id);
+        return await this.scheduleService.deleteById(id);
     }
 }

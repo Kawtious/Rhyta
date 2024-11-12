@@ -21,7 +21,7 @@ export class ClassroomService {
         private readonly classroomRepository: Repository<Classroom>
     ) {}
 
-    async getAll(
+    async search(
         classroomOptionsDto: ClassroomOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Classroom>> {
@@ -45,7 +45,7 @@ export class ClassroomService {
         return new PageDto(classrooms, pageMetaDto);
     }
 
-    async getById(
+    async searchById(
         id: number,
         classroomOptionsDto: ClassroomOptionsDto
     ): Promise<Classroom> {
@@ -88,7 +88,7 @@ export class ClassroomService {
         return await this.classroomRepository.save(classrooms);
     }
 
-    async update(
+    async updateById(
         id: number,
         classroomUpdateDto: ClassroomUpdateDto
     ): Promise<Classroom> {
@@ -163,7 +163,7 @@ export class ClassroomService {
         return await this.classroomRepository.save(classrooms);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.classroomRepository.delete(id);
     }
 }

@@ -24,7 +24,7 @@ export class AvailabilityScheduleEntryService {
         private readonly availabilityScheduleRepository: Repository<AvailabilitySchedule>
     ) {}
 
-    async getAll(
+    async search(
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<AvailabilityScheduleEntry>> {
         const [availabilityScheduleEntries, count] =
@@ -42,7 +42,7 @@ export class AvailabilityScheduleEntryService {
         return new PageDto(availabilityScheduleEntries, pageMetaDto);
     }
 
-    async getAllByCycleIdAndProfessorId(
+    async searchByCycleIdAndProfessorId(
         cycleId: number,
         professorId: number,
         pageOptionsDto: PageOptionsDto
@@ -68,7 +68,7 @@ export class AvailabilityScheduleEntryService {
         return new PageDto(availabilityScheduleEntries, pageMetaDto);
     }
 
-    async getAllByCycleIdAndClassroomId(
+    async searchByCycleIdAndClassroomId(
         cycleId: number,
         classroomId: number,
         pageOptionsDto: PageOptionsDto
@@ -94,7 +94,7 @@ export class AvailabilityScheduleEntryService {
         return new PageDto(availabilityScheduleEntries, pageMetaDto);
     }
 
-    async getById(id: number): Promise<AvailabilityScheduleEntry> {
+    async searchById(id: number): Promise<AvailabilityScheduleEntry> {
         const availabilityScheduleEntry =
             await this.availabilityScheduleEntryRepository.findOneBy({
                 id: id

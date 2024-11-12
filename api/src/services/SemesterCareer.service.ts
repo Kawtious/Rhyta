@@ -24,7 +24,7 @@ export class SemesterCareerService {
         private readonly semesterCareerRepository: Repository<SemesterCareer>
     ) {}
 
-    async getAll(
+    async search(
         semesterCareerOptionsDto: SemesterCareerOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<SemesterCareer>> {
@@ -47,7 +47,7 @@ export class SemesterCareerService {
         return new PageDto(semesterCareers, pageMetaDto);
     }
 
-    async getById(
+    async searchById(
         id: number,
         semesterCareerOptionsDto: SemesterCareerOptionsDto
     ): Promise<SemesterCareer> {
@@ -134,7 +134,7 @@ export class SemesterCareerService {
         return await this.semesterCareerRepository.save(semesterCareers);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.semesterCareerRepository.delete(id);
     }
 }

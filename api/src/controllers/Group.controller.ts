@@ -24,21 +24,21 @@ export class GroupController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() groupOptionsDto: GroupOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.groupService.getAll(groupOptionsDto, pageOptionsDto);
+        return await this.groupService.search(groupOptionsDto, pageOptionsDto);
     }
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() groupOptionsDto: GroupOptionsDto
     ) {
-        return await this.groupService.getById(id, groupOptionsDto);
+        return await this.groupService.searchById(id, groupOptionsDto);
     }
 
     @Post('insert')
@@ -55,12 +55,12 @@ export class GroupController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() groupUpdateDto: GroupUpdateDto
     ) {
-        return await this.groupService.update(id, groupUpdateDto);
+        return await this.groupService.updateById(id, groupUpdateDto);
     }
 
     @Patch('update/many')
@@ -71,10 +71,10 @@ export class GroupController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.groupService.delete(id);
+        return await this.groupService.deleteById(id);
     }
 }

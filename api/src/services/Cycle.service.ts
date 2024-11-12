@@ -19,7 +19,7 @@ export class CycleService {
         private readonly cycleRepository: Repository<Cycle>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cycle>> {
+    async search(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cycle>> {
         const [cycles, count] = await this.cycleRepository.findAndCount({
             order: { id: { direction: pageOptionsDto.order } },
             skip: pageOptionsDto.skip,
@@ -34,7 +34,7 @@ export class CycleService {
         return new PageDto(cycles, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Cycle> {
+    async searchById(id: number): Promise<Cycle> {
         const cycle = await this.cycleRepository.findOneBy({ id: id });
 
         if (!cycle) {
@@ -56,7 +56,10 @@ export class CycleService {
         return await this.cycleRepository.save(cycle);
     }
 
-    async update(id: number, cycleUpdateDto: CycleUpdateDto): Promise<Cycle> {
+    async updateById(
+        id: number,
+        cycleUpdateDto: CycleUpdateDto
+    ): Promise<Cycle> {
         const existingCycle = await this.cycleRepository.findOneBy({
             id: id
         });
@@ -92,7 +95,7 @@ export class CycleService {
         return await this.cycleRepository.save(existingCycle);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.cycleRepository.delete(id);
     }
 }

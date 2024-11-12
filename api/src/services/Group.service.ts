@@ -27,7 +27,7 @@ export class GroupService {
         private readonly professorRepository: Repository<Professor>
     ) {}
 
-    async getAll(
+    async search(
         groupOptionsDto: GroupOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<Group>> {
@@ -49,7 +49,7 @@ export class GroupService {
         return new PageDto(groups, pageMetaDto);
     }
 
-    async getById(
+    async searchById(
         id: number,
         groupOptionsDto: GroupOptionsDto
     ): Promise<Group> {
@@ -126,7 +126,10 @@ export class GroupService {
         return await this.groupRepository.save(groups);
     }
 
-    async update(id: number, groupUpdateDto: GroupUpdateDto): Promise<Group> {
+    async updateById(
+        id: number,
+        groupUpdateDto: GroupUpdateDto
+    ): Promise<Group> {
         const existingGroup = await this.groupRepository.findOneBy({
             id: id
         });
@@ -246,7 +249,7 @@ export class GroupService {
         return await this.groupRepository.save(groups);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.groupRepository.delete(id);
     }
 }

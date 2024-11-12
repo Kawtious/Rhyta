@@ -20,7 +20,7 @@ export class ScheduleTypeService {
         private readonly scheduleTypeRepository: Repository<ScheduleType>
     ) {}
 
-    async getAll(
+    async search(
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<ScheduleType>> {
         const [scheduleTypes, count] =
@@ -38,7 +38,7 @@ export class ScheduleTypeService {
         return new PageDto(scheduleTypes, pageMetaDto);
     }
 
-    async getById(id: number): Promise<ScheduleType> {
+    async searchById(id: number): Promise<ScheduleType> {
         const scheduleType = await this.scheduleTypeRepository.findOneBy({
             id: id
         });
@@ -80,7 +80,7 @@ export class ScheduleTypeService {
         return await this.scheduleTypeRepository.save(scheduleTypes);
     }
 
-    async update(
+    async updateById(
         id: number,
         scheduleTypeUpdateDto: ScheduleTypeUpdateDto
     ): Promise<ScheduleType> {
@@ -182,7 +182,7 @@ export class ScheduleTypeService {
         return await this.scheduleTypeRepository.save(scheduleTypes);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.scheduleTypeRepository.delete(id);
     }
 }

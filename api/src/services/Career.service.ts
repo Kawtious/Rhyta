@@ -20,7 +20,7 @@ export class CareerService {
         private readonly careerRepository: Repository<Career>
     ) {}
 
-    async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Career>> {
+    async search(pageOptionsDto: PageOptionsDto): Promise<PageDto<Career>> {
         const [careers, count] = await this.careerRepository.findAndCount({
             order: { id: { direction: pageOptionsDto.order } },
             skip: pageOptionsDto.skip,
@@ -35,7 +35,7 @@ export class CareerService {
         return new PageDto(careers, pageMetaDto);
     }
 
-    async getById(id: number): Promise<Career> {
+    async searchById(id: number): Promise<Career> {
         const career = await this.careerRepository.findOneBy({ id: id });
 
         if (!career) {
@@ -67,7 +67,7 @@ export class CareerService {
         return await this.careerRepository.save(careers);
     }
 
-    async update(
+    async updateById(
         id: number,
         careerUpdateDto: CareerUpdateDto
     ): Promise<Career> {
@@ -142,7 +142,7 @@ export class CareerService {
         return await this.careerRepository.save(careers);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.careerRepository.delete(id);
     }
 }

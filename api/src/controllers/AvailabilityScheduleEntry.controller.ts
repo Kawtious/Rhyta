@@ -24,15 +24,15 @@ export class AvailabilityScheduleEntryController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(@Query() pageOptionsDto: PageOptionsDto) {
-        return await this.availabilityScheduleEntryService.getAll(
+    async search(@Query() pageOptionsDto: PageOptionsDto) {
+        return await this.availabilityScheduleEntryService.search(
             pageOptionsDto
         );
     }
 
     @Get('search/cycle/professor/:cycleId/:professorId')
     @HttpCode(HttpStatus.OK)
-    async getAllByCycleIdAndProfessorId(
+    async searchByCycleIdAndProfessorId(
         @Param('cycleId')
         cycleId: number,
         @Param('professorId')
@@ -40,7 +40,7 @@ export class AvailabilityScheduleEntryController {
         @Query()
         pageOptionsDto: PageOptionsDto
     ) {
-        return await this.availabilityScheduleEntryService.getAllByCycleIdAndProfessorId(
+        return await this.availabilityScheduleEntryService.searchByCycleIdAndProfessorId(
             cycleId,
             professorId,
             pageOptionsDto
@@ -49,7 +49,7 @@ export class AvailabilityScheduleEntryController {
 
     @Get('search/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
-    async getAllByCycleIdAndClassroomId(
+    async searchByCycleIdAndClassroomId(
         @Param('cycleId')
         cycleId: number,
         @Param('classroomId')
@@ -57,7 +57,7 @@ export class AvailabilityScheduleEntryController {
         @Query()
         pageOptionsDto: PageOptionsDto
     ) {
-        return await this.availabilityScheduleEntryService.getAllByCycleIdAndClassroomId(
+        return await this.availabilityScheduleEntryService.searchByCycleIdAndClassroomId(
             cycleId,
             classroomId,
             pageOptionsDto
@@ -66,11 +66,11 @@ export class AvailabilityScheduleEntryController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number
     ) {
-        return await this.availabilityScheduleEntryService.getById(id);
+        return await this.availabilityScheduleEntryService.searchById(id);
     }
 
     @Post('insert/cycle/professor/:cycleId/:professorId')

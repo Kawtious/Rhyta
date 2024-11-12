@@ -23,11 +23,11 @@ export class SemesterCareerController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() semesterCareerOptionsDto: SemesterCareerOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.semesterCareerService.getAll(
+        return await this.semesterCareerService.search(
             semesterCareerOptionsDto,
             pageOptionsDto
         );
@@ -35,12 +35,12 @@ export class SemesterCareerController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() semesterCareerOptionsDto: SemesterCareerOptionsDto
     ) {
-        return await this.semesterCareerService.getById(
+        return await this.semesterCareerService.searchById(
             id,
             semesterCareerOptionsDto
         );
@@ -64,10 +64,10 @@ export class SemesterCareerController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.semesterCareerService.delete(id);
+        return await this.semesterCareerService.deleteById(id);
     }
 }

@@ -24,11 +24,11 @@ export class ProfessorController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() professorOptionsDto: ProfessorOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.professorService.getAll(
+        return await this.professorService.search(
             professorOptionsDto,
             pageOptionsDto
         );
@@ -36,12 +36,12 @@ export class ProfessorController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() professorOptionsDto: ProfessorOptionsDto
     ) {
-        return await this.professorService.getById(id, professorOptionsDto);
+        return await this.professorService.searchById(id, professorOptionsDto);
     }
 
     @Post('insert')
@@ -58,12 +58,12 @@ export class ProfessorController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() professorUpdateDto: ProfessorUpdateDto
     ) {
-        return await this.professorService.update(id, professorUpdateDto);
+        return await this.professorService.updateById(id, professorUpdateDto);
     }
 
     @Patch('update/many')
@@ -76,10 +76,10 @@ export class ProfessorController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.professorService.delete(Number(id));
+        return await this.professorService.deleteById(Number(id));
     }
 }

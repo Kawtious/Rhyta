@@ -24,11 +24,11 @@ export class ClassroomController {
 
     @Get('search')
     @HttpCode(HttpStatus.OK)
-    async getAll(
+    async search(
         @Query() classroomOptionsDto: ClassroomOptionsDto,
         @Query() pageOptionsDto: PageOptionsDto
     ) {
-        return await this.classroomService.getAll(
+        return await this.classroomService.search(
             classroomOptionsDto,
             pageOptionsDto
         );
@@ -36,12 +36,12 @@ export class ClassroomController {
 
     @Get('search/id/:id')
     @HttpCode(HttpStatus.OK)
-    async getById(
+    async searchById(
         @Param('id')
         id: number,
         @Query() classroomOptionsDto: ClassroomOptionsDto
     ) {
-        return await this.classroomService.getById(id, classroomOptionsDto);
+        return await this.classroomService.searchById(id, classroomOptionsDto);
     }
 
     @Post('insert')
@@ -58,12 +58,12 @@ export class ClassroomController {
 
     @Patch('update/id/:id')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateById(
         @Param('id')
         id: number,
         @Body() classroomUpdateDto: ClassroomUpdateDto
     ) {
-        return await this.classroomService.update(id, classroomUpdateDto);
+        return await this.classroomService.updateById(id, classroomUpdateDto);
     }
 
     @Patch('update/many')
@@ -76,10 +76,10 @@ export class ClassroomController {
 
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
+    async deleteById(
         @Param('id')
         id: number
     ) {
-        return await this.classroomService.delete(id);
+        return await this.classroomService.deleteById(id);
     }
 }

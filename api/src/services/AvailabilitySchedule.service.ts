@@ -30,7 +30,7 @@ export class AvailabilityScheduleService {
         private readonly availabilityScheduleRepository: Repository<AvailabilitySchedule>
     ) {}
 
-    async getAll(
+    async search(
         availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
     ): Promise<PageDto<AvailabilitySchedule>> {
@@ -53,7 +53,7 @@ export class AvailabilityScheduleService {
         return new PageDto(availabilitySchedules, pageMetaDto);
     }
 
-    async getAllByProfessorId(
+    async searchByProfessorId(
         professorId: number,
         availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
@@ -80,7 +80,7 @@ export class AvailabilityScheduleService {
         return new PageDto(availabilitySchedules, pageMetaDto);
     }
 
-    async getAllByClassroomId(
+    async searchByClassroomId(
         classroomId: number,
         availabilityScheduleOptions: AvailabilityScheduleOptionsDto,
         pageOptionsDto: PageOptionsDto
@@ -107,7 +107,7 @@ export class AvailabilityScheduleService {
         return new PageDto(availabilitySchedules, pageMetaDto);
     }
 
-    async getByCycleIdAndProfessorId(
+    async searchByCycleIdAndProfessorId(
         cycleId: number,
         professorId: number,
         availabilityScheduleOptions: AvailabilityScheduleOptionsDto
@@ -131,7 +131,7 @@ export class AvailabilityScheduleService {
         return availabilitySchedule;
     }
 
-    async getByCycleIdAndClassroomId(
+    async searchByCycleIdAndClassroomId(
         cycleId: number,
         classroomId: number,
         availabilityScheduleOptions: AvailabilityScheduleOptionsDto
@@ -439,7 +439,7 @@ export class AvailabilityScheduleService {
         return await this.availabilityScheduleRepository.save(existingSchedule);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    async deleteById(id: number): Promise<DeleteResult> {
         return await this.availabilityScheduleRepository.delete(id);
     }
 }
