@@ -1,6 +1,10 @@
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CycleUpdateDto {
+    @IsOptional()
+    @IsNumber()
+    id?: number;
+
     @IsNumber()
     version!: number;
 

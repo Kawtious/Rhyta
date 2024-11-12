@@ -13,7 +13,6 @@ import {
 
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
-import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { ClassroomOptionsDto } from '../dto/options/ClassroomOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ClassroomService } from '../services/Classroom.service';
@@ -68,10 +67,8 @@ export class ClassroomController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(
-        @Body() classroomUpdateBulkDtos: ClassroomUpdateBulkDto[]
-    ) {
-        return await this.classroomService.updateMany(classroomUpdateBulkDtos);
+    async updateMany(@Body() classroomUpdateDtos: ClassroomUpdateDto[]) {
+        return await this.classroomService.updateMany(classroomUpdateDtos);
     }
 
     @Delete('delete/id/:id')

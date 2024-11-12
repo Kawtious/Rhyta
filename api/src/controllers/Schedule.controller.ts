@@ -13,7 +13,6 @@ import {
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
-import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { ScheduleOptionsDto } from '../dto/options/ScheduleOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleService } from '../services/Schedule.service';
@@ -68,8 +67,8 @@ export class ScheduleController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(@Body() scheduleUpdateBulkDtos: ScheduleUpdateBulkDto[]) {
-        return await this.scheduleService.updateMany(scheduleUpdateBulkDtos);
+    async updateMany(@Body() scheduleUpdateDtos: ScheduleUpdateDto[]) {
+        return await this.scheduleService.updateMany(scheduleUpdateDtos);
     }
 
     @Delete('delete/id/:id')

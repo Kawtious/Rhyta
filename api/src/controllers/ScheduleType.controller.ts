@@ -13,7 +13,6 @@ import {
 
 import { ScheduleTypeInsertDto } from '../dto/ScheduleTypeInsert.dto';
 import { ScheduleTypeUpdateDto } from '../dto/ScheduleTypeUpdate.dto';
-import { ScheduleTypeUpdateBulkDto } from '../dto/ScheduleTypeUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ScheduleTypeService } from '../services/ScheduleType.service';
 
@@ -65,11 +64,9 @@ export class ScheduleTypeController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(
-        @Body() scheduleTypeUpdateBulkDtos: ScheduleTypeUpdateBulkDto[]
-    ) {
+    async updateMany(@Body() scheduleTypeUpdateDtos: ScheduleTypeUpdateDto[]) {
         return await this.scheduleTypeService.updateMany(
-            scheduleTypeUpdateBulkDtos
+            scheduleTypeUpdateDtos
         );
     }
 

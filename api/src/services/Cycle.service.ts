@@ -95,6 +95,48 @@ export class CycleService {
         return await this.cycleRepository.save(existingCycle);
     }
 
+    async updateMany(cycleUpdateDtos: CycleUpdateDto[]): Promise<Cycle[]> {
+        const cycles: Cycle[] = [];
+
+        for (const cycleUpdateDto of cycleUpdateDtos) {
+            const existingCycle = await this.cycleRepository.findOneBy({
+                id: cycleUpdateDto.id
+            });
+
+            if (!existingCycle) {
+                throw new EntityNotFoundError('Cycle not found');
+            }
+
+            if (cycleUpdateDto.version == null) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingCycle.version,
+                    -1
+                );
+            }
+
+            if (cycleUpdateDto.version !== existingCycle.version) {
+                throw new OptimisticLockingFailureError(
+                    'Resource versions do not match',
+                    existingCycle.version,
+                    cycleUpdateDto.version
+                );
+            }
+
+            if (cycleUpdateDto.title != null) {
+                existingCycle.title = cycleUpdateDto.title;
+            }
+
+            if (cycleUpdateDto.description != null) {
+                existingCycle.description = cycleUpdateDto.description;
+            }
+
+            cycles.push(existingCycle);
+        }
+
+        return await this.cycleRepository.save(cycles);
+    }
+
     async deleteById(id: number): Promise<DeleteResult> {
         return await this.cycleRepository.delete(id);
     }

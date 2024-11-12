@@ -13,7 +13,6 @@ import {
 
 import { CareerInsertDto } from '../dto/CareerInsert.dto';
 import { CareerUpdateDto } from '../dto/CareerUpdate.dto';
-import { CareerUpdateBulkDto } from '../dto/CareerUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { CareerService } from '../services/Career.service';
 
@@ -60,8 +59,8 @@ export class CareerController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(@Body() careerUpdateBulkDtos: CareerUpdateBulkDto[]) {
-        return await this.careerService.updateMany(careerUpdateBulkDtos);
+    async updateMany(@Body() careerUpdateDtos: CareerUpdateDto[]) {
+        return await this.careerService.updateMany(careerUpdateDtos);
     }
 
     @Delete('delete/id/:id')

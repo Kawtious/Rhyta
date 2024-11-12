@@ -1,6 +1,6 @@
 import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
-import { AvailabilityScheduleEntryUpdateBulkDto } from './AvailabilityScheduleEntryUpdateBulk.dto';
+import { AvailabilityScheduleEntryUpdateDto } from './AvailabilityScheduleEntryUpdate.dto';
 
 export class AvailabilityScheduleUpdateDto {
     @IsNumber()
@@ -16,5 +16,5 @@ export class AvailabilityScheduleUpdateDto {
 
     @IsOptional()
     @IsArray()
-    entries?: AvailabilityScheduleEntryUpdateBulkDto[];
+    entries?: AvailabilityScheduleEntryUpdateDto[];
 }

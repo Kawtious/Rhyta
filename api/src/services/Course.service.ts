@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
-import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { CourseOptionsDto } from '../dto/options/CourseOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -162,21 +161,19 @@ export class CourseService {
         return await this.courseRepository.save(existingCourse);
     }
 
-    async updateMany(
-        courseUpdateBulkDtos: CourseUpdateBulkDto[]
-    ): Promise<Course[]> {
+    async updateMany(courseUpdateDtos: CourseUpdateDto[]): Promise<Course[]> {
         const courses: Course[] = [];
 
-        for (const courseUpdateBulkDto of courseUpdateBulkDtos) {
+        for (const courseUpdateDto of courseUpdateDtos) {
             const existingCourse = await this.courseRepository.findOneBy({
-                id: courseUpdateBulkDto.id
+                id: courseUpdateDto.id
             });
 
             if (!existingCourse) {
                 throw new EntityNotFoundError('Course not found');
             }
 
-            if (courseUpdateBulkDto.version == null) {
+            if (courseUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingCourse.version,
@@ -184,21 +181,21 @@ export class CourseService {
                 );
             }
 
-            if (courseUpdateBulkDto.version !== existingCourse.version) {
+            if (courseUpdateDto.version !== existingCourse.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingCourse.version,
-                    courseUpdateBulkDto.version
+                    courseUpdateDto.version
                 );
             }
 
-            if (courseUpdateBulkDto.key != null) {
-                existingCourse.key = courseUpdateBulkDto.key;
+            if (courseUpdateDto.key != null) {
+                existingCourse.key = courseUpdateDto.key;
             }
 
-            if (courseUpdateBulkDto.classroomId != null) {
+            if (courseUpdateDto.classroomId != null) {
                 const classroom = await this.classroomRepository.findOneBy({
-                    id: courseUpdateBulkDto.classroomId
+                    id: courseUpdateDto.classroomId
                 });
 
                 if (!classroom) {
@@ -208,12 +205,12 @@ export class CourseService {
                 existingCourse.classroom = classroom;
             }
 
-            if (courseUpdateBulkDto.schedule != null) {
-                existingCourse.schedule = courseUpdateBulkDto.schedule;
+            if (courseUpdateDto.schedule != null) {
+                existingCourse.schedule = courseUpdateDto.schedule;
             }
 
-            if (courseUpdateBulkDto.description != null) {
-                existingCourse.description = courseUpdateBulkDto.description;
+            if (courseUpdateDto.description != null) {
+                existingCourse.description = courseUpdateDto.description;
             }
 
             courses.push(existingCourse);

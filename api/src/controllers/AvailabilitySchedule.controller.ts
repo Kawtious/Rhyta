@@ -145,7 +145,7 @@ export class AvailabilityScheduleController {
 
     @Patch('update/cycle/classroom/:cycleId/:classroomId')
     @HttpCode(HttpStatus.OK)
-    async update(
+    async updateByCycleIdAndClassroomId(
         @Param('cycleId')
         cycleId: number,
         @Param('classroomId')

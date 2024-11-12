@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { CareerInsertDto } from '../dto/CareerInsert.dto';
 import { CareerUpdateDto } from '../dto/CareerUpdate.dto';
-import { CareerUpdateBulkDto } from '../dto/CareerUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -102,21 +101,19 @@ export class CareerService {
         return await this.careerRepository.save(existingCareer);
     }
 
-    async updateMany(
-        careerUpdateBulkDtos: CareerUpdateBulkDto[]
-    ): Promise<Career[]> {
+    async updateMany(careerUpdateDtos: CareerUpdateDto[]): Promise<Career[]> {
         const careers: Career[] = [];
 
-        for (const careerUpdateBulkDto of careerUpdateBulkDtos) {
+        for (const careerUpdateDto of careerUpdateDtos) {
             const existingCareer = await this.careerRepository.findOneBy({
-                id: careerUpdateBulkDto.id
+                id: careerUpdateDto.id
             });
 
             if (!existingCareer) {
                 throw new EntityNotFoundError('Career not found');
             }
 
-            if (careerUpdateBulkDto.version == null) {
+            if (careerUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingCareer.version,
@@ -124,16 +121,16 @@ export class CareerService {
                 );
             }
 
-            if (careerUpdateBulkDto.version !== existingCareer.version) {
+            if (careerUpdateDto.version !== existingCareer.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingCareer.version,
-                    careerUpdateBulkDto.version
+                    careerUpdateDto.version
                 );
             }
 
-            if (careerUpdateBulkDto.key != null) {
-                existingCareer.key = careerUpdateBulkDto.key;
+            if (careerUpdateDto.key != null) {
+                existingCareer.key = careerUpdateDto.key;
             }
 
             careers.push(existingCareer);

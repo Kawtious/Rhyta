@@ -51,6 +51,12 @@ export class CycleController {
         return await this.cycleService.updateById(id, cycleUpdateDto);
     }
 
+    @Patch('update/many')
+    @HttpCode(HttpStatus.OK)
+    async updateMany(@Body() cycleUpdateDtos: CycleUpdateDto[]) {
+        return await this.cycleService.updateMany(cycleUpdateDtos);
+    }
+
     @Delete('delete/id/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteById(

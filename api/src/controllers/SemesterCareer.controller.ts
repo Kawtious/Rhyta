@@ -6,11 +6,13 @@ import {
     HttpCode,
     HttpStatus,
     Param,
+    Patch,
     Post,
     Query
 } from '@nestjs/common';
 
 import { SemesterCareerInsertDto } from '../dto/SemesterCareerInsert.dto';
+import { SemesterCareerUpdateDto } from '../dto/SemesterCareerUpdate.dto';
 import { SemesterCareerOptionsDto } from '../dto/options/SemesterCareerOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { SemesterCareerService } from '../services/SemesterCareer.service';
@@ -59,6 +61,29 @@ export class SemesterCareerController {
     ) {
         return await this.semesterCareerService.insertMany(
             semesterCareerInsertDtos
+        );
+    }
+
+    @Patch('update/id/:id')
+    @HttpCode(HttpStatus.OK)
+    async updateById(
+        @Param('id')
+        id: number,
+        @Body() semesterCareerUpdateDto: SemesterCareerUpdateDto
+    ) {
+        return await this.semesterCareerService.updateById(
+            id,
+            semesterCareerUpdateDto
+        );
+    }
+
+    @Patch('update/many')
+    @HttpCode(HttpStatus.OK)
+    async updateMany(
+        @Body() semesterCareerUpdateDtos: SemesterCareerUpdateDto[]
+    ) {
+        return await this.semesterCareerService.updateMany(
+            semesterCareerUpdateDtos
         );
     }
 

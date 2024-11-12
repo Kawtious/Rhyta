@@ -13,7 +13,6 @@ import {
 
 import { CourseInsertDto } from '../dto/CourseInsert.dto';
 import { CourseUpdateDto } from '../dto/CourseUpdate.dto';
-import { CourseUpdateBulkDto } from '../dto/CourseUpdateBulk.dto';
 import { CourseOptionsDto } from '../dto/options/CourseOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { CourseService } from '../services/Course.service';
@@ -68,8 +67,8 @@ export class CourseController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(@Body() courseUpdateBulkDtos: CourseUpdateBulkDto[]) {
-        return await this.courseService.updateMany(courseUpdateBulkDtos);
+    async updateMany(@Body() courseUpdateDtos: CourseUpdateDto[]) {
+        return await this.courseService.updateMany(courseUpdateDtos);
     }
 
     @Delete('delete/id/:id')

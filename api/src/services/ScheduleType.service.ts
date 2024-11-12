@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ScheduleTypeInsertDto } from '../dto/ScheduleTypeInsert.dto';
 import { ScheduleTypeUpdateDto } from '../dto/ScheduleTypeUpdate.dto';
-import { ScheduleTypeUpdateBulkDto } from '../dto/ScheduleTypeUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -128,21 +127,21 @@ export class ScheduleTypeService {
     }
 
     async updateMany(
-        scheduleTypeUpdateBulkDtos: ScheduleTypeUpdateBulkDto[]
+        scheduleTypeUpdateDtos: ScheduleTypeUpdateDto[]
     ): Promise<ScheduleType[]> {
         const scheduleTypes: ScheduleType[] = [];
 
-        for (const scheduleTypeUpdateBulkDto of scheduleTypeUpdateBulkDtos) {
+        for (const scheduleTypeUpdateDto of scheduleTypeUpdateDtos) {
             const existingScheduleType =
                 await this.scheduleTypeRepository.findOneBy({
-                    id: scheduleTypeUpdateBulkDto.id
+                    id: scheduleTypeUpdateDto.id
                 });
 
             if (!existingScheduleType) {
                 throw new EntityNotFoundError('ScheduleType not found');
             }
 
-            if (scheduleTypeUpdateBulkDto.version == null) {
+            if (scheduleTypeUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleType.version,
@@ -151,29 +150,28 @@ export class ScheduleTypeService {
             }
 
             if (
-                scheduleTypeUpdateBulkDto.version !==
-                existingScheduleType.version
+                scheduleTypeUpdateDto.version !== existingScheduleType.version
             ) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleType.version,
-                    scheduleTypeUpdateBulkDto.version
+                    scheduleTypeUpdateDto.version
                 );
             }
 
-            if (scheduleTypeUpdateBulkDto.description != null) {
+            if (scheduleTypeUpdateDto.description != null) {
                 existingScheduleType.description =
-                    scheduleTypeUpdateBulkDto.description;
+                    scheduleTypeUpdateDto.description;
             }
 
-            if (scheduleTypeUpdateBulkDto.availableHours != null) {
+            if (scheduleTypeUpdateDto.availableHours != null) {
                 existingScheduleType.availableHours =
-                    scheduleTypeUpdateBulkDto.availableHours;
+                    scheduleTypeUpdateDto.availableHours;
             }
 
-            if (scheduleTypeUpdateBulkDto.sessionMask != null) {
+            if (scheduleTypeUpdateDto.sessionMask != null) {
                 existingScheduleType.sessionMask =
-                    scheduleTypeUpdateBulkDto.sessionMask;
+                    scheduleTypeUpdateDto.sessionMask;
             }
 
             scheduleTypes.push(existingScheduleType);

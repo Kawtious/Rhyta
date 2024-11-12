@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ScheduleInsertDto } from '../dto/ScheduleInsert.dto';
 import { ScheduleUpdateDto } from '../dto/ScheduleUpdate.dto';
-import { ScheduleUpdateBulkDto } from '../dto/ScheduleUpdateBulk.dto';
 import { ScheduleOptionsDto } from '../dto/options/ScheduleOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -159,20 +158,20 @@ export class ScheduleService {
     }
 
     async updateMany(
-        scheduleUpdateBulkDtos: ScheduleUpdateBulkDto[]
+        scheduleUpdateDtos: ScheduleUpdateDto[]
     ): Promise<Schedule[]> {
         const schedules: Schedule[] = [];
 
-        for (const scheduleUpdateBulkDto of scheduleUpdateBulkDtos) {
+        for (const scheduleUpdateDto of scheduleUpdateDtos) {
             const existingSchedule = await this.scheduleRepository.findOneBy({
-                id: scheduleUpdateBulkDto.id
+                id: scheduleUpdateDto.id
             });
 
             if (!existingSchedule) {
                 throw new EntityNotFoundError('Schedule not found');
             }
 
-            if (scheduleUpdateBulkDto.version == null) {
+            if (scheduleUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingSchedule.version,
@@ -180,26 +179,26 @@ export class ScheduleService {
                 );
             }
 
-            if (scheduleUpdateBulkDto.version !== existingSchedule.version) {
+            if (scheduleUpdateDto.version !== existingSchedule.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingSchedule.version,
-                    scheduleUpdateBulkDto.version
+                    scheduleUpdateDto.version
                 );
             }
 
-            if (scheduleUpdateBulkDto.type != null) {
-                existingSchedule.type = scheduleUpdateBulkDto.type;
+            if (scheduleUpdateDto.type != null) {
+                existingSchedule.type = scheduleUpdateDto.type;
             }
 
-            if (scheduleUpdateBulkDto.offset != null) {
-                existingSchedule.offset = scheduleUpdateBulkDto.offset;
+            if (scheduleUpdateDto.offset != null) {
+                existingSchedule.offset = scheduleUpdateDto.offset;
             }
 
-            if (scheduleUpdateBulkDto.scheduleTypeId != null) {
+            if (scheduleUpdateDto.scheduleTypeId != null) {
                 const scheduleType =
                     await this.scheduleTypeRepository.findOneBy({
-                        id: scheduleUpdateBulkDto.scheduleTypeId
+                        id: scheduleUpdateDto.scheduleTypeId
                     });
 
                 if (!scheduleType) {

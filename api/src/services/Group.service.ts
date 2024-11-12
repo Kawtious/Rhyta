@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
-import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { GroupOptionsDto } from '../dto/options/GroupOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -185,21 +184,19 @@ export class GroupService {
         return await this.groupRepository.save(existingGroup);
     }
 
-    async updateMany(
-        groupUpdateBulkDtos: GroupUpdateBulkDto[]
-    ): Promise<Group[]> {
+    async updateMany(groupUpdateDtos: GroupUpdateDto[]): Promise<Group[]> {
         const groups: Group[] = [];
 
-        for (const groupUpdateBulkDto of groupUpdateBulkDtos) {
+        for (const groupUpdateDto of groupUpdateDtos) {
             const existingGroup = await this.groupRepository.findOneBy({
-                id: groupUpdateBulkDto.id
+                id: groupUpdateDto.id
             });
 
             if (!existingGroup) {
                 throw new EntityNotFoundError('Group not found');
             }
 
-            if (groupUpdateBulkDto.version == null) {
+            if (groupUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingGroup.version,
@@ -207,21 +204,21 @@ export class GroupService {
                 );
             }
 
-            if (groupUpdateBulkDto.version !== existingGroup.version) {
+            if (groupUpdateDto.version !== existingGroup.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingGroup.version,
-                    groupUpdateBulkDto.version
+                    groupUpdateDto.version
                 );
             }
 
-            if (groupUpdateBulkDto.group != null) {
-                existingGroup.group = groupUpdateBulkDto.group;
+            if (groupUpdateDto.group != null) {
+                existingGroup.group = groupUpdateDto.group;
             }
 
-            if (groupUpdateBulkDto.professorId != null) {
+            if (groupUpdateDto.professorId != null) {
                 const professor = await this.professorRepository.findOneBy({
-                    id: groupUpdateBulkDto.professorId
+                    id: groupUpdateDto.professorId
                 });
 
                 if (!professor) {
@@ -231,9 +228,9 @@ export class GroupService {
                 existingGroup.professor = professor;
             }
 
-            if (groupUpdateBulkDto.courseId != null) {
+            if (groupUpdateDto.courseId != null) {
                 const course = await this.courseRepository.findOneBy({
-                    id: groupUpdateBulkDto.courseId
+                    id: groupUpdateDto.courseId
                 });
 
                 if (!course) {

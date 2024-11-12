@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional } from 'class-validator';
 
-export class ScheduleUpdateDto {
+export class SemesterCareerUpdateDto {
     @IsOptional()
     @IsNumber()
     id?: number;
@@ -10,13 +10,21 @@ export class ScheduleUpdateDto {
 
     @IsOptional()
     @IsNumber()
-    type?: number;
+    careerId?: number;
 
     @IsOptional()
     @IsNumber()
-    offset?: number;
+    courseId?: number;
 
     @IsOptional()
     @IsNumber()
-    scheduleTypeId?: number;
+    start!: number;
+
+    @IsOptional()
+    @IsNumber()
+    end!: number;
+
+    @IsOptional()
+    @IsNumber()
+    semester?: number;
 }

@@ -15,6 +15,7 @@ import { Classroom } from '../entities/Classroom.entity';
 import { Cycle } from '../entities/Cycle.entity';
 import { Professor } from '../entities/Professor.entity';
 import { EntityNotFoundError } from '../errors/EntityNotFound.error';
+import { MethodArgumentNotValidError } from '../errors/MethodArgumentNotValid.error';
 import { OptimisticLockingFailureError } from '../errors/OptimisticLockingFailure.error';
 
 @Injectable()
@@ -309,14 +310,14 @@ export class AvailabilityScheduleService {
         }
 
         if (availabilityScheduleUpdateDto.entries != null) {
-            for (const availabilityScheduleEntryUpdateBulkDto of availabilityScheduleUpdateDto.entries) {
+            for (const availabilityScheduleEntryUpdateDto of availabilityScheduleUpdateDto.entries) {
                 const existingScheduleEntry = existingSchedule.entries.filter(
                     (existingEntry) => {
                         return (
                             existingEntry.day ==
-                                availabilityScheduleEntryUpdateBulkDto.day &&
+                                availabilityScheduleEntryUpdateDto.day &&
                             existingEntry.hour ==
-                                availabilityScheduleEntryUpdateBulkDto.hour
+                                availabilityScheduleEntryUpdateDto.hour
                         );
                     }
                 )[0];
@@ -325,23 +326,43 @@ export class AvailabilityScheduleService {
                     const availabilityScheduleEntry =
                         new AvailabilityScheduleEntry();
 
-                    availabilityScheduleEntry.day =
-                        availabilityScheduleEntryUpdateBulkDto.day;
-                    availabilityScheduleEntry.hour =
-                        availabilityScheduleEntryUpdateBulkDto.hour;
-
-                    if (availabilityScheduleEntryUpdateBulkDto.value != null) {
-                        availabilityScheduleEntry.value =
-                            availabilityScheduleEntryUpdateBulkDto.value;
+                    if (!availabilityScheduleEntryUpdateDto.day) {
+                        throw new MethodArgumentNotValidError(
+                            'Day is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
                     }
+
+                    if (!availabilityScheduleEntryUpdateDto.hour) {
+                        throw new MethodArgumentNotValidError(
+                            'Hour is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
+                    }
+
+                    if (!availabilityScheduleEntryUpdateDto.value) {
+                        throw new MethodArgumentNotValidError(
+                            'Entry value is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
+                    }
+
+                    availabilityScheduleEntry.day =
+                        availabilityScheduleEntryUpdateDto.day;
+
+                    availabilityScheduleEntry.hour =
+                        availabilityScheduleEntryUpdateDto.hour;
+
+                    availabilityScheduleEntry.value =
+                        availabilityScheduleEntryUpdateDto.value;
 
                     existingSchedule.entries.push(availabilityScheduleEntry);
                     continue;
                 }
 
-                if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                if (availabilityScheduleEntryUpdateDto.value) {
                     existingScheduleEntry.value =
-                        availabilityScheduleEntryUpdateBulkDto.value;
+                        availabilityScheduleEntryUpdateDto.value;
                 }
             }
         }
@@ -399,14 +420,14 @@ export class AvailabilityScheduleService {
         }
 
         if (availabilityScheduleUpdateDto.entries != null) {
-            for (const availabilityScheduleEntryUpdateBulkDto of availabilityScheduleUpdateDto.entries) {
+            for (const availabilityScheduleEntryUpdateDto of availabilityScheduleUpdateDto.entries) {
                 const existingScheduleEntry = existingSchedule.entries.filter(
                     (existingEntry) => {
                         return (
                             existingEntry.day ==
-                                availabilityScheduleEntryUpdateBulkDto.day &&
+                                availabilityScheduleEntryUpdateDto.day &&
                             existingEntry.hour ==
-                                availabilityScheduleEntryUpdateBulkDto.hour
+                                availabilityScheduleEntryUpdateDto.hour
                         );
                     }
                 )[0];
@@ -415,23 +436,43 @@ export class AvailabilityScheduleService {
                     const availabilityScheduleEntry =
                         new AvailabilityScheduleEntry();
 
-                    availabilityScheduleEntry.day =
-                        availabilityScheduleEntryUpdateBulkDto.day;
-                    availabilityScheduleEntry.hour =
-                        availabilityScheduleEntryUpdateBulkDto.hour;
-
-                    if (availabilityScheduleEntryUpdateBulkDto.value != null) {
-                        availabilityScheduleEntry.value =
-                            availabilityScheduleEntryUpdateBulkDto.value;
+                    if (!availabilityScheduleEntryUpdateDto.day) {
+                        throw new MethodArgumentNotValidError(
+                            'Day is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
                     }
+
+                    if (!availabilityScheduleEntryUpdateDto.hour) {
+                        throw new MethodArgumentNotValidError(
+                            'Hour is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
+                    }
+
+                    if (!availabilityScheduleEntryUpdateDto.value) {
+                        throw new MethodArgumentNotValidError(
+                            'Entry value is not valid',
+                            availabilityScheduleEntryUpdateDto
+                        );
+                    }
+
+                    availabilityScheduleEntry.day =
+                        availabilityScheduleEntryUpdateDto.day;
+
+                    availabilityScheduleEntry.hour =
+                        availabilityScheduleEntryUpdateDto.hour;
+
+                    availabilityScheduleEntry.value =
+                        availabilityScheduleEntryUpdateDto.value;
 
                     existingSchedule.entries.push(availabilityScheduleEntry);
                     continue;
                 }
 
-                if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+                if (availabilityScheduleEntryUpdateDto.value) {
                     existingScheduleEntry.value =
-                        availabilityScheduleEntryUpdateBulkDto.value;
+                        availabilityScheduleEntryUpdateDto.value;
                 }
             }
         }

@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 
 import { AvailabilityScheduleEntryInsertDto } from '../dto/AvailabilityScheduleEntryInsert.dto';
 import { AvailabilityScheduleEntryUpdateDto } from '../dto/AvailabilityScheduleEntryUpdate.dto';
-import { AvailabilityScheduleEntryUpdateBulkDto } from '../dto/AvailabilityScheduleEntryUpdateBulk.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
@@ -440,11 +439,11 @@ export class AvailabilityScheduleEntryService {
     async updateManyByCycleIdAndProfessorId(
         cycleId: number,
         professorId: number,
-        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
+        availabilityScheduleEntryUpdateDtos: AvailabilityScheduleEntryUpdateDto[]
     ): Promise<AvailabilityScheduleEntry[]> {
         const availabilityScheduleEntries: AvailabilityScheduleEntry[] = [];
 
-        for (const availabilityScheduleEntryUpdateBulkDto of availabilityScheduleEntryUpdateBulkDtos) {
+        for (const availabilityScheduleEntryUpdateDto of availabilityScheduleEntryUpdateDtos) {
             let existingScheduleEntry =
                 await this.availabilityScheduleEntryRepository.findOne({
                     where: {
@@ -452,8 +451,8 @@ export class AvailabilityScheduleEntryService {
                             cycle: { id: cycleId },
                             professor: { id: professorId }
                         },
-                        day: availabilityScheduleEntryUpdateBulkDto.day,
-                        hour: availabilityScheduleEntryUpdateBulkDto.hour
+                        day: availabilityScheduleEntryUpdateDto.day,
+                        hour: availabilityScheduleEntryUpdateDto.hour
                     }
                 });
 
@@ -463,7 +462,7 @@ export class AvailabilityScheduleEntryService {
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.version == null) {
+            if (availabilityScheduleEntryUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleEntry.version,
@@ -472,19 +471,19 @@ export class AvailabilityScheduleEntryService {
             }
 
             if (
-                availabilityScheduleEntryUpdateBulkDto.version !==
+                availabilityScheduleEntryUpdateDto.version !==
                 existingScheduleEntry.version
             ) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleEntry.version,
-                    availabilityScheduleEntryUpdateBulkDto.version
+                    availabilityScheduleEntryUpdateDto.version
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+            if (availabilityScheduleEntryUpdateDto.value != null) {
                 existingScheduleEntry.value =
-                    availabilityScheduleEntryUpdateBulkDto.value;
+                    availabilityScheduleEntryUpdateDto.value;
             }
 
             availabilityScheduleEntries.push(existingScheduleEntry);
@@ -498,11 +497,11 @@ export class AvailabilityScheduleEntryService {
     async updateManyByCycleIdAndClassroomId(
         cycleId: number,
         classroomId: number,
-        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
+        availabilityScheduleEntryUpdateDtos: AvailabilityScheduleEntryUpdateDto[]
     ): Promise<AvailabilityScheduleEntry[]> {
         const availabilityScheduleEntries: AvailabilityScheduleEntry[] = [];
 
-        for (const availabilityScheduleEntryUpdateBulkDto of availabilityScheduleEntryUpdateBulkDtos) {
+        for (const availabilityScheduleEntryUpdateDto of availabilityScheduleEntryUpdateDtos) {
             let existingScheduleEntry =
                 await this.availabilityScheduleEntryRepository.findOne({
                     where: {
@@ -510,8 +509,8 @@ export class AvailabilityScheduleEntryService {
                             cycle: { id: cycleId },
                             classroom: { id: classroomId }
                         },
-                        day: availabilityScheduleEntryUpdateBulkDto.day,
-                        hour: availabilityScheduleEntryUpdateBulkDto.hour
+                        day: availabilityScheduleEntryUpdateDto.day,
+                        hour: availabilityScheduleEntryUpdateDto.hour
                     }
                 });
 
@@ -521,7 +520,7 @@ export class AvailabilityScheduleEntryService {
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.version == null) {
+            if (availabilityScheduleEntryUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleEntry.version,
@@ -530,19 +529,19 @@ export class AvailabilityScheduleEntryService {
             }
 
             if (
-                availabilityScheduleEntryUpdateBulkDto.version !==
+                availabilityScheduleEntryUpdateDto.version !==
                 existingScheduleEntry.version
             ) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingScheduleEntry.version,
-                    availabilityScheduleEntryUpdateBulkDto.version
+                    availabilityScheduleEntryUpdateDto.version
                 );
             }
 
-            if (availabilityScheduleEntryUpdateBulkDto.value != null) {
+            if (availabilityScheduleEntryUpdateDto.value != null) {
                 existingScheduleEntry.value =
-                    availabilityScheduleEntryUpdateBulkDto.value;
+                    availabilityScheduleEntryUpdateDto.value;
             }
 
             availabilityScheduleEntries.push(existingScheduleEntry);

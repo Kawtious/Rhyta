@@ -13,7 +13,6 @@ import {
 
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
-import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { ProfessorOptionsDto } from '../dto/options/ProfessorOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { ProfessorService } from '../services/Professor.service';
@@ -68,10 +67,8 @@ export class ProfessorController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(
-        @Body() professorUpdateBulkDtos: ProfessorUpdateBulkDto[]
-    ) {
-        return await this.professorService.updateMany(professorUpdateBulkDtos);
+    async updateMany(@Body() professorUpdateDtos: ProfessorUpdateDto[]) {
+        return await this.professorService.updateMany(professorUpdateDtos);
     }
 
     @Delete('delete/id/:id')

@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ProfessorInsertDto } from '../dto/ProfessorInsert.dto';
 import { ProfessorUpdateDto } from '../dto/ProfessorUpdate.dto';
-import { ProfessorUpdateBulkDto } from '../dto/ProfessorUpdateBulk.dto';
 import { ProfessorOptionsDto } from '../dto/options/ProfessorOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -138,20 +137,20 @@ export class ProfessorService {
     }
 
     async updateMany(
-        professorUpdateBulkDtos: ProfessorUpdateBulkDto[]
+        professorUpdateDtos: ProfessorUpdateDto[]
     ): Promise<Professor[]> {
         const professors: Professor[] = [];
 
-        for (const professorUpdateBulkDto of professorUpdateBulkDtos) {
+        for (const professorUpdateDto of professorUpdateDtos) {
             const existingProfessor = await this.professorRepository.findOneBy({
-                id: professorUpdateBulkDto.id
+                id: professorUpdateDto.id
             });
 
             if (!existingProfessor) {
                 throw new EntityNotFoundError('Professor not found');
             }
 
-            if (professorUpdateBulkDto.version == null) {
+            if (professorUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingProfessor.version,
@@ -159,25 +158,25 @@ export class ProfessorService {
                 );
             }
 
-            if (professorUpdateBulkDto.version !== existingProfessor.version) {
+            if (professorUpdateDto.version !== existingProfessor.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingProfessor.version,
-                    professorUpdateBulkDto.version
+                    professorUpdateDto.version
                 );
             }
 
-            if (professorUpdateBulkDto.type != null) {
-                existingProfessor.type = professorUpdateBulkDto.type;
+            if (professorUpdateDto.type != null) {
+                existingProfessor.type = professorUpdateDto.type;
             }
 
-            if (professorUpdateBulkDto.controlNumber != null) {
+            if (professorUpdateDto.controlNumber != null) {
                 existingProfessor.controlNumber =
-                    professorUpdateBulkDto.controlNumber;
+                    professorUpdateDto.controlNumber;
             }
 
-            if (professorUpdateBulkDto.name != null) {
-                existingProfessor.name = professorUpdateBulkDto.name;
+            if (professorUpdateDto.name != null) {
+                existingProfessor.name = professorUpdateDto.name;
             }
 
             professors.push(existingProfessor);

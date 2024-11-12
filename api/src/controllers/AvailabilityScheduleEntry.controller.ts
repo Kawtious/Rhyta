@@ -12,7 +12,6 @@ import {
 
 import { AvailabilityScheduleEntryInsertDto } from '../dto/AvailabilityScheduleEntryInsert.dto';
 import { AvailabilityScheduleEntryUpdateDto } from '../dto/AvailabilityScheduleEntryUpdate.dto';
-import { AvailabilityScheduleEntryUpdateBulkDto } from '../dto/AvailabilityScheduleEntryUpdateBulk.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { AvailabilityScheduleEntryService } from '../services/AvailabilityScheduleEntry.service';
 
@@ -195,12 +194,12 @@ export class AvailabilityScheduleEntryController {
         @Param('professorId')
         professorId: number,
         @Body()
-        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
+        availabilityScheduleEntryUpdateDtos: AvailabilityScheduleEntryUpdateDto[]
     ) {
         return await this.availabilityScheduleEntryService.updateManyByCycleIdAndProfessorId(
             cycleId,
             professorId,
-            availabilityScheduleEntryUpdateBulkDtos
+            availabilityScheduleEntryUpdateDtos
         );
     }
 
@@ -212,12 +211,12 @@ export class AvailabilityScheduleEntryController {
         @Param('classroomId')
         classroomId: number,
         @Body()
-        availabilityScheduleEntryUpdateBulkDtos: AvailabilityScheduleEntryUpdateBulkDto[]
+        availabilityScheduleEntryUpdateDtos: AvailabilityScheduleEntryUpdateDto[]
     ) {
         return await this.availabilityScheduleEntryService.updateManyByCycleIdAndClassroomId(
             cycleId,
             classroomId,
-            availabilityScheduleEntryUpdateBulkDtos
+            availabilityScheduleEntryUpdateDtos
         );
     }
 }

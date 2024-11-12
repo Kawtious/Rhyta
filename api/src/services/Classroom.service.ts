@@ -5,7 +5,6 @@ import { DeleteResult, Repository } from 'typeorm';
 
 import { ClassroomInsertDto } from '../dto/ClassroomInsert.dto';
 import { ClassroomUpdateDto } from '../dto/ClassroomUpdate.dto';
-import { ClassroomUpdateBulkDto } from '../dto/ClassroomUpdateBulk.dto';
 import { ClassroomOptionsDto } from '../dto/options/ClassroomOptions.dto';
 import { PageDto } from '../dto/pagination/Page.dto';
 import { PageMetaDto } from '../dto/pagination/PageMeta.dto';
@@ -124,20 +123,20 @@ export class ClassroomService {
     }
 
     async updateMany(
-        classroomUpdateBulkDtos: ClassroomUpdateBulkDto[]
+        classroomUpdateDtos: ClassroomUpdateDto[]
     ): Promise<Classroom[]> {
         const classrooms: Classroom[] = [];
 
-        for (const classroomUpdateBulkDto of classroomUpdateBulkDtos) {
+        for (const classroomUpdateDto of classroomUpdateDtos) {
             const existingClassroom = await this.classroomRepository.findOneBy({
-                id: classroomUpdateBulkDto.id
+                id: classroomUpdateDto.id
             });
 
             if (!existingClassroom) {
                 throw new EntityNotFoundError('Classroom not found');
             }
 
-            if (classroomUpdateBulkDto.version == null) {
+            if (classroomUpdateDto.version == null) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingClassroom.version,
@@ -145,16 +144,16 @@ export class ClassroomService {
                 );
             }
 
-            if (classroomUpdateBulkDto.version !== existingClassroom.version) {
+            if (classroomUpdateDto.version !== existingClassroom.version) {
                 throw new OptimisticLockingFailureError(
                     'Resource versions do not match',
                     existingClassroom.version,
-                    classroomUpdateBulkDto.version
+                    classroomUpdateDto.version
                 );
             }
 
-            if (classroomUpdateBulkDto.type != null) {
-                existingClassroom.type = classroomUpdateBulkDto.type;
+            if (classroomUpdateDto.type != null) {
+                existingClassroom.type = classroomUpdateDto.type;
             }
 
             classrooms.push(existingClassroom);

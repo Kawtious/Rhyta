@@ -13,7 +13,6 @@ import {
 
 import { GroupInsertDto } from '../dto/GroupInsert.dto';
 import { GroupUpdateDto } from '../dto/GroupUpdate.dto';
-import { GroupUpdateBulkDto } from '../dto/GroupUpdateBulk.dto';
 import { GroupOptionsDto } from '../dto/options/GroupOptions.dto';
 import { PageOptionsDto } from '../dto/pagination/PageOptions.dto';
 import { GroupService } from '../services/Group.service';
@@ -65,8 +64,8 @@ export class GroupController {
 
     @Patch('update/many')
     @HttpCode(HttpStatus.OK)
-    async updateMany(@Body() groupUpdateBulkDtos: GroupUpdateBulkDto[]) {
-        return await this.groupService.updateMany(groupUpdateBulkDtos);
+    async updateMany(@Body() groupUpdateDtos: GroupUpdateDto[]) {
+        return await this.groupService.updateMany(groupUpdateDtos);
     }
 
     @Delete('delete/id/:id')
