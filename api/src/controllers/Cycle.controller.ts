@@ -20,6 +20,12 @@ import { CycleService } from '../services/Cycle.service';
 export class CycleController {
     constructor(private readonly cycleService: CycleService) {}
 
+    @Get('fetch')
+    @HttpCode(HttpStatus.OK)
+    async fetch() {
+        return await this.cycleService.fetch();
+    }
+
     @Get('search')
     @HttpCode(HttpStatus.OK)
     async search(@Query() pageOptionsDto: PageOptionsDto) {

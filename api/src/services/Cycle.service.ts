@@ -19,6 +19,10 @@ export class CycleService {
         private readonly cycleRepository: Repository<Cycle>
     ) {}
 
+    async fetch(): Promise<Cycle[]> {
+        return await this.cycleRepository.find();
+    }
+
     async search(pageOptionsDto: PageOptionsDto): Promise<PageDto<Cycle>> {
         const [cycles, count] = await this.cycleRepository.findAndCount({
             order: { id: { direction: pageOptionsDto.order } },
